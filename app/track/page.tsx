@@ -47,8 +47,7 @@ export default async function TrackPage({ searchParams }: Props) {
       <div className="page-header">
         <div className="section-container pt-10">
           <p className="text-xs font-bold uppercase tracking-widest mb-3 text-blue-300">Real-Time Tracking</p>
-          <h1 className="text-4xl lg:text-5xl font-black mb-4 leading-tight flex items-center gap-3">
-            <MapPin className="w-10 h-10 text-blue-200" />
+          <h1 className="text-4xl lg:text-5xl font-black mb-4 leading-tight">
             Track Your Order
           </h1>
           <p className="text-white/65 max-w-xl text-base leading-relaxed">

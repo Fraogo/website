@@ -4,9 +4,6 @@
  * Edit this file to update text, images, and info across the website.
  * No coding knowledge required — just update the values between the quotes.
  *
- * Fields marked [UPDATE] need your attention.
- * Fields marked [OPTIONAL] can be left blank if not available.
- *
  * After editing, save the file and the website will automatically reflect the changes.
  */
 
@@ -14,56 +11,51 @@
 
 export const company = {
   name: 'Fraogo',
-  legalName: 'Fraogo Limited',                   // [UPDATE] Your registered company name
+  legalName: 'Fraogo Limited',
   tagline: 'Procurement · Logistics · General Services',
   shortDescription: "Nigeria's trusted partner for procurement, freight, and business services.",
   longDescription: `Fraogo is a Nigerian company built to simplify how businesses and individuals
 source products, move goods, and access quality services. We handle the complexity —
 you focus on what matters.`,
-  rc: 'RC 0000000',                              // [UPDATE] Your CAC registration number
-  founded: '2024',                               // [UPDATE] Year the company was founded
+  rc: 'RC8967311',
+  founded: '2024',
 
-  heroHeadline: 'Your Business,\nDelivered.',
+  heroHeadline: 'Source it.\nMove it. Done.',
   heroSubtext:
     'From sourcing products globally to transporting goods across Nigeria and beyond — Fraogo handles everything so you can focus on growing your business.',
 
-  stats: [
-    { value: '500+', label: 'Orders Fulfilled' },
-    { value: '50+',  label: 'Active Vendors'   },
-    { value: '24h',  label: 'Response Time'    },
-  ],
+  // Leave stats as an empty array — fake numbers hurt trust more than no numbers
+  stats: [] as { value: string; label: string }[],
 }
 
 // ─── CONTACT INFORMATION ─────────────────────────────────────────────────────
 
 export const contact = {
-  address:  '[YOUR BUSINESS ADDRESS HERE]',      // [UPDATE] e.g. "12 Example Close, Garki, Abuja, FCT, Nigeria"
-  phone:    '[YOUR PHONE NUMBER]',               // [UPDATE] e.g. "+234 803 000 0000"
-  phone2:   '',                                  // [OPTIONAL] Second phone number
-  email:    'info@fraogo.com',                   // [UPDATE] if different from info@fraogo.com
-  whatsapp: '[WHATSAPP_NUMBER_DIGITS_ONLY]',     // [UPDATE] digits only, no spaces: e.g. "2348030000000"
+  address:  'Plot 35b, Abisogun Leigh str, Ikeja, Lagos-State, Nigeria',
+  phone:    '+234 802 822 9002',
+  phone2:   '',
+  email:    'fraogo6@gmail.com',
+  whatsapp: '2348028229002',
 
-  // Google Maps embed URL:
-  // 1. Open Google Maps → find your business location
-  // 2. Click "Share" → "Embed a map" → copy only the URL inside src="..."
-  // 3. Paste it below between the quotes
-  googleMapsEmbedUrl: '',                        // [UPDATE] Paste Google Maps embed URL here
+  // Google Maps embed URL — paste the URL from the Google Maps "Embed a map" dialog
+  googleMapsEmbedUrl: '',
 
   social: {
-    instagram: 'https://instagram.com/fraogo',   // [UPDATE]
-    facebook:  'https://facebook.com/fraogo',    // [UPDATE]
-    twitter:   'https://x.com/fraogo',           // [UPDATE]
-    linkedin:  'https://linkedin.com/company/fraogo', // [UPDATE]
+    instagram: 'https://instagram.com/fraogo',
+    facebook:  'https://facebook.com/fraogo',
+    twitter:   'https://x.com/fraogo',
+    linkedin:  'https://linkedin.com/company/fraogo',
   },
 }
 
 // ─── TEAM MEMBERS ─────────────────────────────────────────────────────────────
 //
 // PHOTOS: Save square images (minimum 400×400px) as:
-//   member-1.jpg, member-2.jpg, member-3.jpg, member-4.jpg, member-5.jpg
+//   member-1.jpg, member-2.jpg, member-3.jpg ...
 //   inside the  public/team/  folder.
 //
-// TIP: Crop photos to a square before saving for best results.
+// Members with a name starting with "[" are automatically hidden from the website.
+// Fill in real names when you're ready and they'll appear automatically.
 
 export const team: {
   name: string
@@ -73,11 +65,11 @@ export const team: {
   linkedin?: string
 }[] = [
   {
-    name:     '[TEAM MEMBER 1 FULL NAME]',       // [UPDATE]
-    role:     'Chief Executive Officer',          // [UPDATE]
-    bio:      '[Short bio — 1–2 sentences about their background and role at Fraogo.]', // [UPDATE]
+    name:     '[TEAM MEMBER 1 FULL NAME]',
+    role:     'Chief Executive Officer',
+    bio:      '[Short bio — 1–2 sentences about their background and role at Fraogo.]',
     image:    '/team/member-1.jpg',
-    linkedin: '',                                 // [OPTIONAL]
+    linkedin: '',
   },
   {
     name:     '[TEAM MEMBER 2 FULL NAME]',
@@ -93,33 +85,20 @@ export const team: {
     image:    '/team/member-3.jpg',
     linkedin: '',
   },
-  {
-    name:     '[TEAM MEMBER 4 FULL NAME]',
-    role:     '[ROLE TITLE]',
-    bio:      '[Short bio here.]',
-    image:    '/team/member-4.jpg',
-    linkedin: '',
-  },
-  {
-    name:     '[TEAM MEMBER 5 FULL NAME]',
-    role:     '[ROLE TITLE]',
-    bio:      '[Short bio here.]',
-    image:    '/team/member-5.jpg',
-    linkedin: '',
-  },
 ]
 
 // ─── ABOUT PAGE ───────────────────────────────────────────────────────────────
 
 export const about = {
-  // Write your brand story here. 2–3 paragraphs work best.
-  // Use \n\n to start a new paragraph.
-  story: `[YOUR BRAND STORY HERE. Answer these questions: Why was Fraogo founded? What problem does it solve? Who does it serve? What makes it different from competitors?
+  story: `Fraogo was founded in 2024 after its founders witnessed firsthand how difficult it was for Nigerian businesses and individuals to reliably source products, coordinate shipments, and access quality service providers. Too many people were losing money to unreliable suppliers, delayed logistics, or vendors who simply didn't show up — and there was no single trusted partner to turn to.
 
-Write 2–3 paragraphs. This is the most important text on your About page — be honest, specific, and speak directly to a business owner.]`,
+We built Fraogo to change that. Headquartered in Ikeja, Lagos, and registered with the Corporate Affairs Commission (RC8967311), we bring together procurement, logistics, and general services under one roof. Whether you need to import goods from abroad, ship cargo within Nigeria, or hire a vetted vendor for an upcoming project, Fraogo handles the complexity so you can focus on what matters most.
 
-  mission: '[YOUR MISSION STATEMENT — one sentence describing what Fraogo exists to do.]',
-  vision:  '[YOUR VISION STATEMENT — one sentence describing where Fraogo is headed in the next 5–10 years.]',
+Our model is simple: you submit your request, we confirm the details within 24 hours, and we execute with full accountability from start to finish. No chasing suppliers. No hidden fees. No guessing where your order is. Just results — delivered.`,
+
+  mission: 'To make procurement, logistics, and service access simple, reliable, and transparent for every Nigerian business and individual.',
+
+  vision: 'To become Nigeria\'s most trusted multi-service platform — connecting businesses and individuals to quality products, freight solutions, and verified service providers across the country and beyond.',
 
   values: [
     {

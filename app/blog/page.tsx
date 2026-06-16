@@ -1,7 +1,7 @@
 import Link from 'next/link'
 import { prisma } from '@/lib/db'
 import { formatDate } from '@/lib/utils'
-import { ArrowRight, BookOpen } from 'lucide-react'
+import { ArrowRight } from 'lucide-react'
 import type { Metadata } from 'next'
 
 export const metadata: Metadata = {
@@ -37,9 +37,6 @@ export default async function BlogPage() {
           {posts.length === 0 ? (
             /* Empty state */
             <div className="max-w-md mx-auto text-center py-20">
-              <div className="w-16 h-16 rounded-2xl flex items-center justify-center mx-auto mb-6" style={{ background: '#EEF2FF' }}>
-                <BookOpen className="w-8 h-8" style={{ color: '#1B4AD4' }} />
-              </div>
               <h2 className="text-2xl font-black text-gray-900 mb-3">Content Coming Soon</h2>
               <p className="text-gray-500 text-sm leading-relaxed mb-8">
                 We&apos;re working on articles to help Nigerian businesses make better decisions around
@@ -68,9 +65,7 @@ export default async function BlogPage() {
                       />
                     )}
                     {!post.coverImage && (
-                      <div className="absolute inset-0 flex items-center justify-center">
-                        <BookOpen className="w-10 h-10 text-blue-200" />
-                      </div>
+                      <div className="absolute inset-0" style={{ background: 'linear-gradient(135deg, #EEF2FF 0%, #dbe4ff 100%)' }} />
                     )}
                   </div>
 

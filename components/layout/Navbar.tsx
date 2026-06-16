@@ -2,7 +2,6 @@
 
 import { useState, useRef, useEffect } from 'react'
 import Link from 'next/link'
-import Image from 'next/image'
 import { usePathname } from 'next/navigation'
 import { Menu, X, ChevronDown, Package, Truck, Wrench, MapPin, Settings } from 'lucide-react'
 import { cn } from '@/lib/utils'
@@ -52,6 +51,7 @@ export default function Navbar() {
   const [openDropdown, setOpenDropdown]   = useState<string | null>(null)
   const [mobileOpen, setMobileOpen]       = useState(false)
   const [scrolled, setScrolled]           = useState(false)
+  const [logoError, setLogoError]         = useState(false)
   const pathname  = usePathname()
   const navRef    = useRef<HTMLDivElement>(null)
   const prevPath  = useRef(pathname)
@@ -95,33 +95,22 @@ export default function Navbar() {
 
           {/* ── Logo ── */}
           <Link href="/" className="flex items-center gap-2.5 flex-shrink-0">
-            {/* Logo image — place your logo at public/logo/logo.png and public/logo/logo-white.png */}
-            <div className="relative">
-              <Image
+            {logoError ? (
+              <span className={cn('flex items-center gap-2', solidBg ? 'text-[#0E2A82]' : 'text-white')}>
+                <span className="w-8 h-8 rounded-lg flex items-center justify-center text-white font-black text-sm" style={{ background: 'linear-gradient(135deg, #0E2A82, #1B4AD4)' }}>F</span>
+                <span className="text-xl font-black tracking-tight">FRAOGO</span>
+              </span>
+            ) : (
+              // eslint-disable-next-line @next/next/no-img-element
+              <img
                 src={solidBg ? '/logo/logo.png' : '/logo/logo-white.png'}
                 alt="Fraogo"
                 width={120}
                 height={36}
-                className="object-contain"
-                priority
-                onError={(e) => {
-                  // Fallback to text logo if image not yet provided
-                  e.currentTarget.style.display = 'none'
-                  const fallback = e.currentTarget.nextElementSibling as HTMLElement
-                  if (fallback) fallback.style.display = 'flex'
-                }}
+                className="object-contain h-9"
+                onError={() => setLogoError(true)}
               />
-              {/* Text fallback (hidden once logo is provided) */}
-              <span
-                className={cn(
-                  'items-center gap-2 hidden',
-                  solidBg ? 'text-[#0E2A82]' : 'text-white'
-                )}
-              >
-                <span className="w-8 h-8 rounded-lg flex items-center justify-center text-white font-black text-sm" style={{ background: 'linear-gradient(135deg, #0E2A82, #1B4AD4)' }}>F</span>
-                <span className="text-xl font-black tracking-tight">FRAOGO</span>
-              </span>
-            </div>
+            )}
           </Link>
 
           {/* ── Desktop Nav ── */}

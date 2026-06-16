@@ -1,5 +1,4 @@
 import Link from 'next/link'
-import Image from 'next/image'
 import { Phone, Mail, MapPin } from 'lucide-react'
 import { contact, company } from '@/content'
 
@@ -44,22 +43,8 @@ export default function Footer() {
           {/* ── Brand ── */}
           <div className="lg:col-span-1">
             <Link href="/" className="inline-flex items-center gap-2 mb-5">
-              <Image
-                src="/logo/logo-white.png"
-                alt="Fraogo"
-                width={110}
-                height={34}
-                className="object-contain"
-                onError={(e) => {
-                  e.currentTarget.style.display = 'none'
-                  const fb = e.currentTarget.nextElementSibling as HTMLElement
-                  if (fb) fb.style.display = 'flex'
-                }}
-              />
-              <span className="hidden items-center gap-2">
-                <span className="w-9 h-9 rounded-lg flex items-center justify-center text-white font-black text-base border border-white/20" style={{ background: 'rgba(255,255,255,0.1)' }}>F</span>
-                <span className="text-2xl font-black tracking-tight">FRAOGO</span>
-              </span>
+              <span className="w-9 h-9 rounded-lg flex items-center justify-center text-white font-black text-base border border-white/20" style={{ background: 'rgba(255,255,255,0.1)' }}>F</span>
+              <span className="text-2xl font-black tracking-tight">FRAOGO</span>
             </Link>
             <p className="text-sm text-white/55 leading-relaxed mb-5">
               {company.shortDescription}

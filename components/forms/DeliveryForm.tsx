@@ -1,4 +1,4 @@
-'use client'
+﻿'use client'
 
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
@@ -60,7 +60,7 @@ export default function DeliveryForm({ defaultType = 'local' }: DeliveryFormProp
   if (success) {
     return (
       <div className="text-center py-12 animate-fade-in">
-        <div className="w-20 h-20 rounded-2xl flex items-center justify-center mx-auto mb-6" style={{ background: 'linear-gradient(135deg, #0A4D2E, #1A6B42)' }}>
+        <div className="w-20 h-20 rounded-2xl flex items-center justify-center mx-auto mb-6" style={{ background: 'linear-gradient(135deg, #0E2A82, #1B4AD4)' }}>
           <CheckCircle2 className="w-10 h-10 text-white" />
         </div>
         <h2 className="text-2xl font-black text-foreground mb-3">Delivery Request Sent! ✅</h2>
@@ -86,7 +86,7 @@ export default function DeliveryForm({ defaultType = 'local' }: DeliveryFormProp
               className={cn(
                 'flex items-center justify-center gap-2 py-3 px-4 rounded-xl border-2 cursor-pointer transition-all font-semibold text-sm',
                 selectedType === t
-                  ? 'border-[#0A4D2E] bg-green-50 text-[#0A4D2E]'
+                  ? 'border-[#0E2A82] bg-green-50 text-[#0E2A82]'
                   : 'border-border text-muted-foreground hover:border-gray-300'
               )}
             >
@@ -100,7 +100,7 @@ export default function DeliveryForm({ defaultType = 'local' }: DeliveryFormProp
       {/* Sender Info */}
       <div className="bg-white rounded-2xl p-6 shadow-soft border border-border">
         <h2 className="text-base font-bold text-foreground mb-5 flex items-center gap-2">
-          <span className="w-6 h-6 rounded-md flex items-center justify-center text-white text-xs font-bold" style={{ background: '#0A4D2E' }}>1</span>
+          <span className="w-6 h-6 rounded-md flex items-center justify-center text-white text-xs font-bold" style={{ background: '#0E2A82' }}>1</span>
           Sender Information
         </h2>
         <div className="grid sm:grid-cols-2 gap-5">
@@ -125,7 +125,7 @@ export default function DeliveryForm({ defaultType = 'local' }: DeliveryFormProp
       {/* Item Info */}
       <div className="bg-white rounded-2xl p-6 shadow-soft border border-border">
         <h2 className="text-base font-bold text-foreground mb-5 flex items-center gap-2">
-          <span className="w-6 h-6 rounded-md flex items-center justify-center text-white text-xs font-bold" style={{ background: '#0A4D2E' }}>2</span>
+          <span className="w-6 h-6 rounded-md flex items-center justify-center text-white text-xs font-bold" style={{ background: '#0E2A82' }}>2</span>
           Item Details
         </h2>
         <div className="space-y-5">
@@ -176,7 +176,7 @@ export default function DeliveryForm({ defaultType = 'local' }: DeliveryFormProp
       {/* Receiver Info */}
       <div className="bg-white rounded-2xl p-6 shadow-soft border border-border">
         <h2 className="text-base font-bold text-foreground mb-5 flex items-center gap-2">
-          <span className="w-6 h-6 rounded-md flex items-center justify-center text-white text-xs font-bold" style={{ background: '#0A4D2E' }}>3</span>
+          <span className="w-6 h-6 rounded-md flex items-center justify-center text-white text-xs font-bold" style={{ background: '#0E2A82' }}>3</span>
           Receiver Information
         </h2>
         <div className="grid sm:grid-cols-2 gap-5">
@@ -197,7 +197,7 @@ export default function DeliveryForm({ defaultType = 'local' }: DeliveryFormProp
       <div className="bg-white rounded-2xl p-6 shadow-soft border border-border space-y-4">
         {/* Warning notice */}
         <div className="info-box">
-          <AlertTriangle className="w-5 h-5 flex-shrink-0 mt-0.5" style={{ color: '#C9A84C' }} />
+          <AlertTriangle className="w-5 h-5 flex-shrink-0 mt-0.5" style={{ color: '#93A9F5' }} />
           <p>
             <strong>Important Notice:</strong> Receiver must come with a valid means of identification upon collection.
           </p>
@@ -208,7 +208,7 @@ export default function DeliveryForm({ defaultType = 'local' }: DeliveryFormProp
           <input
             type="checkbox"
             {...register('consentGiven')}
-            className="mt-0.5 w-4 h-4 rounded accent-[#0A4D2E] flex-shrink-0"
+            className="mt-0.5 w-4 h-4 rounded accent-[#0E2A82] flex-shrink-0"
           />
           <span className="text-sm text-foreground leading-relaxed">
             I agree that item(s) can be checked/inspected before sending to the destination. *
@@ -244,3 +244,4 @@ export default function DeliveryForm({ defaultType = 'local' }: DeliveryFormProp
     </form>
   )
 }
+

@@ -1,4 +1,4 @@
-'use client'
+﻿'use client'
 
 import { useState } from 'react'
 import Image from 'next/image'
@@ -38,7 +38,7 @@ export default function VendorCard({ vendor }: VendorCardProps) {
   }
   const badgeClass = Object.keys(typeColors).find((k) => vendor.businessType.startsWith(k))
     ? typeColors[Object.keys(typeColors).find((k) => vendor.businessType.startsWith(k))!]
-    : 'bg-green-100 text-green-800'
+    : 'bg-blue-100 text-blue-800'
 
   return (
     <>
@@ -105,7 +105,7 @@ export default function VendorCard({ vendor }: VendorCardProps) {
 
           <button
             className="w-full py-2.5 rounded-xl text-sm font-bold text-white transition-all hover:opacity-90"
-            style={{ background: 'linear-gradient(135deg, #0A4D2E, #1A6B42)' }}
+            style={{ background: 'linear-gradient(135deg, #0E2A82, #1B4AD4)' }}
             id={`view-vendor-${vendor.id}`}
           >
             View Details & Request
@@ -117,3 +117,4 @@ export default function VendorCard({ vendor }: VendorCardProps) {
     </>
   )
 }
+

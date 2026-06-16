@@ -29,13 +29,13 @@ export default function AdminLoginPage() {
   return (
     <div
       className="min-h-screen flex items-center justify-center"
-      style={{ background: 'linear-gradient(135deg, #0A4D2E 0%, #052818 100%)' }}
+      style={{ background: 'linear-gradient(135deg, #0E2A82 0%, #070F2B 100%)' }}
     >
       <div className="w-full max-w-sm px-4">
         {/* Card */}
         <div className="bg-white rounded-2xl shadow-elevated overflow-hidden">
           {/* Header */}
-          <div className="p-8 pb-6 text-center" style={{ background: 'linear-gradient(135deg, #0A4D2E, #1A6B42)' }}>
+          <div className="p-8 pb-6 text-center" style={{ background: 'linear-gradient(135deg, #0E2A82, #1B4AD4)' }}>
             <div className="w-14 h-14 rounded-2xl bg-white/20 flex items-center justify-center mx-auto mb-3">
               <Lock className="w-7 h-7 text-white" />
             </div>

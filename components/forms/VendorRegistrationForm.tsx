@@ -1,4 +1,4 @@
-'use client'
+﻿'use client'
 
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
@@ -104,7 +104,7 @@ export default function VendorRegistrationForm() {
   if (success) {
     return (
       <div className="text-center py-12 animate-fade-in">
-        <div className="w-20 h-20 rounded-2xl flex items-center justify-center mx-auto mb-6" style={{ background: 'linear-gradient(135deg, #0A4D2E, #1A6B42)' }}>
+        <div className="w-20 h-20 rounded-2xl flex items-center justify-center mx-auto mb-6" style={{ background: 'linear-gradient(135deg, #0E2A82, #1B4AD4)' }}>
           <CheckCircle2 className="w-10 h-10 text-white" />
         </div>
         <h2 className="text-2xl font-black text-foreground mb-3">Application Submitted! 🎉</h2>
@@ -126,7 +126,7 @@ export default function VendorRegistrationForm() {
       {/* Business Info */}
       <div className="bg-white rounded-2xl p-6 shadow-soft border border-border">
         <h2 className="text-base font-bold text-foreground mb-5 flex items-center gap-2">
-          <span className="w-6 h-6 rounded-md flex items-center justify-center text-white text-xs font-bold" style={{ background: '#0A4D2E' }}>1</span>
+          <span className="w-6 h-6 rounded-md flex items-center justify-center text-white text-xs font-bold" style={{ background: '#0E2A82' }}>1</span>
           Business Information
         </h2>
         <div className="grid sm:grid-cols-2 gap-5">
@@ -184,7 +184,7 @@ export default function VendorRegistrationForm() {
       {/* NIN Document Upload */}
       <div className="bg-white rounded-2xl p-6 shadow-soft border border-border">
         <h2 className="text-base font-bold text-foreground mb-2 flex items-center gap-2">
-          <span className="w-6 h-6 rounded-md flex items-center justify-center text-white text-xs font-bold" style={{ background: '#0A4D2E' }}>2</span>
+          <span className="w-6 h-6 rounded-md flex items-center justify-center text-white text-xs font-bold" style={{ background: '#0E2A82' }}>2</span>
           NIN Document Upload
         </h2>
         <p className="text-sm text-muted-foreground mb-4">Upload your National Identification Number (NIN) document. Accepted formats: JPEG, PNG, PDF. Max size: 5MB.</p>
@@ -202,7 +202,7 @@ export default function VendorRegistrationForm() {
           <button
             type="button"
             onClick={() => fileInputRef.current?.click()}
-            className="w-full flex flex-col items-center justify-center gap-3 py-8 rounded-xl border-2 border-dashed border-gray-300 hover:border-[#0A4D2E] hover:bg-green-50 transition-all cursor-pointer"
+            className="w-full flex flex-col items-center justify-center gap-3 py-8 rounded-xl border-2 border-dashed border-gray-300 hover:border-[#0E2A82] hover:bg-blue-50 transition-all cursor-pointer"
             id="nin-upload-btn"
           >
             <Upload className="w-8 h-8 text-gray-400" />
@@ -275,12 +275,12 @@ export default function VendorRegistrationForm() {
       {/* Consent */}
       <div className="bg-white rounded-2xl p-6 shadow-soft border border-border">
         <h2 className="text-base font-bold text-foreground mb-5 flex items-center gap-2">
-          <span className="w-6 h-6 rounded-md flex items-center justify-center text-white text-xs font-bold" style={{ background: '#0A4D2E' }}>3</span>
+          <span className="w-6 h-6 rounded-md flex items-center justify-center text-white text-xs font-bold" style={{ background: '#0E2A82' }}>3</span>
           Terms & Consent
         </h2>
         <div className="space-y-4">
           <label className={cn('flex items-start gap-3 p-4 rounded-xl border cursor-pointer transition-all', errors.consentFee ? 'border-red-200 bg-red-50' : 'border-border hover:bg-gray-50')}>
-            <input type="checkbox" {...register('consentFee')} className="mt-0.5 w-4 h-4 accent-[#0A4D2E] flex-shrink-0" />
+            <input type="checkbox" {...register('consentFee')} className="mt-0.5 w-4 h-4 accent-[#0E2A82] flex-shrink-0" />
             <span className="text-sm text-foreground leading-relaxed">
               I agree that <strong>FRAOGO takes 10% of the total bargain</strong> as a service fee for facilitating the vendor-customer connection. *
             </span>
@@ -288,7 +288,7 @@ export default function VendorRegistrationForm() {
           {errors.consentFee && <p className="form-error text-xs ml-1"><AlertCircle className="w-3 h-3" />{errors.consentFee.message}</p>}
 
           <label className={cn('flex items-start gap-3 p-4 rounded-xl border cursor-pointer transition-all', errors.consentNoDirect ? 'border-red-200 bg-red-50' : 'border-border hover:bg-gray-50')}>
-            <input type="checkbox" {...register('consentNoDirect')} className="mt-0.5 w-4 h-4 accent-[#0A4D2E] flex-shrink-0" />
+            <input type="checkbox" {...register('consentNoDirect')} className="mt-0.5 w-4 h-4 accent-[#0E2A82] flex-shrink-0" />
             <span className="text-sm text-foreground leading-relaxed">
               I agree <strong>not to negotiate with customers directly</strong> outside the FRAOGO platform. All transactions must be facilitated through FRAOGO. *
             </span>
@@ -320,3 +320,4 @@ export default function VendorRegistrationForm() {
     </form>
   )
 }
+

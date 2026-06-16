@@ -1,4 +1,4 @@
-import Link from 'next/link'
+﻿import Link from 'next/link'
 import { CheckCircle2, Package, ArrowRight } from 'lucide-react'
 import type { Metadata } from 'next'
 
@@ -15,7 +15,7 @@ export default function ProcurementSuccessPage() {
           {/* Success Icon */}
           <div
             className="w-24 h-24 rounded-3xl flex items-center justify-center mx-auto mb-8 shadow-glow"
-            style={{ background: 'linear-gradient(135deg, #0A4D2E, #1A6B42)' }}
+            style={{ background: 'linear-gradient(135deg, #0E2A82, #1B4AD4)' }}
           >
             <CheckCircle2 className="w-12 h-12 text-white" />
           </div>
@@ -32,7 +32,7 @@ export default function ProcurementSuccessPage() {
 
           <div className="bg-white rounded-2xl p-6 shadow-soft border border-border mb-8 text-left">
             <h2 className="font-bold text-foreground mb-3 flex items-center gap-2 text-sm">
-              <Package className="w-4 h-4" style={{ color: '#C9A84C' }} />
+              <Package className="w-4 h-4" style={{ color: '#1B4AD4' }} />
               What happens next?
             </h2>
             <ol className="space-y-2">
@@ -45,7 +45,7 @@ export default function ProcurementSuccessPage() {
                 <li key={i} className="flex items-start gap-3 text-sm text-muted-foreground">
                   <span
                     className="w-5 h-5 rounded-full flex items-center justify-center text-xs font-bold text-white flex-shrink-0 mt-0.5"
-                    style={{ background: '#0A4D2E' }}
+                    style={{ background: '#0E2A82' }}
                   >
                     {i + 1}
                   </span>
@@ -69,3 +69,4 @@ export default function ProcurementSuccessPage() {
     </div>
   )
 }
+

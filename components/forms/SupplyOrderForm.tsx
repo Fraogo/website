@@ -1,4 +1,4 @@
-'use client'
+﻿'use client'
 
 import { useState } from 'react'
 import { useForm } from 'react-hook-form'
@@ -88,7 +88,7 @@ export default function SupplyOrderForm() {
   if (success) {
     return (
       <div className="text-center py-12 animate-fade-in">
-        <div className="w-20 h-20 rounded-2xl flex items-center justify-center mx-auto mb-6" style={{ background: 'linear-gradient(135deg, #0A4D2E, #1A6B42)' }}>
+        <div className="w-20 h-20 rounded-2xl flex items-center justify-center mx-auto mb-6" style={{ background: 'linear-gradient(135deg, #0E2A82, #1B4AD4)' }}>
           <CheckCircle2 className="w-10 h-10 text-white" />
         </div>
         <h2 className="text-2xl font-black text-foreground mb-3">Supply Order Received! ✅</h2>
@@ -107,7 +107,7 @@ export default function SupplyOrderForm() {
       {/* Item Selection */}
       <div className="bg-white rounded-2xl p-6 shadow-soft border border-border">
         <h2 className="text-base font-bold text-foreground mb-2 flex items-center gap-2">
-          <span className="w-6 h-6 rounded-md flex items-center justify-center text-white text-xs font-bold" style={{ background: '#0A4D2E' }}>1</span>
+          <span className="w-6 h-6 rounded-md flex items-center justify-center text-white text-xs font-bold" style={{ background: '#0E2A82' }}>1</span>
           Select Items
         </h2>
         <p className="text-xs text-muted-foreground mb-5">Click on items to select them, then set quantities below</p>
@@ -121,20 +121,20 @@ export default function SupplyOrderForm() {
               className={cn(
                 'flex items-start gap-3 p-4 rounded-xl border-2 text-left transition-all',
                 selectedItems.includes(item.id)
-                  ? 'border-[#0A4D2E] bg-green-50'
+                  ? 'border-[#0E2A82] bg-green-50'
                   : 'border-border hover:border-gray-300'
               )}
             >
               <span className="text-2xl flex-shrink-0">{item.emoji}</span>
               <div>
-                <div className={cn('font-bold text-sm', selectedItems.includes(item.id) ? 'text-[#0A4D2E]' : 'text-foreground')}>
+                <div className={cn('font-bold text-sm', selectedItems.includes(item.id) ? 'text-[#0E2A82]' : 'text-foreground')}>
                   {item.label}
                 </div>
                 <div className="text-xs text-muted-foreground mt-0.5">{item.description}</div>
               </div>
               {selectedItems.includes(item.id) && (
                 <div className="ml-auto flex-shrink-0">
-                  <div className="w-5 h-5 rounded-full flex items-center justify-center" style={{ background: '#0A4D2E' }}>
+                  <div className="w-5 h-5 rounded-full flex items-center justify-center" style={{ background: '#0E2A82' }}>
                     <svg className="w-3 h-3 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
                     </svg>
@@ -186,7 +186,7 @@ export default function SupplyOrderForm() {
       {/* Contact & Delivery */}
       <div className="bg-white rounded-2xl p-6 shadow-soft border border-border">
         <h2 className="text-base font-bold text-foreground mb-5 flex items-center gap-2">
-          <span className="w-6 h-6 rounded-md flex items-center justify-center text-white text-xs font-bold" style={{ background: '#0A4D2E' }}>2</span>
+          <span className="w-6 h-6 rounded-md flex items-center justify-center text-white text-xs font-bold" style={{ background: '#0E2A82' }}>2</span>
           Contact & Delivery Details
         </h2>
         <div className="grid sm:grid-cols-2 gap-5">
@@ -255,3 +255,4 @@ export default function SupplyOrderForm() {
     </form>
   )
 }
+

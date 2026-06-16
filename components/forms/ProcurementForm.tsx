@@ -1,4 +1,4 @@
-'use client'
+﻿'use client'
 
 import { useForm, useFieldArray } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
@@ -90,12 +90,12 @@ export default function ProcurementForm({ type }: ProcurementFormProps) {
       {/* Order type badge */}
       <div className="flex items-center gap-3">
         {type === 'nigeria' ? (
-          <span className="flex items-center gap-2 px-4 py-2 rounded-full text-sm font-bold text-white" style={{ background: '#0A4D2E' }}>
+          <span className="flex items-center gap-2 px-4 py-2 rounded-full text-sm font-bold text-white" style={{ background: '#0E2A82' }}>
             <Package className="w-4 h-4" />
             🇳🇬 Nigeria Order
           </span>
         ) : (
-          <span className="flex items-center gap-2 px-4 py-2 rounded-full text-sm font-bold text-white" style={{ background: '#1A6B42' }}>
+          <span className="flex items-center gap-2 px-4 py-2 rounded-full text-sm font-bold text-white" style={{ background: '#1B4AD4' }}>
             <Globe className="w-4 h-4" />
             🌍 International Order
           </span>
@@ -105,7 +105,7 @@ export default function ProcurementForm({ type }: ProcurementFormProps) {
       {/* Contact Information */}
       <div className="bg-white rounded-2xl p-6 shadow-soft border border-border">
         <h2 className="text-lg font-bold text-foreground mb-5 flex items-center gap-2">
-          <span className="w-7 h-7 rounded-lg flex items-center justify-center text-white text-xs font-bold" style={{ background: '#0A4D2E' }}>1</span>
+          <span className="w-7 h-7 rounded-lg flex items-center justify-center text-white text-xs font-bold" style={{ background: '#0E2A82' }}>1</span>
           Your Contact Information
         </h2>
 
@@ -157,7 +157,7 @@ export default function ProcurementForm({ type }: ProcurementFormProps) {
       {/* Items */}
       <div className="space-y-4">
         <h2 className="text-lg font-bold text-foreground flex items-center gap-2">
-          <span className="w-7 h-7 rounded-lg flex items-center justify-center text-white text-xs font-bold" style={{ background: '#0A4D2E' }}>2</span>
+          <span className="w-7 h-7 rounded-lg flex items-center justify-center text-white text-xs font-bold" style={{ background: '#0E2A82' }}>2</span>
           Items to Order
         </h2>
 
@@ -240,7 +240,7 @@ export default function ProcurementForm({ type }: ProcurementFormProps) {
                       className={cn(
                         'flex items-center gap-3 flex-1 p-4 rounded-xl border-2 cursor-pointer transition-all',
                         watchedItems?.[index]?.deliveryMode === mode
-                          ? 'border-[#0A4D2E] bg-green-50'
+                          ? 'border-[#0E2A82] bg-green-50'
                           : 'border-border hover:border-gray-300'
                       )}
                     >
@@ -248,7 +248,7 @@ export default function ProcurementForm({ type }: ProcurementFormProps) {
                         type="radio"
                         value={mode}
                         {...register(`items.${index}.deliveryMode`)}
-                        className="accent-[#0A4D2E]"
+                        className="accent-[#0E2A82]"
                       />
                       <span className="font-semibold text-sm capitalize">
                         {mode === 'pickup' ? 'Pick Up' : 'Dispatch'}
@@ -283,7 +283,7 @@ export default function ProcurementForm({ type }: ProcurementFormProps) {
           <button
             type="button"
             onClick={() => append({ name: '', specification: '', quantity: 1, deliveryMode: 'pickup', deliveryAddress: '' })}
-            className="w-full flex items-center justify-center gap-2 py-4 rounded-2xl border-2 border-dashed border-gray-300 text-sm font-semibold text-gray-500 hover:border-[#0A4D2E] hover:text-[#0A4D2E] hover:bg-green-50 transition-all"
+            className="w-full flex items-center justify-center gap-2 py-4 rounded-2xl border-2 border-dashed border-gray-300 text-sm font-semibold text-gray-500 hover:border-[#0E2A82] hover:text-[#0E2A82] hover:bg-blue-50 transition-all"
             id="add-another-item"
           >
             <Plus className="w-4 h-4" />
@@ -312,3 +312,4 @@ export default function ProcurementForm({ type }: ProcurementFormProps) {
     </form>
   )
 }
+

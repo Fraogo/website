@@ -130,3 +130,51 @@ model Invoice {
   grandTotal    Float
   createdAt     DateTime @default(now())
 }
+
+model ContactInquiry {
+  id        String   @id @default(cuid())
+  name      String
+  email     String
+  phone     String?
+  subject   String
+  message   String
+  status    String   @default("new") // new | read | responded
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model TrackingRecord {
+  id             String          @id @default(cuid())
+  trackingNumber String          @unique
+  serviceType    String          // "procurement" | "logistics-local" | "logistics-abroad" | "supply" | "vendor-service"
+  customerName   String
+  customerEmail  String?
+  description    String
+  currentStatus  String          @default("Order Confirmed")
+  updates        TrackingUpdate[]
+  createdAt      DateTime        @default(now())
+  updatedAt      DateTime        @updatedAt
+}
+
+model TrackingUpdate {
+  id               String         @id @default(cuid())
+  trackingRecordId String
+  trackingRecord   TrackingRecord @relation(fields: [trackingRecordId], references: [id], onDelete: Cascade)
+  status           String
+  note             String?
+  location         String?
+  createdAt        DateTime       @default(now())
+}
+
+model BlogPost {
+  id          String    @id @default(cuid())
+  title       String
+  slug        String    @unique
+  excerpt     String?
+  content     String    // HTML / rich text
+  coverImage  String?
+  published   Boolean   @default(false)
+  publishedAt DateTime?
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+}

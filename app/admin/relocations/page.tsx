@@ -1,4 +1,4 @@
-import { getRelocationRequests } from '@/app/actions/relocation'
+﻿import { getRelocationRequests } from '@/app/actions/relocation'
 import { formatDateTime, getStatusColor } from '@/lib/utils'
 import Link from 'next/link'
 import { MoveRight } from 'lucide-react'
@@ -24,7 +24,7 @@ export default async function AdminRelocationsPage({
         {['all', 'pending', 'confirmed', 'completed'].map((s) => (
           <Link key={s} href={s === 'all' ? '/admin/relocations' : `/admin/relocations?status=${s}`}
             className={`px-3 py-1.5 rounded-lg text-xs font-semibold capitalize transition-all ${(s === 'all' && !status) || status === s ? 'text-white' : 'bg-white border border-border text-gray-600 hover:border-gray-400'}`}
-            style={(s === 'all' && !status) || status === s ? { background: '#0A4D2E' } : {}}
+            style={(s === 'all' && !status) || status === s ? { background: '#0E2A82' } : {}}
           >{s}</Link>
         ))}
       </div>
@@ -45,7 +45,7 @@ export default async function AdminRelocationsPage({
                     <td className="text-gray-600 text-xs">{r.customerEmail}</td>
                     <td className="text-gray-600 text-xs max-w-32 truncate">{r.pickupLocation}</td>
                     <td className="text-gray-600 text-xs max-w-32 truncate">{r.destination}</td>
-                    <td><span className={`text-xs px-2 py-0.5 rounded-full font-semibold ${r.transportBy === 'fraogo' ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-700'}`}>{r.transportBy}</span></td>
+                    <td><span className={`text-xs px-2 py-0.5 rounded-full font-semibold ${r.transportBy === 'fraogo' ? 'bg-blue-100 text-blue-800' : 'bg-gray-100 text-gray-700'}`}>{r.transportBy}</span></td>
                     <td><span className={`status-badge ${getStatusColor(r.status)}`}>{r.status}</span></td>
                     <td className="text-gray-500 text-xs whitespace-nowrap">{formatDateTime(r.createdAt)}</td>
                   </tr>
@@ -58,3 +58,4 @@ export default async function AdminRelocationsPage({
     </div>
   )
 }
+

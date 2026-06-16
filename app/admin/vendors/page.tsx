@@ -1,4 +1,4 @@
-import { getVendors } from '@/app/actions/vendor'
+﻿import { getVendors } from '@/app/actions/vendor'
 import { getNinSignedUrl } from '@/lib/storage'
 import { formatDateTime, getStatusColor } from '@/lib/utils'
 import { Users, ExternalLink } from 'lucide-react'
@@ -27,7 +27,7 @@ export default async function AdminVendorsPage({
         {['all', 'pending_review', 'active', 'rejected'].map((s) => (
           <Link key={s} href={s === 'all' ? '/admin/vendors' : `/admin/vendors?status=${s}`}
             className={`px-3 py-1.5 rounded-lg text-xs font-semibold capitalize transition-all ${(s === 'all' && !status) || status === s ? 'text-white' : 'bg-white border border-border text-gray-600 hover:border-gray-400'}`}
-            style={(s === 'all' && !status) || status === s ? { background: '#0A4D2E' } : {}}
+            style={(s === 'all' && !status) || status === s ? { background: '#0E2A82' } : {}}
           >{s.replace('_', ' ')}</Link>
         ))}
       </div>
@@ -91,3 +91,4 @@ async function NinDocumentLink({ ninDocumentUrl }: { ninDocumentUrl: string }) {
     </a>
   )
 }
+

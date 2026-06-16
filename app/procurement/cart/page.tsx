@@ -1,4 +1,4 @@
-'use client'
+﻿'use client'
 
 import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
@@ -67,7 +67,7 @@ export default function CartPage() {
       {/* Header */}
       <div className="page-header">
         <div className="section-container pt-8">
-          <p className="text-sm font-bold uppercase tracking-wider mb-2" style={{ color: '#C9A84C' }}>
+          <p className="text-sm font-bold uppercase tracking-wider mb-2" style={{ color: '#1B4AD4' }}>
             Procurement
           </p>
           <h1 className="text-3xl font-black mb-2 flex items-center gap-3">
@@ -83,7 +83,7 @@ export default function CartPage() {
           {/* Customer Info Card */}
           <div className="bg-white rounded-2xl p-6 shadow-soft border border-border">
             <h2 className="font-bold text-foreground mb-4 flex items-center gap-2">
-              <span className="w-6 h-6 rounded-md flex items-center justify-center text-white text-xs font-bold" style={{ background: '#0A4D2E' }}>i</span>
+              <span className="w-6 h-6 rounded-md flex items-center justify-center text-white text-xs font-bold" style={{ background: '#0E2A82' }}>i</span>
               Customer Information
             </h2>
             <div className="grid sm:grid-cols-3 gap-4 text-sm">
@@ -103,7 +103,7 @@ export default function CartPage() {
             <div className="mt-3 pt-3 border-t border-border">
               <span className={cn(
                 'inline-flex items-center px-3 py-1 rounded-full text-xs font-bold',
-                orderType === 'nigeria' ? 'bg-green-100 text-green-800' : 'bg-blue-100 text-blue-800'
+                orderType === 'nigeria' ? 'bg-blue-100 text-blue-800' : 'bg-blue-100 text-blue-800'
               )}>
                 {orderType === 'nigeria' ? '🇳🇬 Nigeria Order' : '🌍 International Order'}
               </span>
@@ -117,7 +117,7 @@ export default function CartPage() {
               <Link
                 href={orderType === 'nigeria' ? '/procurement/nigeria' : '/procurement/international'}
                 className="flex items-center gap-1.5 text-sm font-semibold hover:underline"
-                style={{ color: '#0A4D2E' }}
+                style={{ color: '#0E2A82' }}
               >
                 <Plus className="w-4 h-4" />
                 Add More Items
@@ -235,7 +235,7 @@ export default function CartPage() {
           <div className="bg-white rounded-2xl p-6 max-w-sm w-full shadow-elevated animate-scale-in">
             <div className="text-center mb-5">
               <div className="w-14 h-14 rounded-2xl flex items-center justify-center mx-auto mb-4" style={{ background: '#f0fdf4' }}>
-                <ShoppingCart className="w-7 h-7" style={{ color: '#0A4D2E' }} />
+                <ShoppingCart className="w-7 h-7" style={{ color: '#0E2A82' }} />
               </div>
               <h3 className="text-lg font-bold text-foreground mb-2">Confirm Order Submission</h3>
               <p className="text-sm text-muted-foreground">
@@ -274,3 +274,4 @@ export default function CartPage() {
     </div>
   )
 }
+

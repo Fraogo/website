@@ -12,28 +12,25 @@ const config: Config = {
     extend: {
       colors: {
         brand: {
-          green: {
-            DEFAULT: '#0A4D2E',
-            50: '#f0fdf4',
-            100: '#dcfce7',
-            200: '#bbf7d0',
-            300: '#86efac',
-            400: '#4ade80',
-            500: '#22c55e',
-            600: '#16a34a',
-            700: '#1A6B42',
-            800: '#0A4D2E',
-            900: '#052818',
-          },
-          gold: {
-            DEFAULT: '#C9A84C',
-            50: '#fefce8',
-            100: '#fef9c3',
-            200: '#fef08a',
-            300: '#fde047',
-            400: '#C9A84C',
-            500: '#A8860F',
-            600: '#8B6D0C',
+          // ── BRAND BLUE PALETTE ─────────────────────────────────────────
+          // These are placeholders. Replace hex values here when the
+          // designer provides the final brand colours. One change here
+          // updates the entire site.
+          blue: {
+            DEFAULT: '#1B4AD4',   // Primary brand blue
+            deep:    '#0E2A82',   // Dark / hover state
+            mid:     '#2A5EE8',   // Gradient lighter end
+            pale:    '#EEF2FF',   // Section backgrounds
+            50:      '#F5F7FF',
+            100:     '#EEF2FF',
+            200:     '#C7D4FA',
+            300:     '#9FB4F5',
+            400:     '#6E8EEF',
+            500:     '#4067E8',
+            600:     '#2A5EE8',
+            700:     '#1B4AD4',
+            800:     '#1438A8',
+            900:     '#0E2A82',
           },
         },
         background: 'hsl(var(--background))',
@@ -91,12 +88,11 @@ const config: Config = {
         soft: '0 2px 8px rgba(0,0,0,0.06)',
         card: '0 4px 16px rgba(0,0,0,0.08)',
         elevated: '0 8px 32px rgba(0,0,0,0.12)',
-        glow: '0 0 24px rgba(10,77,46,0.15)',
+        glow: '0 0 24px rgba(27,74,212,0.20)',
       },
       backgroundImage: {
-        'hero-pattern': 'linear-gradient(135deg, #0A4D2E 0%, #1A6B42 50%, #0f5e37 100%)',
-        'gold-gradient': 'linear-gradient(135deg, #C9A84C 0%, #A8860F 100%)',
-        'green-gradient': 'linear-gradient(135deg, #0A4D2E 0%, #1A6B42 100%)',
+        'hero-pattern':  'linear-gradient(135deg, #0E2A82 0%, #1B4AD4 60%, #2A5EE8 100%)',
+        'blue-gradient': 'linear-gradient(135deg, #0E2A82 0%, #1B4AD4 100%)',
       },
       keyframes: {
         'fade-in': {

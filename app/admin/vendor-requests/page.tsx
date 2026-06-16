@@ -1,4 +1,4 @@
-import { getVendorRequests } from '@/app/actions/vendorRequest'
+﻿import { getVendorRequests } from '@/app/actions/vendorRequest'
 import { formatDateTime, getStatusColor } from '@/lib/utils'
 import { UserCheck, Clock, MapPin } from 'lucide-react'
 import type { Metadata } from 'next'
@@ -52,7 +52,7 @@ export default async function AdminVendorRequestsPage() {
                     <td className="max-w-md">
                       <p className="text-xs text-gray-600 line-clamp-2">{r.description}</p>
                       {r.eventDate && (
-                        <div className="text-[10px] font-bold text-[#0A4D2E] mt-1 flex items-center gap-1">
+                        <div className="text-[10px] font-bold text-[#0E2A82] mt-1 flex items-center gap-1">
                           <Clock className="w-2.5 h-2.5" />
                           Event: {new Date(r.eventDate).toLocaleDateString()}
                         </div>
@@ -76,3 +76,4 @@ export default async function AdminVendorRequestsPage() {
     </div>
   )
 }
+

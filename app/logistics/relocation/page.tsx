@@ -1,4 +1,4 @@
-import type { Metadata } from 'next'
+﻿import type { Metadata } from 'next'
 import RelocationForm from '@/components/forms/RelocationForm'
 
 export const metadata: Metadata = {
@@ -11,10 +11,10 @@ export default function RelocationPage() {
     <div className="min-h-screen" style={{ background: '#f8fafc' }}>
       <div className="page-header">
         <div className="section-container pt-8">
-          <p className="text-sm font-bold uppercase tracking-wider mb-2" style={{ color: '#C9A84C' }}>
+          <p className="text-sm font-bold uppercase tracking-wider mb-2" style={{ color: '#93A9F5' }}>
             Logistics
           </p>
-          <h1 className="text-3xl lg:text-4xl font-black mb-3">🚛 Relocation of Items</h1>
+          <h1 className="text-3xl lg:text-4xl font-black mb-3">Relocation of Items</h1>
           <p className="text-white/70 max-w-xl">
             Moving home or office? FRAOGO coordinates the labor and/or transport to move your belongings safely.
           </p>
@@ -28,3 +28,5 @@ export default function RelocationPage() {
     </div>
   )
 }
+
+

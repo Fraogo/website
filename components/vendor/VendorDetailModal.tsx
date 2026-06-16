@@ -1,4 +1,4 @@
-'use client'
+﻿'use client'
 
 import { useState } from 'react'
 import Image from 'next/image'
@@ -76,7 +76,7 @@ export default function VendorDetailModal({ vendor, onClose }: VendorDetailModal
           <div>
             <h2 className="font-black text-foreground text-lg">{vendor.businessName}</h2>
             <div className="flex items-center gap-2 mt-0.5">
-              <span className="text-xs font-semibold px-2 py-0.5 rounded-full text-white" style={{ background: '#0A4D2E' }}>
+              <span className="text-xs font-semibold px-2 py-0.5 rounded-full text-white" style={{ background: '#0E2A82' }}>
                 {vendor.businessType}
               </span>
               <span className="flex items-center gap-1 text-xs text-muted-foreground">
@@ -126,7 +126,7 @@ export default function VendorDetailModal({ vendor, onClose }: VendorDetailModal
               {images.length > 1 && (
                 <div className="flex gap-2 overflow-x-auto pb-1">
                   {images.slice(0, 10).map((img, i) => (
-                    <button key={img.id} onClick={() => setImageIndex(i)} className={cn('flex-shrink-0 w-14 h-14 rounded-lg overflow-hidden border-2 transition-all', i === imageIndex ? 'border-[#0A4D2E]' : 'border-transparent hover:border-gray-300')}>
+                    <button key={img.id} onClick={() => setImageIndex(i)} className={cn('flex-shrink-0 w-14 h-14 rounded-lg overflow-hidden border-2 transition-all', i === imageIndex ? 'border-[#0E2A82]' : 'border-transparent hover:border-gray-300')}>
                       <Image src={img.url} alt="" width={56} height={56} className="object-cover w-full h-full" />
                     </button>
                   ))}
@@ -153,7 +153,7 @@ export default function VendorDetailModal({ vendor, onClose }: VendorDetailModal
 
             {requestSuccess ? (
               <div className="text-center py-6 animate-fade-in">
-                <CheckCircle2 className="w-12 h-12 mx-auto mb-3" style={{ color: '#0A4D2E' }} />
+                <CheckCircle2 className="w-12 h-12 mx-auto mb-3" style={{ color: '#0E2A82' }} />
                 <h4 className="font-bold text-foreground mb-2">Request Sent! ✅</h4>
                 <p className="text-sm text-muted-foreground">
                   Your request has been sent to {vendor.businessName}. FRAOGO will facilitate the connection and reach out to you shortly.
@@ -226,3 +226,4 @@ export default function VendorDetailModal({ vendor, onClose }: VendorDetailModal
     </div>
   )
 }
+

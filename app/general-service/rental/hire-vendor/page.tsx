@@ -1,4 +1,4 @@
-import type { Metadata } from 'next'
+﻿import type { Metadata } from 'next'
 import { getActiveVendors } from '@/app/actions/vendor'
 import VendorCard from '@/components/vendor/VendorCard'
 import { Users } from 'lucide-react'
@@ -27,7 +27,7 @@ export default async function HireVendorPage({
     <div className="min-h-screen" style={{ background: '#f8fafc' }}>
       <div className="page-header">
         <div className="section-container pt-8">
-          <p className="text-sm font-bold uppercase tracking-wider mb-2" style={{ color: '#C9A84C' }}>
+          <p className="text-sm font-bold uppercase tracking-wider mb-2" style={{ color: '#93A9F5' }}>
             General Service → Rental
           </p>
           <h1 className="text-3xl lg:text-4xl font-black mb-3 flex items-center gap-3">
@@ -50,9 +50,9 @@ export default async function HireVendorPage({
               className={`px-4 py-2 rounded-xl text-sm font-semibold transition-all ${
                 (t === 'All' && !type) || type === t
                   ? 'text-white shadow-soft'
-                  : 'bg-white border border-border text-muted-foreground hover:border-[#0A4D2E] hover:text-[#0A4D2E]'
+                  : 'bg-white border border-border text-muted-foreground hover:border-[#0E2A82] hover:text-[#0E2A82]'
               }`}
-              style={(t === 'All' && !type) || type === t ? { background: '#0A4D2E' } : {}}
+              style={(t === 'All' && !type) || type === t ? { background: '#0E2A82' } : {}}
             >
               {t}
             </a>
@@ -85,3 +85,4 @@ export default async function HireVendorPage({
     </div>
   )
 }
+

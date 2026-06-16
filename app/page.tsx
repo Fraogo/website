@@ -1,11 +1,14 @@
 import Link from 'next/link'
-import { ArrowRight, Package, Truck, Wrench, ShieldCheck, Globe, Clock, Star, CheckCircle2 } from 'lucide-react'
+import {
+  ArrowRight, Package, Truck, Wrench, ShieldCheck, Globe, Clock,
+  Star, CheckCircle2, MapPin, ChevronRight,
+} from 'lucide-react'
 import type { Metadata } from 'next'
+import { company } from '@/content'
 
 export const metadata: Metadata = {
-  title: 'FRAOGO — Procurement, Logistics & General Services',
-  description:
-    'FRAOGO delivers reliable procurement, logistics, and general services across Nigeria and internationally. Place orders, book deliveries, and hire vendors — all in one place.',
+  title: `${company.name} — Procurement, Logistics & General Services`,
+  description: company.heroSubtext,
 }
 
 const services = [
@@ -14,142 +17,132 @@ const services = [
     title: 'Procurement',
     tagline: 'Local & International Sourcing',
     description:
-      'Source products within Nigeria or import from global markets. We handle the legwork — you receive your goods.',
+      'Tell us what you need — from any market in Nigeria or anywhere in the world. We source it, handle the paperwork, and deliver it to you.',
     links: [
-      { label: 'Nigeria Orders', href: '/procurement/nigeria' },
+      { label: 'Nigeria Orders',       href: '/procurement/nigeria' },
       { label: 'International Orders', href: '/procurement/international' },
     ],
-    color: '#0A4D2E',
-    bg: 'from-green-900 to-green-800',
+    accent: '#1B4AD4',
+    bg:     'from-[#0E2A82] to-[#1B4AD4]',
   },
   {
     icon: Truck,
     title: 'Logistics',
-    tagline: 'Delivery & Relocation',
+    tagline: 'Freight & Transport',
     description:
-      'Local and international delivery with full tracking. Moving? We handle item relocation with care and precision.',
+      'Need to ship something internationally or move cargo across Nigeria? We coordinate the right transport solution for your goods.',
     links: [
-      { label: 'Book a Delivery', href: '/logistics/delivery' },
-      { label: 'Relocation Services', href: '/logistics/relocation' },
+      { label: 'Send Abroad',     href: '/logistics/delivery' },
+      { label: 'Local Transport', href: '/logistics/relocation' },
     ],
-    color: '#C9A84C',
-    bg: 'from-amber-800 to-amber-700',
+    accent: '#0E2A82',
+    bg:     'from-[#0a2060] to-[#0E2A82]',
   },
   {
     icon: Wrench,
-    title: 'General Service',
-    tagline: 'Vendors & Supply Orders',
+    title: 'General Services',
+    tagline: 'Vendors & Supplies',
     description:
-      'Hire verified vendors for events, or order bulk supplies (water, drinks, event items) delivered to your door.',
+      'Browse verified vendors for events, or order bulk supplies. From event spaces to catering — find trusted professionals here.',
     links: [
-      { label: 'Hire a Vendor', href: '/general-service/rental' },
-      { label: 'Supply Orders', href: '/general-service/supply' },
+      { label: 'Browse & Hire Vendors', href: '/general-service/rental' },
+      { label: 'Supply Orders',         href: '/general-service/supply' },
     ],
-    color: '#1A6B42',
-    bg: 'from-teal-900 to-teal-800',
+    accent: '#2A5EE8',
+    bg:     'from-[#1B4AD4] to-[#2A5EE8]',
   },
 ]
 
 const whyFraogo = [
   {
     icon: ShieldCheck,
-    title: 'Trusted & Reliable',
-    desc: 'Every order is tracked and followed through. We maintain full accountability from placement to delivery.',
+    title: 'Trusted & Accountable',
+    desc: 'Every order is tracked and followed through. We take ownership of every request from placement to delivery.',
   },
   {
     icon: Globe,
     title: 'Local & Global Reach',
-    desc: 'Whether you\'re ordering from Lagos or importing from overseas, FRAOGO has the connections to make it happen.',
+    desc: 'Whether ordering within Nigeria or importing from overseas, Fraogo has the connections to make it happen.',
   },
   {
     icon: Clock,
-    title: 'Fast Response Time',
-    desc: 'Our team responds to every order within 24–48 hours to confirm details and kickstart your request.',
+    title: 'Fast Response',
+    desc: 'Our team responds to every inquiry within 24–48 hours to confirm details and kick-start your request.',
   },
   {
     icon: Star,
-    title: 'Verified Vendors Only',
-    desc: 'Our vendor network is carefully vetted. Every vendor on our platform has passed our screening process.',
+    title: 'Verified Vendors',
+    desc: 'Every vendor on our platform is registered and email-verified. You deal with professionals only.',
   },
+]
+
+const steps = [
+  { step: '01', title: 'Submit Your Request',  desc: 'Fill out the form for your order, shipment, or vendor hire. No upfront payment required.' },
+  { step: '02', title: 'We Confirm Details',   desc: 'Our team reviews your request and contacts you within 24–48 hours.' },
+  { step: '03', title: 'We Execute',           desc: 'We handle procurement, logistics coordination, or vendor connection on your behalf.' },
+  { step: '04', title: 'Delivered to You',     desc: 'Your order arrives. We follow up to make sure you are satisfied.' },
 ]
 
 export default function HomePage() {
   return (
     <>
-      {/* ── Hero Section ──────────────────────────────────────────────────── */}
+      {/* ─── HERO ────────────────────────────────────────────────────────────── */}
       <section
         className="relative min-h-screen flex items-center justify-center overflow-hidden"
-        style={{ background: 'linear-gradient(135deg, #0A4D2E 0%, #1A6B42 60%, #0f5e37 100%)' }}
+        style={{ background: 'linear-gradient(135deg, #070F2B 0%, #0E2A82 50%, #1B4AD4 100%)' }}
       >
-        {/* Background pattern */}
-        <div className="absolute inset-0 opacity-5">
-          <div
-            className="absolute inset-0"
-            style={{
-              backgroundImage: `radial-gradient(circle at 25% 25%, white 1px, transparent 1px), radial-gradient(circle at 75% 75%, white 1px, transparent 1px)`,
-              backgroundSize: '60px 60px',
-            }}
-          />
-        </div>
-
+        {/* Subtle dot grid */}
+        <div
+          className="absolute inset-0 opacity-[0.07]"
+          style={{
+            backgroundImage: 'radial-gradient(circle, white 1px, transparent 1px)',
+            backgroundSize: '40px 40px',
+          }}
+        />
         {/* Glow orbs */}
-        <div
-          className="absolute top-1/4 right-1/4 w-96 h-96 rounded-full opacity-10 blur-3xl"
-          style={{ background: '#C9A84C' }}
-        />
-        <div
-          className="absolute bottom-1/4 left-1/4 w-64 h-64 rounded-full opacity-10 blur-3xl"
-          style={{ background: '#22c55e' }}
-        />
+        <div className="absolute top-1/4 right-1/4 w-96 h-96 rounded-full opacity-10 blur-3xl" style={{ background: '#3B6EF0' }} />
+        <div className="absolute bottom-1/3 left-1/4 w-72 h-72 rounded-full opacity-10 blur-3xl"  style={{ background: '#1B4AD4' }} />
 
-        <div className="section-container relative z-10 text-center pt-20 pb-16">
+        <div className="section-container relative z-10 text-center pt-24 pb-20">
           {/* Badge */}
-          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full text-xs font-semibold mb-8 border border-white/20 text-white/80 bg-white/10 backdrop-blur-sm">
-            <span className="w-1.5 h-1.5 rounded-full bg-green-400 animate-pulse-slow" />
-            Nigeria&apos;s Trusted Procurement Partner
+          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full text-xs font-semibold mb-8 border border-white/15 text-white/75 bg-white/8 backdrop-blur-sm">
+            <span className="w-1.5 h-1.5 rounded-full bg-blue-300 animate-pulse-slow" />
+            Nigeria&apos;s Trusted Business Services Partner
           </div>
 
-          <h1 className="text-5xl sm:text-6xl lg:text-7xl font-black text-white mb-6 leading-none tracking-tight">
-            Procurement.{' '}
-            <br className="hidden sm:block" />
-            <span style={{ color: '#C9A84C' }}>Logistics.</span>
-            <br className="hidden sm:block" />
-            Service.
+          {/* Headline */}
+          <h1 className="text-5xl sm:text-6xl lg:text-7xl font-black text-white mb-6 leading-[1.08] tracking-tight">
+            {company.heroHeadline.split('\n').map((line, i) => (
+              <span key={i}>
+                {i > 0 && <br />}
+                {i === 0 ? line : <span style={{ color: '#93B4F8' }}>{line}</span>}
+              </span>
+            ))}
           </h1>
 
-          <p className="text-lg sm:text-xl text-white/70 max-w-2xl mx-auto mb-10 leading-relaxed">
-            From sourcing products globally to delivering them to your door — FRAOGO handles everything,
-            so you can focus on what matters.
+          <p className="text-lg sm:text-xl text-white/65 max-w-2xl mx-auto mb-10 leading-relaxed">
+            {company.heroSubtext}
           </p>
 
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-            <Link
-              href="/procurement/nigeria"
-              className="btn-gold text-base px-8 py-4 rounded-2xl font-bold hover-lift"
-              id="hero-cta-get-started"
-            >
+            <Link href="/procurement/nigeria" className="btn-white text-base px-8 py-4 rounded-2xl font-bold hover-lift">
               Get Started
               <ArrowRight className="w-5 h-5" />
             </Link>
             <Link
-              href="#services"
+              href="/services"
               className="inline-flex items-center gap-2 px-8 py-4 rounded-2xl font-bold text-white/80 border border-white/20 hover:bg-white/10 transition-all text-base"
-              id="hero-cta-learn-more"
             >
               Explore Services
             </Link>
           </div>
 
           {/* Stats */}
-          <div className="mt-16 grid grid-cols-3 gap-6 max-w-lg mx-auto">
-            {[
-              { value: '500+', label: 'Orders Fulfilled' },
-              { value: '50+', label: 'Active Vendors' },
-              { value: '24h', label: 'Response Time' },
-            ].map((stat) => (
+          <div className="mt-16 flex items-center justify-center gap-8 sm:gap-14 flex-wrap">
+            {company.stats.map((stat) => (
               <div key={stat.label} className="text-center">
-                <div className="text-2xl sm:text-3xl font-black text-white">{stat.value}</div>
-                <div className="text-xs text-white/50 mt-1">{stat.label}</div>
+                <div className="text-3xl sm:text-4xl font-black text-white">{stat.value}</div>
+                <div className="text-xs text-white/45 mt-1 font-medium uppercase tracking-wide">{stat.label}</div>
               </div>
             ))}
           </div>
@@ -157,25 +150,23 @@ export default function HomePage() {
 
         {/* Wave divider */}
         <div className="absolute bottom-0 left-0 right-0">
-          <svg viewBox="0 0 1440 80" fill="white" xmlns="http://www.w3.org/2000/svg" className="w-full">
-            <path d="M0,40 C360,80 1080,0 1440,40 L1440,80 L0,80 Z" />
+          <svg viewBox="0 0 1440 72" fill="white" xmlns="http://www.w3.org/2000/svg" className="w-full block">
+            <path d="M0,40 C480,80 960,0 1440,40 L1440,72 L0,72 Z" />
           </svg>
         </div>
       </section>
 
-      {/* ── Services Section ──────────────────────────────────────────────── */}
+      {/* ─── SERVICES ────────────────────────────────────────────────────────── */}
       <section id="services" className="section-padding bg-white">
         <div className="section-container">
           <div className="text-center mb-14">
-            <p className="text-sm font-bold uppercase tracking-wider mb-3" style={{ color: '#C9A84C' }}>
-              What We Do
-            </p>
-            <h2 className="text-3xl lg:text-4xl font-black text-foreground">
+            <p className="text-xs font-bold uppercase tracking-widest mb-3 text-[#1B4AD4]">What We Do</p>
+            <h2 className="text-3xl lg:text-4xl font-black text-gray-900">
               Everything you need,{' '}
-              <span className="text-gradient">all in one place</span>
+              <span className="text-gradient">one place</span>
             </h2>
-            <p className="text-muted-foreground mt-4 max-w-xl mx-auto">
-              FRAOGO simplifies complex supply chains and service coordination for individuals and businesses.
+            <p className="text-gray-500 mt-4 max-w-xl mx-auto text-sm leading-relaxed">
+              Fraogo simplifies procurement, freight, and service coordination for Nigerian businesses and individuals.
             </p>
           </div>
 
@@ -183,35 +174,28 @@ export default function HomePage() {
             {services.map((svc, i) => (
               <div
                 key={svc.title}
-                className="group rounded-2xl overflow-hidden shadow-card card-hover border border-border"
-                style={{ animationDelay: `${i * 100}ms` }}
+                className="group rounded-2xl overflow-hidden shadow-card card-hover border border-gray-100"
+                style={{ animationDelay: `${i * 80}ms` }}
               >
-                {/* Card header */}
-                <div
-                  className={`bg-gradient-to-br ${svc.bg} p-8`}
-                >
-                  <div className="w-14 h-14 rounded-2xl bg-white/10 flex items-center justify-center mb-5">
-                    <svc.icon className="w-7 h-7 text-white" />
+                <div className={`bg-gradient-to-br ${svc.bg} p-8`}>
+                  <div className="w-12 h-12 rounded-xl bg-white/15 flex items-center justify-center mb-5">
+                    <svc.icon className="w-6 h-6 text-white" />
                   </div>
                   <h3 className="text-2xl font-black text-white mb-1">{svc.title}</h3>
-                  <p className="text-sm font-semibold" style={{ color: 'rgba(255,255,255,0.6)' }}>
-                    {svc.tagline}
-                  </p>
+                  <p className="text-sm font-semibold text-white/55">{svc.tagline}</p>
                 </div>
-
-                {/* Card body */}
                 <div className="p-6 bg-white">
-                  <p className="text-sm text-muted-foreground leading-relaxed mb-5">{svc.description}</p>
+                  <p className="text-sm text-gray-500 leading-relaxed mb-5">{svc.description}</p>
                   <div className="flex flex-col gap-2">
                     {svc.links.map((link) => (
                       <Link
                         key={link.href}
                         href={link.href}
                         className="flex items-center justify-between px-4 py-2.5 rounded-xl text-sm font-semibold transition-all hover:pl-5"
-                        style={{ color: svc.color, background: `${svc.color}10` }}
+                        style={{ color: svc.accent, background: `${svc.accent}12` }}
                       >
                         {link.label}
-                        <ArrowRight className="w-4 h-4" />
+                        <ChevronRight className="w-4 h-4" />
                       </Link>
                     ))}
                   </div>
@@ -222,24 +206,51 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* ── Why FRAOGO ────────────────────────────────────────────────────── */}
-      <section className="section-padding" style={{ background: '#f8fafc' }}>
+      {/* ─── HOW IT WORKS ────────────────────────────────────────────────────── */}
+      <section className="section-padding" style={{ background: '#F5F7FF' }}>
         <div className="section-container">
-          <div className="grid lg:grid-cols-2 gap-12 items-center">
+          <div className="text-center mb-14">
+            <p className="text-xs font-bold uppercase tracking-widest mb-3 text-[#1B4AD4]">Simple Process</p>
+            <h2 className="text-3xl lg:text-4xl font-black text-gray-900">How It Works</h2>
+          </div>
+          <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
+            {steps.map((item, i) => (
+              <div key={item.step} className="relative text-center bg-white rounded-2xl p-6 shadow-soft border border-gray-100 card-hover">
+                <div
+                  className="w-14 h-14 rounded-2xl flex items-center justify-center text-xl font-black text-white mx-auto mb-4"
+                  style={{ background: 'linear-gradient(135deg, #0E2A82, #1B4AD4)' }}
+                >
+                  {item.step}
+                </div>
+                {i < steps.length - 1 && (
+                  <div className="absolute top-[3.25rem] left-[calc(50%+2rem)] right-0 hidden lg:block">
+                    <div className="border-t-2 border-dashed border-blue-100 mx-4" />
+                  </div>
+                )}
+                <h3 className="font-bold text-gray-900 mb-2 text-sm">{item.title}</h3>
+                <p className="text-xs text-gray-500 leading-relaxed">{item.desc}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ─── WHY FRAOGO ──────────────────────────────────────────────────────── */}
+      <section className="section-padding bg-white">
+        <div className="section-container">
+          <div className="grid lg:grid-cols-2 gap-14 items-center">
             <div>
-              <p className="text-sm font-bold uppercase tracking-wider mb-3" style={{ color: '#C9A84C' }}>
-                Why Choose Us
-              </p>
-              <h2 className="text-3xl lg:text-4xl font-black text-foreground mb-5">
+              <p className="text-xs font-bold uppercase tracking-widest mb-3 text-[#1B4AD4]">Why Choose Us</p>
+              <h2 className="text-3xl lg:text-4xl font-black text-gray-900 mb-5">
                 Built on trust,{' '}
                 <span className="text-gradient">driven by results</span>
               </h2>
-              <p className="text-muted-foreground leading-relaxed mb-8">
-                We&apos;re not just another logistics company. FRAOGO is a full-service partner that takes
-                ownership of every request — from the moment you place your order to the moment it&apos;s delivered.
+              <p className="text-gray-500 leading-relaxed mb-8 text-sm">
+                Fraogo is not just another logistics company. We take full ownership of every request — from
+                placement to delivery — so you never have to chase updates or deal with middlemen.
               </p>
-              <Link href="/procurement/nigeria" className="btn-primary inline-flex">
-                Start Your Order
+              <Link href="/about" className="btn-primary inline-flex">
+                Learn More About Us
                 <ArrowRight className="w-4 h-4" />
               </Link>
             </div>
@@ -248,16 +259,13 @@ export default function HomePage() {
               {whyFraogo.map((item) => (
                 <div
                   key={item.title}
-                  className="bg-white rounded-2xl p-5 shadow-soft border border-border card-hover"
+                  className="bg-white rounded-2xl p-5 shadow-soft border border-gray-100 card-hover"
                 >
-                  <div
-                    className="w-10 h-10 rounded-xl flex items-center justify-center mb-3"
-                    style={{ background: '#f0fdf4' }}
-                  >
-                    <item.icon className="w-5 h-5" style={{ color: '#0A4D2E' }} />
+                  <div className="w-10 h-10 rounded-xl flex items-center justify-center mb-3" style={{ background: '#EEF2FF' }}>
+                    <item.icon className="w-5 h-5" style={{ color: '#1B4AD4' }} />
                   </div>
-                  <h3 className="font-bold text-foreground text-sm mb-1.5">{item.title}</h3>
-                  <p className="text-xs text-muted-foreground leading-relaxed">{item.desc}</p>
+                  <h3 className="font-bold text-gray-900 text-sm mb-1.5">{item.title}</h3>
+                  <p className="text-xs text-gray-500 leading-relaxed">{item.desc}</p>
                 </div>
               ))}
             </div>
@@ -265,68 +273,73 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* ── How It Works ──────────────────────────────────────────────────── */}
-      <section className="section-padding bg-white">
+      {/* ─── TRACK ORDER QUICK-ACCESS ────────────────────────────────────────── */}
+      <section className="section-padding" style={{ background: '#F5F7FF' }}>
         <div className="section-container">
-          <div className="text-center mb-14">
-            <p className="text-sm font-bold uppercase tracking-wider mb-3" style={{ color: '#C9A84C' }}>
-              Simple Process
+          <div className="max-w-2xl mx-auto text-center">
+            <div className="w-14 h-14 rounded-2xl flex items-center justify-center mx-auto mb-5" style={{ background: '#EEF2FF' }}>
+              <MapPin className="w-7 h-7" style={{ color: '#1B4AD4' }} />
+            </div>
+            <h2 className="text-2xl lg:text-3xl font-black text-gray-900 mb-3">Track Your Order</h2>
+            <p className="text-gray-500 text-sm mb-8 leading-relaxed">
+              Have a tracking number? Enter it below to see the status of your delivery or shipment.
             </p>
-            <h2 className="text-3xl lg:text-4xl font-black">How It Works</h2>
-          </div>
-          <div className="grid md:grid-cols-4 gap-6">
-            {[
-              { step: '01', title: 'Submit Your Request', desc: 'Fill out the simple form for your order, delivery, or vendor hire.' },
-              { step: '02', title: 'We Confirm', desc: 'FRAOGO reviews your request and contacts you within 24–48 hours.' },
-              { step: '03', title: 'We Execute', desc: 'Our team handles sourcing, logistics, or vendor coordination on your behalf.' },
-              { step: '04', title: 'Delivered to You', desc: 'Your order arrives safely. We follow up to ensure your satisfaction.' },
-            ].map((item, i) => (
-              <div key={item.step} className="text-center">
-                <div
-                  className="w-14 h-14 rounded-2xl flex items-center justify-center text-xl font-black text-white mx-auto mb-4 relative"
-                  style={{ background: 'linear-gradient(135deg, #0A4D2E, #1A6B42)' }}
-                >
-                  {item.step}
-                  {i < 3 && (
-                    <div className="absolute left-full top-1/2 -translate-y-1/2 w-full hidden md:block">
-                      <div className="border-t-2 border-dashed border-gray-200 mx-4" />
-                    </div>
-                  )}
-                </div>
-                <h3 className="font-bold text-foreground mb-2 text-sm">{item.title}</h3>
-                <p className="text-xs text-muted-foreground leading-relaxed">{item.desc}</p>
-              </div>
-            ))}
+            <form action="/track" method="get" className="flex flex-col sm:flex-row gap-3 max-w-md mx-auto">
+              <input
+                name="ref"
+                type="text"
+                placeholder="e.g. FRG-AB2X7K9M"
+                className="form-input flex-1 text-sm"
+                aria-label="Enter your tracking number"
+              />
+              <button
+                type="submit"
+                className="btn-primary px-6 py-3 rounded-xl text-sm whitespace-nowrap"
+              >
+                Track <ArrowRight className="w-4 h-4" />
+              </button>
+            </form>
+            <p className="text-xs text-gray-400 mt-4">
+              Don&apos;t have a number yet?{' '}
+              <Link href="/track" className="underline text-[#1B4AD4]">Go to the tracking page</Link>
+            </p>
           </div>
         </div>
       </section>
 
-      {/* ── CTA Banner ────────────────────────────────────────────────────── */}
+      {/* ─── CTA BANNER ──────────────────────────────────────────────────────── */}
       <section
         className="py-20 relative overflow-hidden"
-        style={{ background: 'linear-gradient(135deg, #0A4D2E 0%, #1A6B42 100%)' }}
+        style={{ background: 'linear-gradient(135deg, #070F2B 0%, #0E2A82 50%, #1B4AD4 100%)' }}
       >
-        <div className="absolute inset-0 opacity-5">
-          <div className="absolute inset-0" style={{ backgroundImage: 'radial-gradient(circle at 50% 50%, white 1px, transparent 1px)', backgroundSize: '40px 40px' }} />
-        </div>
+        <div
+          className="absolute inset-0 opacity-[0.06]"
+          style={{
+            backgroundImage: 'radial-gradient(circle, white 1px, transparent 1px)',
+            backgroundSize: '40px 40px',
+          }}
+        />
         <div className="section-container relative z-10 text-center">
           <div className="flex items-center justify-center gap-2 mb-4">
-            <CheckCircle2 className="w-5 h-5" style={{ color: '#C9A84C' }} />
-            <span className="text-sm font-semibold text-white/70">No payment required upfront — we contact you first</span>
+            <CheckCircle2 className="w-5 h-5 text-blue-300" />
+            <span className="text-sm font-semibold text-white/60">No upfront payment — we contact you first</span>
           </div>
-          <h2 className="text-3xl lg:text-5xl font-black text-white mb-4">
-            Ready to place your order?
+          <h2 className="text-3xl lg:text-5xl font-black text-white mb-4 leading-tight">
+            Ready to get started?
           </h2>
-          <p className="text-white/60 max-w-lg mx-auto mb-8">
-            Join hundreds of Nigerians who trust FRAOGO for their procurement, logistics, and service needs.
+          <p className="text-white/55 max-w-lg mx-auto mb-10 text-sm leading-relaxed">
+            Join hundreds of Nigerians who trust Fraogo for their procurement, logistics, and service needs.
           </p>
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-            <Link href="/procurement/nigeria" className="btn-gold text-base px-8 py-4 rounded-2xl font-bold" id="cta-start-order">
+            <Link href="/procurement/nigeria" className="btn-white text-base px-8 py-4 rounded-2xl font-bold hover-lift">
               Start an Order
               <ArrowRight className="w-5 h-5" />
             </Link>
-            <Link href="/logistics/delivery" className="inline-flex items-center gap-2 px-8 py-4 rounded-2xl font-bold text-white border border-white/20 hover:bg-white/10 transition-all text-base" id="cta-book-delivery">
-              Book a Delivery
+            <Link
+              href="/contact"
+              className="inline-flex items-center gap-2 px-8 py-4 rounded-2xl font-bold text-white border border-white/20 hover:bg-white/10 transition-all text-base"
+            >
+              Contact Us
             </Link>
           </div>
         </div>

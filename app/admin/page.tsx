@@ -1,4 +1,4 @@
-import { prisma } from '@/lib/db'
+﻿import { prisma } from '@/lib/db'
 import { Package, Truck, MoveRight, ShoppingBag, Users, UserCheck, Clock, TrendingUp } from 'lucide-react'
 import Link from 'next/link'
 import { formatDateTime } from '@/lib/utils'
@@ -41,13 +41,13 @@ export default async function AdminDashboardPage() {
   const recent = await getRecentActivity()
 
   const statCards = [
-    { label: 'Pending Orders', value: stats.pendingOrders, icon: Package, href: '/admin/orders', color: '#0A4D2E', bg: '#f0fdf4' },
-    { label: 'Pending Deliveries', value: stats.deliveries, icon: Truck, href: '/admin/deliveries', color: '#1d4ed8', bg: '#eff6ff' },
-    { label: 'Relocations', value: stats.relocations, icon: MoveRight, href: '/admin/relocations', color: '#7c3aed', bg: '#f5f3ff' },
-    { label: 'Supply Orders', value: stats.supplyOrders, icon: ShoppingBag, href: '/admin/supply-orders', color: '#b45309', bg: '#fffbeb' },
-    { label: 'Vendor Applications', value: stats.pendingVendors, icon: Users, href: '/admin/vendors', color: '#dc2626', bg: '#fef2f2' },
-    { label: 'Active Vendors', value: stats.activeVendors, icon: UserCheck, href: '/admin/vendors', color: '#059669', bg: '#ecfdf5' },
-    { label: 'Vendor Requests', value: stats.vendorRequests, icon: TrendingUp, href: '/admin/vendor-requests', color: '#0891b2', bg: '#ecfeff' },
+    { label: 'Pending Orders',      value: stats.pendingOrders,  icon: Package,    href: '/admin/orders',           color: '#0E2A82', bg: '#EEF2FF' },
+    { label: 'Pending Deliveries',  value: stats.deliveries,     icon: Truck,      href: '/admin/deliveries',       color: '#1B4AD4', bg: '#EEF2FF' },
+    { label: 'Relocations',         value: stats.relocations,    icon: MoveRight,  href: '/admin/relocations',      color: '#2A5EE8', bg: '#EEF2FF' },
+    { label: 'Supply Orders',       value: stats.supplyOrders,   icon: ShoppingBag,href: '/admin/supply-orders',    color: '#1B4AD4', bg: '#EEF2FF' },
+    { label: 'Vendor Applications', value: stats.pendingVendors, icon: Users,      href: '/admin/vendors',          color: '#dc2626', bg: '#fef2f2' },
+    { label: 'Active Vendors',      value: stats.activeVendors,  icon: UserCheck,  href: '/admin/vendors',          color: '#059669', bg: '#f0fdf4' },
+    { label: 'Vendor Requests',     value: stats.vendorRequests, icon: TrendingUp, href: '/admin/vendor-requests',  color: '#0891b2', bg: '#ecfeff' },
   ]
 
   return (
@@ -86,10 +86,10 @@ export default async function AdminDashboardPage() {
         <div className="bg-white rounded-2xl shadow-soft border border-border overflow-hidden">
           <div className="p-5 border-b border-border flex items-center justify-between">
             <h2 className="font-bold text-gray-900 flex items-center gap-2">
-              <Package className="w-4 h-4" style={{ color: '#0A4D2E' }} />
+              <Package className="w-4 h-4" style={{ color: '#0E2A82' }} />
               Recent Procurement Orders
             </h2>
-            <Link href="/admin/orders" className="text-xs font-semibold hover:underline" style={{ color: '#0A4D2E' }}>View all</Link>
+            <Link href="/admin/orders" className="text-xs font-semibold hover:underline" style={{ color: '#0E2A82' }}>View all</Link>
           </div>
           {recent.orders.length === 0 ? (
             <div className="p-8 text-center text-sm text-gray-400">No orders yet</div>
@@ -106,7 +106,7 @@ export default async function AdminDashboardPage() {
                       {order.type === 'nigeria' ? '🇳🇬' : '🌍'} {order.type}
                     </div>
                   </div>
-                  <span className={`status-badge ${order.status === 'pending' ? 'bg-amber-100 text-amber-800' : order.status === 'completed' ? 'bg-green-100 text-green-800' : 'bg-blue-100 text-blue-800'}`}>
+                  <span className={`status-badge ${order.status === 'pending' ? 'bg-amber-100 text-amber-800' : order.status === 'completed' ? 'bg-blue-100 text-blue-800' : 'bg-blue-100 text-blue-800'}`}>
                     {order.status}
                   </span>
                 </div>
@@ -139,7 +139,7 @@ export default async function AdminDashboardPage() {
                       {delivery.type}
                     </div>
                   </div>
-                  <span className={`status-badge ${delivery.status === 'pending' ? 'bg-amber-100 text-amber-800' : 'bg-green-100 text-green-800'}`}>
+                  <span className={`status-badge ${delivery.status === 'pending' ? 'bg-amber-100 text-amber-800' : 'bg-blue-100 text-blue-800'}`}>
                     {delivery.status}
                   </span>
                 </div>
@@ -151,3 +151,4 @@ export default async function AdminDashboardPage() {
     </div>
   )
 }
+

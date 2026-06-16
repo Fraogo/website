@@ -1,4 +1,4 @@
-import type { Metadata } from 'next'
+﻿import type { Metadata } from 'next'
 import VendorRegistrationForm from '@/components/forms/VendorRegistrationForm'
 
 export const metadata: Metadata = {
@@ -11,7 +11,7 @@ export default function RegisterVendorPage() {
     <div className="min-h-screen" style={{ background: '#f8fafc' }}>
       <div className="page-header">
         <div className="section-container pt-8">
-          <p className="text-sm font-bold uppercase tracking-wider mb-2" style={{ color: '#C9A84C' }}>
+          <p className="text-sm font-bold uppercase tracking-wider mb-2" style={{ color: '#93A9F5' }}>
             General Service → Rental
           </p>
           <h1 className="text-3xl lg:text-4xl font-black mb-3">Become a Vendor</h1>
@@ -28,3 +28,4 @@ export default function RegisterVendorPage() {
     </div>
   )
 }
+

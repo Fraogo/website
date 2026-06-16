@@ -1,4 +1,4 @@
-import type { Metadata } from 'next'
+﻿import type { Metadata } from 'next'
 import ProcurementForm from '@/components/forms/ProcurementForm'
 
 export const metadata: Metadata = {
@@ -12,10 +12,10 @@ export default function NigeriaProcurementPage() {
       {/* Header */}
       <div className="page-header">
         <div className="section-container pt-8">
-          <p className="text-sm font-bold uppercase tracking-wider mb-2" style={{ color: '#C9A84C' }}>
+          <p className="text-sm font-bold uppercase tracking-wider mb-2" style={{ color: '#93A9F5' }}>
             Procurement
           </p>
-          <h1 className="text-3xl lg:text-4xl font-black mb-3">🇳🇬 Nigeria Order</h1>
+          <h1 className="text-3xl lg:text-4xl font-black mb-3">Nigeria Order</h1>
           <p className="text-white/70 max-w-xl">
             Need something sourced within Nigeria? Fill in the form below and our team will get back to you within 24–48 hours.
           </p>
@@ -30,3 +30,5 @@ export default function NigeriaProcurementPage() {
     </div>
   )
 }
+
+

@@ -1,4 +1,4 @@
-import { getProcurementOrders } from '@/app/actions/procurement'
+﻿import { getProcurementOrders } from '@/app/actions/procurement'
 import { formatDateTime, getStatusColor } from '@/lib/utils'
 import Link from 'next/link'
 import { Package } from 'lucide-react'
@@ -36,7 +36,7 @@ export default async function AdminOrdersPage({
                 ? 'text-white shadow-sm'
                 : 'bg-white border border-border text-gray-600 hover:border-gray-400'
             }`}
-            style={(s === 'all' && !status) || status === s ? { background: '#0A4D2E' } : {}}
+            style={(s === 'all' && !status) || status === s ? { background: '#0E2A82' } : {}}
           >
             {s}
           </Link>
@@ -93,3 +93,4 @@ export default async function AdminOrdersPage({
     </div>
   )
 }
+

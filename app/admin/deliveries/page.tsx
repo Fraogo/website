@@ -1,4 +1,4 @@
-import { getDeliveryRequests } from '@/app/actions/delivery'
+﻿import { getDeliveryRequests } from '@/app/actions/delivery'
 import { formatDateTime, getStatusColor } from '@/lib/utils'
 import Link from 'next/link'
 import { Truck } from 'lucide-react'
@@ -26,7 +26,7 @@ export default async function AdminDeliveriesPage({
         {['all', 'pending', 'confirmed', 'completed', 'cancelled'].map((s) => (
           <Link key={s} href={s === 'all' ? '/admin/deliveries' : `/admin/deliveries?status=${s}`}
             className={`px-3 py-1.5 rounded-lg text-xs font-semibold capitalize transition-all ${(s === 'all' && !status) || status === s ? 'text-white' : 'bg-white border border-border text-gray-600 hover:border-gray-400'}`}
-            style={(s === 'all' && !status) || status === s ? { background: '#0A4D2E' } : {}}
+            style={(s === 'all' && !status) || status === s ? { background: '#0E2A82' } : {}}
           >{s}</Link>
         ))}
       </div>
@@ -63,3 +63,4 @@ export default async function AdminDeliveriesPage({
     </div>
   )
 }
+

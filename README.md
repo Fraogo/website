@@ -129,7 +129,7 @@ npm install
 ```
 
 ### 2. Create `.env` file
-Copy `.env.example` to `.env` and fill in the database password:
+Copy `.env.example` to `.env` and fill in the database password (URL-encode special characters — `?` becomes `%3F`):
 ```
 DATABASE_URL="postgresql://postgres.weuclpucfwltxqhxsava:YOUR-PASSWORD@aws-0-eu-west-1.pooler.supabase.com:6543/postgres?pgbouncer=true"
 DIRECT_URL="postgresql://postgres.weuclpucfwltxqhxsava:YOUR-PASSWORD@aws-0-eu-west-1.pooler.supabase.com:5432/postgres"

@@ -56,6 +56,47 @@ export const contact = {
   },
 }
 
+// ─── FREQUENTLY ASKED QUESTIONS ───────────────────────────────────────────────
+// Shown on the Contact page. Add, edit, or remove questions freely.
+
+export const faqs: { question: string; answer: string }[] = [
+  {
+    question: 'How do I place an order or request?',
+    answer:
+      'Pick the service you need — Procurement, Logistics, or General Services — and fill in the short form. Our team reviews it and contacts you within 24–48 hours to confirm the details and next steps.',
+  },
+  {
+    question: 'Do I have to pay upfront?',
+    answer:
+      'No. Submitting a request is free and commits you to nothing. We confirm the details and pricing with you first, then proceed once you approve.',
+  },
+  {
+    question: 'How long does it take to hear back?',
+    answer:
+      'We respond to every request within 24–48 hours. Actual sourcing or delivery timelines depend on the service and route involved, which we confirm when we reach out.',
+  },
+  {
+    question: 'Where do you operate?',
+    answer:
+      'We are based in Ikeja, Lagos and work across Nigeria. For procurement and logistics we also handle international sourcing and shipping.',
+  },
+  {
+    question: 'How do I track my order?',
+    answer:
+      'Once your order is confirmed we give you a reference number. Enter it on the Track page to see real-time status and updates.',
+  },
+  {
+    question: 'Are your vendors verified?',
+    answer:
+      'Yes. Vendors are vetted before they join our network, and every booking is mediated through Fraogo for your protection — payments and arrangements should always go through us.',
+  },
+  {
+    question: 'What does it cost?',
+    answer:
+      'Pricing depends on your specific request, and we confirm a clear quote before anything moves. For vendor hires, Fraogo charges a 10% service fee on the agreed amount.',
+  },
+]
+
 // ─── TEAM MEMBERS ─────────────────────────────────────────────────────────────
 //
 // PHOTOS: Save square images (minimum 400×400px) as:

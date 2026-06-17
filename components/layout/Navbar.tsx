@@ -3,58 +3,46 @@
 import { useState, useRef, useEffect } from 'react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
-import { Menu, X, ChevronDown, Package, Truck, Wrench, MapPin, Settings } from 'lucide-react'
+import { Menu, X, ChevronDown, MapPin, ArrowRight } from 'lucide-react'
 import { cn } from '@/lib/utils'
 
 const navItems = [
   {
     label: 'Procurement',
-    icon: Package,
     children: [
-      { label: 'Nigeria Orders',       href: '/procurement/nigeria',       description: 'Source products within Nigeria' },
-      { label: 'International Orders', href: '/procurement/international', description: 'Import from anywhere in the world' },
+      { label: 'Nigeria Orders',      href: '/procurement/nigeria',       description: 'Source products within Nigeria' },
+      { label: 'International Orders', href: '/procurement/international',  description: 'Import from anywhere in the world' },
     ],
   },
   {
     label: 'Logistics',
-    icon: Truck,
     children: [
-      { label: 'Send Abroad',      href: '/logistics/delivery',    description: 'Ship items internationally' },
-      { label: 'Local Transport',  href: '/logistics/relocation',  description: 'Trucks & freight within Nigeria' },
+      { label: 'Send Abroad',     href: '/logistics/delivery',   description: 'Ship items internationally' },
+      { label: 'Local Transport', href: '/logistics/relocation', description: 'Trucks & freight within Nigeria' },
     ],
   },
   {
     label: 'Services',
-    icon: Wrench,
     children: [
-      { label: 'Browse & Hire',  href: '/general-service/rental', description: 'Find vendors for events & projects' },
-      { label: 'Supply Orders',  href: '/general-service/supply', description: 'Bulk supplies delivered to you' },
+      { label: 'Browse & Hire', href: '/general-service/rental', description: 'Find vendors for events & projects' },
+      { label: 'Supply Orders', href: '/general-service/supply', description: 'Bulk supplies delivered to you' },
     ],
   },
 ]
 
-function DropdownMenu({ items, isOpen }: { items: typeof navItems[0]['children']; isOpen: boolean }) {
-  if (!isOpen) return null
-  return (
-    <div className="nav-dropdown">
-      {items.map((item) => (
-        <Link key={item.href} href={item.href} className="nav-dropdown-item">
-          <span className="font-semibold text-sm">{item.label}</span>
-          <span className="text-xs text-gray-400 mt-0.5">{item.description}</span>
-        </Link>
-      ))}
-    </div>
-  )
-}
+const simpleLinks = [
+  { label: 'About',   href: '/about' },
+  { label: 'Contact', href: '/contact' },
+]
 
 export default function Navbar() {
-  const [openDropdown, setOpenDropdown]   = useState<string | null>(null)
-  const [mobileOpen, setMobileOpen]       = useState(false)
-  const [scrolled, setScrolled]           = useState(false)
-  const [logoError, setLogoError]         = useState(false)
-  const pathname  = usePathname()
-  const navRef    = useRef<HTMLDivElement>(null)
-  const prevPath  = useRef(pathname)
+  const [openDropdown, setOpenDropdown] = useState<string | null>(null)
+  const [mobileOpen, setMobileOpen]     = useState(false)
+  const [scrolled, setScrolled]         = useState(false)
+  const [logoError, setLogoError]       = useState(false)
+  const pathname = usePathname()
+  const navRef   = useRef<HTMLElement>(null)
+  const prevPath = useRef(pathname)
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 20)
@@ -87,13 +75,16 @@ export default function Navbar() {
   const isAdminPage = pathname.startsWith('/admin')
   const solidBg = scrolled || isAdminPage || mobileOpen
 
+  const linkClass = cn(
+    'px-3 py-2 rounded-lg text-sm font-semibold transition-colors',
+    solidBg ? 'text-gray-700 hover:text-[#1B4AD4] hover:bg-blue-50' : 'text-white/90 hover:text-white hover:bg-white/10'
+  )
+
   return (
     <header
       className={cn(
         'fixed top-0 left-0 right-0 z-50 transition-all duration-300',
-        solidBg
-          ? 'bg-white/97 backdrop-blur-md shadow-soft border-b border-gray-100'
-          : 'bg-transparent'
+        solidBg ? 'bg-white/95 backdrop-blur-md shadow-soft border-b border-gray-100' : 'bg-transparent'
       )}
     >
       <nav ref={navRef} className="section-container">
@@ -122,75 +113,74 @@ export default function Navbar() {
           {/* ── Desktop Nav ── */}
           <div className="hidden lg:flex items-center gap-0.5">
             {navItems.map((item) => (
-              <div key={item.label} className="relative">
+              <div
+                key={item.label}
+                className="relative"
+                onMouseEnter={() => setOpenDropdown(item.label)}
+                onMouseLeave={() => setOpenDropdown(null)}
+              >
                 <button
                   onClick={() => setOpenDropdown(openDropdown === item.label ? null : item.label)}
                   aria-haspopup="true"
                   aria-expanded={openDropdown === item.label}
-                  className={cn(
-                    'flex items-center gap-1.5 px-3.5 py-2 rounded-lg text-sm font-semibold transition-all duration-150',
-                    solidBg
-                      ? 'text-gray-700 hover:text-[#1B4AD4] hover:bg-blue-50'
-                      : 'text-white/90 hover:text-white hover:bg-white/10'
-                  )}
+                  className={cn(linkClass, 'flex items-center gap-1')}
                 >
-                  <item.icon className="w-4 h-4" />
                   {item.label}
                   <ChevronDown className={cn('w-3.5 h-3.5 transition-transform duration-200', openDropdown === item.label && 'rotate-180')} />
                 </button>
-                <DropdownMenu items={item.children} isOpen={openDropdown === item.label} />
+
+                {/* Dropdown — pt-2 makes a hover bridge so it doesn't flicker */}
+                {openDropdown === item.label && (
+                  <div className="absolute top-full left-0 pt-2 min-w-[16rem] z-50">
+                    <div className="bg-white rounded-xl border border-gray-100 overflow-hidden shadow-[0_12px_40px_rgba(7,15,43,0.14)]">
+                      {item.children.map((child) => (
+                        <Link
+                          key={child.href}
+                          href={child.href}
+                          className="group/item block px-4 py-3 border-b border-gray-50 last:border-0 hover:bg-blue-50 transition-colors"
+                        >
+                          <span className="flex items-center justify-between font-semibold text-sm text-gray-800 group-hover/item:text-[#1B4AD4]">
+                            {child.label}
+                            <ArrowRight className="w-3.5 h-3.5 opacity-0 -translate-x-1 group-hover/item:opacity-100 group-hover/item:translate-x-0 transition-all text-[#1B4AD4]" />
+                          </span>
+                          <span className="block text-xs text-gray-400 mt-0.5">{child.description}</span>
+                        </Link>
+                      ))}
+                    </div>
+                  </div>
+                )}
               </div>
             ))}
 
-            <Link
-              href="/about"
-              className={cn(
-                'px-3.5 py-2 rounded-lg text-sm font-semibold transition-all duration-150',
-                solidBg ? 'text-gray-700 hover:text-[#1B4AD4] hover:bg-blue-50' : 'text-white/90 hover:text-white hover:bg-white/10'
-              )}
-            >
-              About
-            </Link>
-
-            <Link
-              href="/contact"
-              className={cn(
-                'px-3.5 py-2 rounded-lg text-sm font-semibold transition-all duration-150',
-                solidBg ? 'text-gray-700 hover:text-[#1B4AD4] hover:bg-blue-50' : 'text-white/90 hover:text-white hover:bg-white/10'
-              )}
-            >
-              Contact
-            </Link>
+            {simpleLinks.map((l) => (
+              <Link key={l.href} href={l.href} className={linkClass}>{l.label}</Link>
+            ))}
           </div>
 
           {/* ── Right side ── */}
-          <div className="flex items-center gap-2">
-            {/* Track Order */}
+          <div className="flex items-center gap-2 lg:gap-3">
             <Link
               href="/track"
               className={cn(
-                'hidden lg:flex items-center gap-1.5 px-4 py-2 rounded-lg text-sm font-semibold border transition-all',
-                solidBg
-                  ? 'border-[#1B4AD4] text-[#1B4AD4] hover:bg-[#1B4AD4] hover:text-white'
-                  : 'border-white/50 text-white hover:bg-white hover:text-[#1B4AD4]'
+                'hidden lg:flex items-center gap-1.5 text-sm font-semibold transition-colors',
+                solidBg ? 'text-gray-600 hover:text-[#1B4AD4]' : 'text-white/80 hover:text-white'
               )}
             >
-              <MapPin className="w-3.5 h-3.5" />
-              Track Order
+              <MapPin className="w-4 h-4" />
+              Track
             </Link>
 
-            {/* Admin (subtle) */}
             <Link
-              href="/admin/login"
+              href="/procurement/nigeria"
               className={cn(
-                'hidden lg:flex items-center gap-1 px-2.5 py-1.5 rounded-lg text-xs font-medium transition-all border',
+                'hidden sm:inline-flex items-center gap-1.5 px-4 py-2 rounded-lg text-sm font-bold transition-all',
                 solidBg
-                  ? 'text-gray-400 border-gray-200 hover:text-gray-600'
-                  : 'text-white/40 border-white/10 hover:text-white/70'
+                  ? 'bg-[#1B4AD4] text-white hover:bg-[#2A5EE8] shadow-sm'
+                  : 'bg-white text-[#1B4AD4] hover:bg-blue-50'
               )}
             >
-              <Settings className="w-3 h-3" />
-              Admin
+              Start an Order
+              <ArrowRight className="w-4 h-4" />
             </Link>
 
             {/* Mobile burger */}
@@ -201,6 +191,7 @@ export default function Navbar() {
                 solidBg ? 'text-gray-700 hover:bg-gray-100' : 'text-white hover:bg-white/10'
               )}
               aria-label="Toggle menu"
+              aria-expanded={mobileOpen}
             >
               {mobileOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
             </button>
@@ -209,7 +200,7 @@ export default function Navbar() {
 
         {/* ── Mobile Menu ── */}
         {mobileOpen && (
-          <div className="lg:hidden bg-white border-t border-gray-100 pb-4">
+          <div className="lg:hidden bg-white border-t border-gray-100 pb-4 max-h-[calc(100vh-4rem)] overflow-y-auto">
             <div className="py-2 space-y-0.5">
               {navItems.map((item) => (
                 <div key={item.label}>
@@ -219,10 +210,7 @@ export default function Navbar() {
                     aria-expanded={openDropdown === item.label}
                     className="w-full flex items-center justify-between px-4 py-3 text-sm font-semibold text-gray-800 hover:bg-blue-50 hover:text-[#1B4AD4] transition-colors"
                   >
-                    <span className="flex items-center gap-2">
-                      <item.icon className="w-4 h-4" />
-                      {item.label}
-                    </span>
+                    {item.label}
                     <ChevronDown className={cn('w-4 h-4 transition-transform', openDropdown === item.label && 'rotate-180')} />
                   </button>
                   {openDropdown === item.label && (
@@ -238,15 +226,22 @@ export default function Navbar() {
                 </div>
               ))}
 
-              <Link href="/about"   className="flex items-center px-4 py-3 text-sm font-semibold text-gray-800 hover:bg-blue-50 hover:text-[#1B4AD4] transition-colors">About Us</Link>
-              <Link href="/contact" className="flex items-center px-4 py-3 text-sm font-semibold text-gray-800 hover:bg-blue-50 hover:text-[#1B4AD4] transition-colors">Contact</Link>
-              <Link href="/track"   className="flex items-center px-4 py-3 text-sm font-semibold text-gray-800 hover:bg-blue-50 hover:text-[#1B4AD4] transition-colors">
-                <MapPin className="w-4 h-4 mr-2" /> Track Order
+              {simpleLinks.map((l) => (
+                <Link key={l.href} href={l.href} className="flex items-center px-4 py-3 text-sm font-semibold text-gray-800 hover:bg-blue-50 hover:text-[#1B4AD4] transition-colors">
+                  {l.label}
+                </Link>
+              ))}
+              <Link href="/track" className="flex items-center gap-2 px-4 py-3 text-sm font-semibold text-gray-800 hover:bg-blue-50 hover:text-[#1B4AD4] transition-colors">
+                <MapPin className="w-4 h-4" /> Track Order
               </Link>
 
-              <div className="px-4 pt-3 border-t border-gray-100 mt-1">
-                <Link href="/admin/login" className="text-xs text-gray-400 hover:text-gray-600 flex items-center gap-2">
-                  <Settings className="w-3.5 h-3.5" /> Admin Login
+              <div className="px-4 pt-3">
+                <Link
+                  href="/procurement/nigeria"
+                  className="btn-primary w-full justify-center py-3 rounded-xl text-sm"
+                >
+                  Start an Order
+                  <ArrowRight className="w-4 h-4" />
                 </Link>
               </div>
             </div>

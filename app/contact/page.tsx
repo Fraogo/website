@@ -2,9 +2,10 @@
 
 import { useState } from 'react'
 import { Send, Loader2, CheckCircle2, MapPin } from 'lucide-react'
-import { contact, company } from '@/content'
+import { contact, company, faqs } from '@/content'
 import { submitContactForm, type ContactFormData } from '@/app/actions/contact'
 import { InstagramIcon, FacebookIcon, TwitterIcon, LinkedInIcon, TikTokIcon } from '@/components/ui/social-icons'
+import FaqAccordion from '@/components/contact/FaqAccordion'
 
 const socials = [
   { href: contact.social.instagram, Icon: InstagramIcon, label: 'Instagram' },
@@ -259,6 +260,31 @@ export default function ContactPage() {
           </div>
         </div>
       </section>
+
+      {/* ── FAQ ── */}
+      {faqs.length > 0 && (
+        <section className="section-padding border-t border-gray-100" style={{ background: '#F5F7FF' }}>
+          <div className="section-container">
+            <div className="max-w-3xl mx-auto">
+              <p className="text-xs font-bold uppercase tracking-widest mb-3 text-[#1B4AD4]">FAQ</p>
+              <h2 className="text-2xl lg:text-3xl font-black text-gray-900 mb-8">Frequently asked questions</h2>
+              <FaqAccordion faqs={faqs} />
+              <p className="text-sm text-gray-500 mt-8">
+                Still have a question? Use the form above
+                {whatsappUrl && (
+                  <>
+                    {' '}or message us on{' '}
+                    <a href={whatsappUrl} target="_blank" rel="noopener noreferrer" className="font-bold text-[#1B4AD4] hover:underline">
+                      WhatsApp
+                    </a>
+                  </>
+                )}
+                .
+              </p>
+            </div>
+          </div>
+        </section>
+      )}
 
       {/* ── Find Us (map) ── */}
       {mapSrc && (

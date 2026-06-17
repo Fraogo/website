@@ -27,9 +27,17 @@
 - Full-bleed photography with CSS gradient fallback (no JS image loading needed)
 - Text left-aligned, never centred hero layout
 
-## Brand
-- Colours: `#070F2B` (darkest) · `#0E2A82` (deep) · `#1B4AD4` (primary) · `#2A5EE8` (mid) · `#EEF2FF` (pale)
-- Font: Plus Jakarta Sans (Google Fonts via CSS `@import` in globals.css)
+## Brand Assets
+Full brand reference lives in `brand/` — read these before making any visual changes:
+- `brand/colors.md` — full colour palette, gradient formulas, usage rules
+- `brand/typography.md` — Plus Jakarta Sans, weights, responsive size scale
+- `brand/logo.md` — logo variants, placement, clearspace, fallback text mark
+- `brand/voice.md` — tone, writing rules, what copy is banned
+
+Quick reference:
+- Colours: `#070F2B` · `#0E2A82` · `#1B4AD4` (primary) · `#2A5EE8` · `#EEF2FF`
+- Font: Plus Jakarta Sans only — no other typefaces
+- RC8967311 appears in footer prose and About page story only — never as a badge
 
 ## Key Files
 - `content/index.ts` — all site copy, contact info, team, company details. Edit here for text changes.

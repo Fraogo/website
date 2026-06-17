@@ -13,6 +13,7 @@ interface PostData {
   excerpt: string | null
   content: string
   coverImage: string | null
+  author: string | null
   published: boolean
 }
 
@@ -36,6 +37,7 @@ export default function BlogEditForm({ post }: { post: PostData }) {
         excerpt:    (data.get('excerpt') as string) || undefined,
         content:    data.get('content') as string,
         coverImage: (data.get('coverImage') as string) || undefined,
+        author:     (data.get('author') as string) || undefined,
         published:  data.get('published') === 'true',
       })
 
@@ -82,6 +84,11 @@ export default function BlogEditForm({ post }: { post: PostData }) {
           <div>
             <label className="form-label">Short Summary / Excerpt</label>
             <textarea name="excerpt" rows={2} defaultValue={post.excerpt ?? ''} className="form-input resize-none" />
+          </div>
+
+          <div>
+            <label className="form-label">Author <span className="text-gray-400 font-normal">(name shown on the post)</span></label>
+            <input name="author" type="text" defaultValue={post.author ?? ''} placeholder="e.g. Franklin Obuke" className="form-input" />
           </div>
 
           <div>

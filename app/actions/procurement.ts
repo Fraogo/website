@@ -82,3 +82,15 @@ export async function updateProcurementStatus(id: string, status: string) {
     data: { status },
   })
 }
+
+export async function deleteProcurementOrder(id: string) {
+  await requireAdmin()
+  try {
+    await prisma.procurementOrder.delete({ where: { id } })
+    revalidatePath('/admin/orders')
+    return { success: true }
+  } catch (error) {
+    console.error('[Procurement] Delete error:', error)
+    return { success: false, error: 'Failed to delete order.' }
+  }
+}

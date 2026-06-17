@@ -3,6 +3,7 @@ import './globals.css'
 import Navbar from '@/components/layout/Navbar'
 import Footer from '@/components/layout/Footer'
 import FloatingWhatsApp from '@/components/ui/floating-whatsapp'
+import PublicChrome from '@/components/layout/PublicChrome'
 import { Toaster } from '@/components/ui/sonner'
 import { company, contact } from '@/content'
 
@@ -34,8 +35,10 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <body className="min-h-screen flex flex-col font-sans antialiased">
         <Navbar />
         <main className="flex-1">{children}</main>
-        <Footer />
-        <FloatingWhatsApp />
+        <PublicChrome>
+          <Footer />
+          <FloatingWhatsApp />
+        </PublicChrome>
         <Toaster position="top-center" richColors />
       </body>
     </html>

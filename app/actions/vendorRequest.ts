@@ -83,3 +83,15 @@ export async function getVendorRequests() {
     orderBy: { createdAt: 'desc' },
   })
 }
+
+export async function deleteVendorRequest(id: string) {
+  await requireAdmin()
+  try {
+    await prisma.vendorRequest.delete({ where: { id } })
+    revalidatePath('/admin/vendor-requests')
+    return { success: true }
+  } catch (error) {
+    console.error('[VendorRequest] Delete error:', error)
+    return { success: false, error: 'Failed to delete request.' }
+  }
+}

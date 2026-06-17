@@ -25,6 +25,7 @@ export default function NewBlogPostPage() {
         excerpt:    (data.get('excerpt') as string) || undefined,
         content:    data.get('content') as string,
         coverImage: (data.get('coverImage') as string) || undefined,
+        author:     (data.get('author') as string) || undefined,
         published:  data.get('published') === 'true',
       })
 
@@ -75,6 +76,16 @@ export default function NewBlogPostPage() {
               rows={2}
               placeholder="One or two sentences summarising what the article is about."
               className="form-input resize-none"
+            />
+          </div>
+
+          <div>
+            <label className="form-label">Author <span className="text-gray-400 font-normal">(name shown on the post)</span></label>
+            <input
+              name="author"
+              type="text"
+              placeholder="e.g. Franklin Obuke"
+              className="form-input"
             />
           </div>
 

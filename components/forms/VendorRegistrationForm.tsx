@@ -8,6 +8,7 @@ import { AlertCircle, AlertTriangle, CheckCircle2, Loader2, Upload, X } from 'lu
 import { registerVendor } from '@/app/actions/vendor'
 import { supabaseClient, VENDOR_DOCUMENTS_BUCKET } from '@/lib/storage'
 import { cn } from '@/lib/utils'
+import PhoneField from '@/components/ui/PhoneField'
 
 const BUSINESS_TYPES = ['Event Space', 'Protocol Service', 'Catering & Small Chops', 'Make Up', 'Other']
 
@@ -144,7 +145,8 @@ export default function VendorRegistrationForm() {
 
           <div>
             <label className="form-label" htmlFor="vendor-phone">Phone Number *</label>
-            <input id="vendor-phone" type="tel" className={cn('form-input', errors.phone && 'error')} placeholder="+234 800 000 0000" {...register('phone')} />
+            <PhoneField id="vendor-phone" value={watch('phone') ?? ''} onChange={(v) => setValue('phone', v, { shouldValidate: true })} error={!!errors.phone} />
+            <input type="hidden" {...register('phone')} />
             {errors.phone && <p className="form-error"><AlertCircle className="w-3 h-3" />{errors.phone.message}</p>}
           </div>
 

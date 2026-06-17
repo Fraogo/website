@@ -7,6 +7,7 @@ import { useState } from 'react'
 import { AlertCircle, AlertTriangle, CheckCircle2, Loader2 } from 'lucide-react'
 import { submitDeliveryRequest } from '@/app/actions/delivery'
 import { cn } from '@/lib/utils'
+import PhoneField from '@/components/ui/PhoneField'
 
 const formSchema = z.object({
   type: z.enum(['local', 'international']),
@@ -36,6 +37,7 @@ export default function DeliveryForm({ defaultType = 'local' }: DeliveryFormProp
     register,
     handleSubmit,
     watch,
+    setValue,
     formState: { errors, isSubmitting },
   } = useForm<FormValues>({
     resolver: zodResolver(formSchema),
@@ -116,7 +118,8 @@ export default function DeliveryForm({ defaultType = 'local' }: DeliveryFormProp
           </div>
           <div>
             <label className="form-label" htmlFor="delivery-sender-phone">Phone Number *</label>
-            <input id="delivery-sender-phone" type="tel" className={cn('form-input', errors.senderPhone && 'error')} placeholder="+234 800 000 0000" {...register('senderPhone')} />
+            <PhoneField id="delivery-sender-phone" value={watch('senderPhone') ?? ''} onChange={(v) => setValue('senderPhone', v, { shouldValidate: true })} error={!!errors.senderPhone} />
+            <input type="hidden" {...register('senderPhone')} />
             {errors.senderPhone && <p className="form-error"><AlertCircle className="w-3 h-3" />{errors.senderPhone.message}</p>}
           </div>
         </div>
@@ -187,7 +190,8 @@ export default function DeliveryForm({ defaultType = 'local' }: DeliveryFormProp
           </div>
           <div>
             <label className="form-label" htmlFor="receiver-contact">Receiver&apos;s Contact Number *</label>
-            <input id="receiver-contact" type="tel" className={cn('form-input', errors.receiverContact && 'error')} placeholder="+234 800 000 0000" {...register('receiverContact')} />
+            <PhoneField id="receiver-contact" value={watch('receiverContact') ?? ''} onChange={(v) => setValue('receiverContact', v, { shouldValidate: true })} error={!!errors.receiverContact} />
+            <input type="hidden" {...register('receiverContact')} />
             {errors.receiverContact && <p className="form-error"><AlertCircle className="w-3 h-3" />{errors.receiverContact.message}</p>}
           </div>
         </div>

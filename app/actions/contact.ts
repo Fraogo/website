@@ -76,3 +76,15 @@ export async function markContactRead(id: string, status: 'read' | 'responded') 
   await prisma.contactInquiry.update({ where: { id }, data: { status } })
   revalidatePath('/admin/contacts')
 }
+
+export async function deleteContactInquiry(id: string) {
+  await requireAdmin()
+  try {
+    await prisma.contactInquiry.delete({ where: { id } })
+    revalidatePath('/admin/contacts')
+    return { success: true }
+  } catch (error) {
+    console.error('[Contact] Delete error:', error)
+    return { success: false, error: 'Failed to delete message.' }
+  }
+}

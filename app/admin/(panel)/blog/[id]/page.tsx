@@ -18,7 +18,7 @@ export default async function EditBlogPostPage({ params }: Props) {
 
   const post = await prisma.blogPost.findUnique({
     where: { id },
-    select: { id: true, title: true, slug: true, excerpt: true, content: true, coverImage: true, published: true },
+    select: { id: true, title: true, slug: true, excerpt: true, content: true, coverImage: true, author: true, published: true },
   })
 
   if (!post) notFound()

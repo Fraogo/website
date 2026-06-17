@@ -7,6 +7,7 @@ import { useState } from 'react'
 import { AlertCircle, AlertTriangle, CheckCircle2, Loader2 } from 'lucide-react'
 import { submitRelocationRequest } from '@/app/actions/relocation'
 import { cn } from '@/lib/utils'
+import PhoneField from '@/components/ui/PhoneField'
 
 const formSchema = z.object({
   customerName: z.string().min(2, 'Full name is required'),
@@ -29,6 +30,7 @@ export default function RelocationForm() {
     register,
     handleSubmit,
     watch,
+    setValue,
     formState: { errors, isSubmitting },
   } = useForm<FormValues>({
     resolver: zodResolver(formSchema),
@@ -85,7 +87,8 @@ export default function RelocationForm() {
           </div>
           <div>
             <label className="form-label" htmlFor="reloc-phone">Phone Number *</label>
-            <input id="reloc-phone" type="tel" className={cn('form-input', errors.customerPhone && 'error')} placeholder="+234 800 000 0000" {...register('customerPhone')} />
+            <PhoneField id="reloc-phone" value={watch('customerPhone') ?? ''} onChange={(v) => setValue('customerPhone', v, { shouldValidate: true })} error={!!errors.customerPhone} />
+            <input type="hidden" {...register('customerPhone')} />
             {errors.customerPhone && <p className="form-error"><AlertCircle className="w-3 h-3" />{errors.customerPhone.message}</p>}
           </div>
         </div>

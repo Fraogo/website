@@ -1,8 +1,10 @@
-import { getAllTrackingRecords } from '@/app/actions/tracking'
+import { getAllTrackingRecords, deleteTrackingRecord } from '@/app/actions/tracking'
 import { formatDateTime } from '@/lib/utils'
 import { MapPin, Plus } from 'lucide-react'
 import Link from 'next/link'
 import type { Metadata } from 'next'
+import DeleteButton from '@/components/admin/DeleteButton'
+import RefreshButton from '@/components/admin/RefreshButton'
 
 export const metadata: Metadata = { title: 'Order Tracking — Admin' }
 export const dynamic = 'force-dynamic'
@@ -37,12 +39,15 @@ export default async function AdminTrackingPage() {
             <p className="text-sm text-gray-400">{records.length} total records</p>
           </div>
         </div>
-        <Link
-          href="/admin/tracking/new"
-          className="btn-primary px-4 py-2.5 rounded-xl text-sm flex items-center gap-2"
-        >
-          <Plus className="w-4 h-4" /> New Tracking Record
-        </Link>
+        <div className="flex items-center gap-2">
+          <RefreshButton />
+          <Link
+            href="/admin/tracking/new"
+            className="btn-primary px-4 py-2.5 rounded-xl text-sm flex items-center gap-2"
+          >
+            <Plus className="w-4 h-4" /> New Tracking Record
+          </Link>
+        </div>
       </div>
 
       {records.length === 0 ? (
@@ -89,13 +94,16 @@ export default async function AdminTrackingPage() {
                   <td className="px-5 py-3.5 hidden lg:table-cell text-gray-400 text-xs">
                     {formatDateTime(record.createdAt)}
                   </td>
-                  <td className="px-5 py-3.5 text-right">
-                    <Link
-                      href={`/admin/tracking/${record.id}`}
-                      className="text-xs font-semibold text-[#1B4AD4] hover:underline"
-                    >
-                      Update →
-                    </Link>
+                  <td className="px-5 py-3.5">
+                    <div className="flex items-center justify-end gap-3">
+                      <Link
+                        href={`/admin/tracking/${record.id}`}
+                        className="text-xs font-semibold text-[#1B4AD4] hover:underline"
+                      >
+                        Update →
+                      </Link>
+                      <DeleteButton id={record.id} action={deleteTrackingRecord} confirmText="Delete this tracking record permanently?" />
+                    </div>
                   </td>
                 </tr>
               ))}

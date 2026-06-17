@@ -1,8 +1,10 @@
-﻿import { getDeliveryRequests } from '@/app/actions/delivery'
+﻿import { getDeliveryRequests, deleteDeliveryRequest } from '@/app/actions/delivery'
 import { formatDateTime, getStatusColor } from '@/lib/utils'
 import Link from 'next/link'
 import { Truck } from 'lucide-react'
 import type { Metadata } from 'next'
+import DeleteButton from '@/components/admin/DeleteButton'
+import RefreshButton from '@/components/admin/RefreshButton'
 
 export const metadata: Metadata = { title: 'Delivery Requests' }
 export const dynamic = 'force-dynamic'
@@ -17,9 +19,12 @@ export default async function AdminDeliveriesPage({
 
   return (
     <div className="space-y-6">
-      <div>
-        <h1 className="text-2xl font-black text-gray-900">Delivery Requests</h1>
-        <p className="text-sm text-gray-500 mt-1">{deliveries.length} request{deliveries.length !== 1 ? 's' : ''}</p>
+      <div className="flex items-center justify-between gap-3">
+        <div>
+          <h1 className="text-2xl font-black text-gray-900">Delivery Requests</h1>
+          <p className="text-sm text-gray-500 mt-1">{deliveries.length} request{deliveries.length !== 1 ? 's' : ''}</p>
+        </div>
+        <RefreshButton />
       </div>
 
       <div className="flex gap-2">
@@ -39,7 +44,7 @@ export default async function AdminDeliveriesPage({
             <table className="data-table">
               <thead>
                 <tr>
-                  <th>Sender</th><th>Email</th><th>Type</th><th>Destination</th><th>Receiver</th><th>Weight</th><th>Status</th><th>Date</th>
+                  <th>Sender</th><th>Email</th><th>Type</th><th>Destination</th><th>Receiver</th><th>Weight</th><th>Status</th><th>Date</th><th></th>
                 </tr>
               </thead>
               <tbody>
@@ -53,6 +58,7 @@ export default async function AdminDeliveriesPage({
                     <td className="text-gray-600 text-xs whitespace-nowrap">{d.itemWeight} {d.weightUnit}</td>
                     <td><span className={`status-badge ${getStatusColor(d.status)}`}>{d.status}</span></td>
                     <td className="text-gray-500 text-xs whitespace-nowrap">{formatDateTime(d.createdAt)}</td>
+                    <td><DeleteButton id={d.id} action={deleteDeliveryRequest} confirmText="Delete this request permanently?" /></td>
                   </tr>
                 ))}
               </tbody>

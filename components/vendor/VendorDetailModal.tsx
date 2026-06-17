@@ -8,6 +8,7 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { z } from 'zod'
 import { submitVendorRequest } from '@/app/actions/vendorRequest'
 import { cn } from '@/lib/utils'
+import PhoneField from '@/components/ui/PhoneField'
 
 interface VendorImage {
   id: string
@@ -50,6 +51,8 @@ export default function VendorDetailModal({ vendor, onClose }: VendorDetailModal
   const {
     register,
     handleSubmit,
+    watch,
+    setValue,
     formState: { errors, isSubmitting },
   } = useForm<RequestFormValues>({
     resolver: zodResolver(requestSchema),
@@ -174,7 +177,8 @@ export default function VendorDetailModal({ vendor, onClose }: VendorDetailModal
                   </div>
                   <div>
                     <label className="form-label text-xs" htmlFor="req-phone">Phone Number *</label>
-                    <input id="req-phone" type="tel" className={cn('form-input py-2.5 text-sm', errors.customerPhone && 'error')} placeholder="+234 800 000 0000" {...register('customerPhone')} />
+                    <PhoneField id="req-phone" value={watch('customerPhone') ?? ''} onChange={(v) => setValue('customerPhone', v, { shouldValidate: true })} error={!!errors.customerPhone} />
+                    <input type="hidden" {...register('customerPhone')} />
                     {errors.customerPhone && <p className="form-error"><AlertCircle className="w-3 h-3" />{errors.customerPhone.message}</p>}
                   </div>
                   <div>

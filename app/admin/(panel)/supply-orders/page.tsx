@@ -1,8 +1,10 @@
-﻿import { getSupplyOrders } from '@/app/actions/supply'
+﻿import { getSupplyOrders, deleteSupplyOrder } from '@/app/actions/supply'
 import { formatDateTime, formatDate, getStatusColor } from '@/lib/utils'
 import Link from 'next/link'
 import { ShoppingBag } from 'lucide-react'
 import type { Metadata } from 'next'
+import DeleteButton from '@/components/admin/DeleteButton'
+import RefreshButton from '@/components/admin/RefreshButton'
 
 export const metadata: Metadata = { title: 'Supply Orders' }
 export const dynamic = 'force-dynamic'
@@ -15,9 +17,12 @@ export default async function AdminSupplyOrdersPage({
 
   return (
     <div className="space-y-6">
-      <div>
-        <h1 className="text-2xl font-black text-gray-900">Supply Orders</h1>
-        <p className="text-sm text-gray-500 mt-1">{orders.length} order{orders.length !== 1 ? 's' : ''}</p>
+      <div className="flex items-center justify-between gap-3">
+        <div>
+          <h1 className="text-2xl font-black text-gray-900">Supply Orders</h1>
+          <p className="text-sm text-gray-500 mt-1">{orders.length} order{orders.length !== 1 ? 's' : ''}</p>
+        </div>
+        <RefreshButton />
       </div>
 
       <div className="flex gap-2">
@@ -36,7 +41,7 @@ export default async function AdminSupplyOrdersPage({
           <div className="overflow-x-auto">
             <table className="data-table">
               <thead>
-                <tr><th>Customer</th><th>Items</th><th>Destination</th><th>Preferred Date</th><th>Status</th><th>Submitted</th></tr>
+                <tr><th>Customer</th><th>Items</th><th>Destination</th><th>Preferred Date</th><th>Status</th><th>Submitted</th><th></th></tr>
               </thead>
               <tbody>
                 {orders.map((o: any) => {
@@ -54,6 +59,7 @@ export default async function AdminSupplyOrdersPage({
                       <td className="text-xs whitespace-nowrap">{formatDate(o.preferredDate)}</td>
                       <td><span className={`status-badge ${getStatusColor(o.status)}`}>{o.status}</span></td>
                       <td className="text-xs text-gray-500 whitespace-nowrap">{formatDateTime(o.createdAt)}</td>
+                      <td><DeleteButton id={o.id} action={deleteSupplyOrder} confirmText="Delete this order permanently?" /></td>
                     </tr>
                   )
                 })}

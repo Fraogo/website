@@ -7,6 +7,7 @@ import { z } from 'zod'
 import { AlertCircle, AlertTriangle, CheckCircle2, Loader2, ShoppingBag } from 'lucide-react'
 import { submitSupplyOrder } from '@/app/actions/supply'
 import { getMinDeliveryDate, cn } from '@/lib/utils'
+import PhoneField from '@/components/ui/PhoneField'
 
 const SUPPLY_ITEMS = [
   { id: 'event-supplies', label: 'Supply for Events', emoji: '🎉', description: 'Generic event supplies and materials' },
@@ -45,6 +46,8 @@ export default function SupplyOrderForm() {
   const {
     register,
     handleSubmit,
+    watch,
+    setValue,
     formState: { errors, isSubmitting },
   } = useForm<FormValues>({
     resolver: zodResolver(formSchema),
@@ -202,7 +205,8 @@ export default function SupplyOrderForm() {
           </div>
           <div>
             <label className="form-label" htmlFor="supply-phone">Phone Number *</label>
-            <input id="supply-phone" type="tel" className={cn('form-input', errors.customerPhone && 'error')} placeholder="+234 800 000 0000" {...register('customerPhone')} />
+            <PhoneField id="supply-phone" value={watch('customerPhone') ?? ''} onChange={(v) => setValue('customerPhone', v, { shouldValidate: true })} error={!!errors.customerPhone} />
+            <input type="hidden" {...register('customerPhone')} />
             {errors.customerPhone && <p className="form-error"><AlertCircle className="w-3 h-3" />{errors.customerPhone.message}</p>}
           </div>
           <div>

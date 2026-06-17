@@ -19,6 +19,7 @@ const postSchema = z.object({
   excerpt:    z.string().optional(),
   content:    z.string().min(10),
   coverImage: z.string().url().optional().or(z.literal('')),
+  author:     z.string().optional(),
   published:  z.boolean().default(false),
 })
 
@@ -49,6 +50,7 @@ export async function createBlogPost(data: BlogPostData) {
         excerpt:     d.excerpt || null,
         content:     d.content,
         coverImage:  d.coverImage || null,
+        author:      d.author || null,
         published:   d.published,
         publishedAt: d.published ? new Date() : null,
       },
@@ -85,6 +87,7 @@ export async function updateBlogPost(id: string, data: BlogPostData & { publish?
         excerpt:     d.excerpt || null,
         content:     d.content,
         coverImage:  d.coverImage || null,
+        author:      d.author || null,
         published:   d.published,
         publishedAt: d.published && !wasPublished ? new Date() : existing.publishedAt,
       },

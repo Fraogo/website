@@ -126,6 +126,19 @@ export async function rejectVendor(vendorId: string) {
   }
 }
 
+export async function deleteVendor(id: string) {
+  await requireAdmin()
+  try {
+    // Portfolio images, requests and magic links cascade on delete (see schema)
+    await prisma.vendor.delete({ where: { id } })
+    revalidatePath('/admin/vendors')
+    return { success: true }
+  } catch (error) {
+    console.error('[Vendor] Delete error:', error)
+    return { success: false, error: 'Failed to delete vendor.' }
+  }
+}
+
 export async function getVendors(status?: string) {
   await requireAdmin()
   return prisma.vendor.findMany({

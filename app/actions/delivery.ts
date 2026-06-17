@@ -70,3 +70,15 @@ export async function updateDeliveryStatus(id: string, status: string) {
   await requireAdmin()
   return prisma.deliveryRequest.update({ where: { id }, data: { status } })
 }
+
+export async function deleteDeliveryRequest(id: string) {
+  await requireAdmin()
+  try {
+    await prisma.deliveryRequest.delete({ where: { id } })
+    revalidatePath('/admin/deliveries')
+    return { success: true }
+  } catch (error) {
+    console.error('[Delivery] Delete error:', error)
+    return { success: false, error: 'Failed to delete request.' }
+  }
+}

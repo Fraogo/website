@@ -64,3 +64,15 @@ export async function updateRelocationStatus(id: string, status: string) {
   await requireAdmin()
   return prisma.relocationRequest.update({ where: { id }, data: { status } })
 }
+
+export async function deleteRelocationRequest(id: string) {
+  await requireAdmin()
+  try {
+    await prisma.relocationRequest.delete({ where: { id } })
+    revalidatePath('/admin/relocations')
+    return { success: true }
+  } catch (error) {
+    console.error('[Relocation] Delete error:', error)
+    return { success: false, error: 'Failed to delete request.' }
+  }
+}

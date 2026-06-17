@@ -110,3 +110,15 @@ export async function getAllTrackingRecords() {
     orderBy: { createdAt: 'desc' },
   })
 }
+
+export async function deleteTrackingRecord(id: string) {
+  await requireAdmin()
+  try {
+    await prisma.trackingRecord.delete({ where: { id } })
+    revalidatePath('/admin/tracking')
+    return { success: true }
+  } catch (error) {
+    console.error('[Tracking] Delete error:', error)
+    return { success: false, error: 'Failed to delete record.' }
+  }
+}

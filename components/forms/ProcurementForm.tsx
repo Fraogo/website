@@ -8,6 +8,7 @@ import { useState } from 'react'
 import { Plus, Trash2, Package, Globe, AlertCircle } from 'lucide-react'
 import { useCartStore } from '@/store/cartStore'
 import { cn } from '@/lib/utils'
+import PhoneField from '@/components/ui/PhoneField'
 
 const itemSchema = z.object({
   name: z.string().min(1, 'Item name is required'),
@@ -44,6 +45,7 @@ export default function ProcurementForm({ type }: ProcurementFormProps) {
     control,
     handleSubmit,
     watch,
+    setValue,
     formState: { errors },
   } = useForm<FormValues>({
     resolver: zodResolver(formSchema),
@@ -140,13 +142,13 @@ export default function ProcurementForm({ type }: ProcurementFormProps) {
 
           <div>
             <label className="form-label" htmlFor="phone">Phone Number *</label>
-            <input
+            <PhoneField
               id="phone"
-              type="tel"
-              className={cn('form-input', errors.phone && 'error')}
-              placeholder="+234 800 000 0000"
-              {...register('phone')}
+              value={watch('phone') ?? ''}
+              onChange={(v) => setValue('phone', v, { shouldValidate: true })}
+              error={!!errors.phone}
             />
+            <input type="hidden" {...register('phone')} />
             {errors.phone && (
               <p className="form-error"><AlertCircle className="w-3 h-3" />{errors.phone.message}</p>
             )}

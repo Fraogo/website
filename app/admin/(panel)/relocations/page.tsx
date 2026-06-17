@@ -1,8 +1,10 @@
-﻿import { getRelocationRequests } from '@/app/actions/relocation'
+﻿import { getRelocationRequests, deleteRelocationRequest } from '@/app/actions/relocation'
 import { formatDateTime, getStatusColor } from '@/lib/utils'
 import Link from 'next/link'
 import { MoveRight } from 'lucide-react'
 import type { Metadata } from 'next'
+import DeleteButton from '@/components/admin/DeleteButton'
+import RefreshButton from '@/components/admin/RefreshButton'
 
 export const metadata: Metadata = { title: 'Relocation Requests' }
 export const dynamic = 'force-dynamic'
@@ -15,9 +17,12 @@ export default async function AdminRelocationsPage({
 
   return (
     <div className="space-y-6">
-      <div>
-        <h1 className="text-2xl font-black text-gray-900">Relocation Requests</h1>
-        <p className="text-sm text-gray-500 mt-1">{relocations.length} request{relocations.length !== 1 ? 's' : ''}</p>
+      <div className="flex items-center justify-between gap-3">
+        <div>
+          <h1 className="text-2xl font-black text-gray-900">Relocation Requests</h1>
+          <p className="text-sm text-gray-500 mt-1">{relocations.length} request{relocations.length !== 1 ? 's' : ''}</p>
+        </div>
+        <RefreshButton />
       </div>
 
       <div className="flex gap-2">
@@ -36,7 +41,7 @@ export default async function AdminRelocationsPage({
           <div className="overflow-x-auto">
             <table className="data-table">
               <thead>
-                <tr><th>Customer</th><th>Email</th><th>Pick-up</th><th>Destination</th><th>Transport</th><th>Status</th><th>Date</th></tr>
+                <tr><th>Customer</th><th>Email</th><th>Pick-up</th><th>Destination</th><th>Transport</th><th>Status</th><th>Date</th><th></th></tr>
               </thead>
               <tbody>
                 {relocations.map((r: any) => (
@@ -48,6 +53,7 @@ export default async function AdminRelocationsPage({
                     <td><span className={`text-xs px-2 py-0.5 rounded-full font-semibold ${r.transportBy === 'fraogo' ? 'bg-blue-100 text-blue-800' : 'bg-gray-100 text-gray-700'}`}>{r.transportBy}</span></td>
                     <td><span className={`status-badge ${getStatusColor(r.status)}`}>{r.status}</span></td>
                     <td className="text-gray-500 text-xs whitespace-nowrap">{formatDateTime(r.createdAt)}</td>
+                    <td><DeleteButton id={r.id} action={deleteRelocationRequest} confirmText="Delete this request permanently?" /></td>
                   </tr>
                 ))}
               </tbody>

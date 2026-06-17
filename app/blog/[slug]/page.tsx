@@ -44,12 +44,17 @@ export default async function BlogPostPage({ params }: Props) {
 
         <header className="mb-10">
           <h1 className="text-3xl lg:text-4xl font-black text-gray-900 leading-tight mb-4">{post.title}</h1>
-          {post.publishedAt && (
-            <div className="flex items-center gap-2 text-sm text-gray-400 font-medium">
-              <Calendar className="w-4 h-4" />
-              {formatDate(post.publishedAt)}
-            </div>
-          )}
+          <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-sm text-gray-400 font-medium">
+            {post.author && (
+              <span className="text-gray-600 font-semibold">By {post.author}</span>
+            )}
+            {post.publishedAt && (
+              <span className="flex items-center gap-2">
+                <Calendar className="w-4 h-4" />
+                {formatDate(post.publishedAt)}
+              </span>
+            )}
+          </div>
           {post.excerpt && (
             <p className="mt-4 text-base text-gray-500 leading-relaxed border-l-4 border-[#1B4AD4] pl-4 italic">
               {post.excerpt}

@@ -1,7 +1,9 @@
-﻿import { getVendorRequests } from '@/app/actions/vendorRequest'
+﻿import { getVendorRequests, deleteVendorRequest } from '@/app/actions/vendorRequest'
 import { formatDateTime, getStatusColor } from '@/lib/utils'
 import { UserCheck, Clock, MapPin } from 'lucide-react'
 import type { Metadata } from 'next'
+import DeleteButton from '@/components/admin/DeleteButton'
+import RefreshButton from '@/components/admin/RefreshButton'
 
 export const metadata: Metadata = { title: 'Vendor Requests' }
 export const dynamic = 'force-dynamic'
@@ -11,9 +13,12 @@ export default async function AdminVendorRequestsPage() {
 
   return (
     <div className="space-y-6">
-      <div>
-        <h1 className="text-2xl font-black text-gray-900">Vendor Hire Requests</h1>
-        <p className="text-sm text-gray-500 mt-1">{requests.length} request{requests.length !== 1 ? 's' : ''} total</p>
+      <div className="flex items-center justify-between gap-3">
+        <div>
+          <h1 className="text-2xl font-black text-gray-900">Vendor Hire Requests</h1>
+          <p className="text-sm text-gray-500 mt-1">{requests.length} request{requests.length !== 1 ? 's' : ''} total</p>
+        </div>
+        <RefreshButton />
       </div>
 
       <div className="bg-white rounded-2xl shadow-soft border border-border overflow-hidden">
@@ -32,6 +37,7 @@ export default async function AdminVendorRequestsPage() {
                   <th>Description</th>
                   <th>Status</th>
                   <th>Submitted</th>
+                  <th></th>
                 </tr>
               </thead>
               <tbody>
@@ -66,6 +72,7 @@ export default async function AdminVendorRequestsPage() {
                     <td className="text-xs text-gray-500 whitespace-nowrap">
                       {formatDateTime(r.createdAt)}
                     </td>
+                    <td><DeleteButton id={r.id} action={deleteVendorRequest} confirmText="Delete this request permanently?" /></td>
                   </tr>
                 ))}
               </tbody>

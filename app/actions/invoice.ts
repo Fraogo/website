@@ -3,6 +3,7 @@
 import { z } from 'zod'
 import { prisma } from '@/lib/db'
 import { requireAdmin } from '@/lib/auth'
+import { revalidatePath } from 'next/cache'
 
 const lineItemSchema = z.object({
   name: z.string().min(1, 'Item name is required'),
@@ -62,6 +63,18 @@ export async function saveInvoice(data: InvoiceFormData) {
 export async function getInvoices() {
   await requireAdmin()
   return prisma.invoice.findMany({ orderBy: { createdAt: 'desc' } })
+}
+
+export async function deleteInvoice(id: string) {
+  await requireAdmin()
+  try {
+    await prisma.invoice.delete({ where: { id } })
+    revalidatePath('/admin/invoice')
+    return { success: true }
+  } catch (error) {
+    console.error('[Invoice] Delete error:', error)
+    return { success: false, error: 'Failed to delete invoice.' }
+  }
 }
 
 export async function getNextInvoiceNumber(): Promise<string> {

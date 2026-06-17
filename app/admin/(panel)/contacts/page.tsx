@@ -1,8 +1,10 @@
-import { getContactInquiries, markContactRead } from '@/app/actions/contact'
+import { getContactInquiries, markContactRead, deleteContactInquiry } from '@/app/actions/contact'
 import { formatDateTime } from '@/lib/utils'
 import { MessageSquare, Mail, Phone, CheckCircle2 } from 'lucide-react'
 import type { Metadata } from 'next'
 import { revalidatePath } from 'next/cache'
+import DeleteButton from '@/components/admin/DeleteButton'
+import RefreshButton from '@/components/admin/RefreshButton'
 
 export const metadata: Metadata = { title: 'Contact Messages — Admin' }
 export const dynamic = 'force-dynamic'
@@ -29,16 +31,19 @@ export default async function AdminContactsPage() {
 
   return (
     <div className="p-6 lg:p-8 max-w-5xl">
-      <div className="flex items-center gap-3 mb-8">
-        <div className="w-10 h-10 rounded-xl flex items-center justify-center" style={{ background: '#EEF2FF' }}>
-          <MessageSquare className="w-5 h-5" style={{ color: '#1B4AD4' }} />
+      <div className="flex items-center justify-between gap-3 mb-8">
+        <div className="flex items-center gap-3">
+          <div className="w-10 h-10 rounded-xl flex items-center justify-center" style={{ background: '#EEF2FF' }}>
+            <MessageSquare className="w-5 h-5" style={{ color: '#1B4AD4' }} />
+          </div>
+          <div>
+            <h1 className="text-2xl font-black text-gray-900">Contact Messages</h1>
+            <p className="text-sm text-gray-400">
+              {newOnly.length} unread · {all.length} total
+            </p>
+          </div>
         </div>
-        <div>
-          <h1 className="text-2xl font-black text-gray-900">Contact Messages</h1>
-          <p className="text-sm text-gray-400">
-            {newOnly.length} unread · {all.length} total
-          </p>
-        </div>
+        <RefreshButton />
       </div>
 
       {all.length === 0 ? (
@@ -84,17 +89,17 @@ export default async function AdminContactsPage() {
               </p>
 
               {/* Actions */}
-              {inquiry.status !== 'responded' && (
-                <div className="flex gap-2 mt-4 pt-4 border-t border-gray-50">
-                  {inquiry.status === 'new' && (
-                    <form action={markAsRead}>
-                      <input type="hidden" name="id" value={inquiry.id} />
-                      <input type="hidden" name="status" value="read" />
-                      <button type="submit" className="text-xs font-semibold px-3 py-1.5 rounded-lg bg-gray-100 text-gray-600 hover:bg-gray-200 transition-colors">
-                        Mark as Read
-                      </button>
-                    </form>
-                  )}
+              <div className="flex flex-wrap gap-2 mt-4 pt-4 border-t border-gray-50">
+                {inquiry.status === 'new' && (
+                  <form action={markAsRead}>
+                    <input type="hidden" name="id" value={inquiry.id} />
+                    <input type="hidden" name="status" value="read" />
+                    <button type="submit" className="text-xs font-semibold px-3 py-1.5 rounded-lg bg-gray-100 text-gray-600 hover:bg-gray-200 transition-colors">
+                      Mark as Read
+                    </button>
+                  </form>
+                )}
+                {inquiry.status !== 'responded' && (
                   <form action={markAsRead}>
                     <input type="hidden" name="id" value={inquiry.id} />
                     <input type="hidden" name="status" value="responded" />
@@ -102,14 +107,15 @@ export default async function AdminContactsPage() {
                       <CheckCircle2 className="w-3.5 h-3.5" /> Mark Responded
                     </button>
                   </form>
-                  <a
-                    href={`mailto:${inquiry.email}?subject=Re: ${encodeURIComponent(inquiry.subject)}`}
-                    className="text-xs font-semibold px-3 py-1.5 rounded-lg bg-blue-50 text-[#1B4AD4] hover:bg-blue-100 transition-colors"
-                  >
-                    Reply via Email
-                  </a>
-                </div>
-              )}
+                )}
+                <a
+                  href={`mailto:${inquiry.email}?subject=Re: ${encodeURIComponent(inquiry.subject)}`}
+                  className="text-xs font-semibold px-3 py-1.5 rounded-lg bg-blue-50 text-[#1B4AD4] hover:bg-blue-100 transition-colors"
+                >
+                  Reply via Email
+                </a>
+                <DeleteButton id={inquiry.id} action={deleteContactInquiry} label="Delete" confirmText="Delete this message permanently?" />
+              </div>
             </div>
           ))}
         </div>

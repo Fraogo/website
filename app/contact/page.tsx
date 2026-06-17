@@ -6,6 +6,7 @@ import { contact, company, faqs } from '@/content'
 import { submitContactForm, type ContactFormData } from '@/app/actions/contact'
 import { InstagramIcon, FacebookIcon, TwitterIcon, LinkedInIcon, TikTokIcon } from '@/components/ui/social-icons'
 import FaqAccordion from '@/components/contact/FaqAccordion'
+import PhoneField from '@/components/ui/PhoneField'
 
 const socials = [
   { href: contact.social.instagram, Icon: InstagramIcon, label: 'Instagram' },
@@ -204,8 +205,7 @@ export default function ContactPage() {
                     <label htmlFor="phone" className="form-label">
                       Phone Number <span className="text-gray-400 font-normal">(optional)</span>
                     </label>
-                    <input id="phone" name="phone" type="tel" value={form.phone} onChange={handleChange}
-                      className="form-input" placeholder="+234 800 000 0000" />
+                    <PhoneField id="phone" value={form.phone ?? ''} onChange={(v) => setForm((prev) => ({ ...prev, phone: v }))} />
                   </div>
                   <div>
                     <label htmlFor="subject" className="form-label">Subject *</label>

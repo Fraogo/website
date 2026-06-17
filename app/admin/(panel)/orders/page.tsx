@@ -1,8 +1,10 @@
-﻿import { getProcurementOrders } from '@/app/actions/procurement'
+﻿import { getProcurementOrders, deleteProcurementOrder } from '@/app/actions/procurement'
 import { formatDateTime, getStatusColor } from '@/lib/utils'
 import Link from 'next/link'
 import { Package } from 'lucide-react'
 import type { Metadata } from 'next'
+import DeleteButton from '@/components/admin/DeleteButton'
+import RefreshButton from '@/components/admin/RefreshButton'
 
 export const metadata: Metadata = { title: 'Procurement Orders' }
 export const dynamic = 'force-dynamic'
@@ -20,9 +22,12 @@ export default async function AdminOrdersPage({
 
   return (
     <div className="space-y-6">
-      <div>
-        <h1 className="text-2xl font-black text-gray-900">Procurement Orders</h1>
-        <p className="text-sm text-gray-500 mt-1">{orders.length} order{orders.length !== 1 ? 's' : ''} found</p>
+      <div className="flex items-center justify-between gap-3">
+        <div>
+          <h1 className="text-2xl font-black text-gray-900">Procurement Orders</h1>
+          <p className="text-sm text-gray-500 mt-1">{orders.length} order{orders.length !== 1 ? 's' : ''} found</p>
+        </div>
+        <RefreshButton />
       </div>
 
       {/* Status filter */}
@@ -62,6 +67,7 @@ export default async function AdminOrdersPage({
                   <th>Items</th>
                   <th>Status</th>
                   <th>Date</th>
+                  <th></th>
                 </tr>
               </thead>
               <tbody>
@@ -82,6 +88,7 @@ export default async function AdminOrdersPage({
                         <span className={`status-badge ${getStatusColor(order.status)}`}>{order.status}</span>
                       </td>
                       <td className="text-gray-500 text-xs whitespace-nowrap">{formatDateTime(order.createdAt)}</td>
+                      <td><DeleteButton id={order.id} action={deleteProcurementOrder} confirmText="Delete this order permanently?" /></td>
                     </tr>
                   )
                 })}

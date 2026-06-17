@@ -6,7 +6,7 @@ import { useState } from 'react'
 import {
   LayoutDashboard, Package, Truck, MoveRight, ShoppingBag, Users,
   UserCheck, FileText, LogOut, Menu, X, ChevronRight, MapPin,
-  MessageSquare, BookOpen,
+  MessageSquare, BookOpen, Settings,
 } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { adminLogout } from '@/app/actions/auth'
@@ -53,6 +53,12 @@ const navGroups: NavGroup[] = [
       { label: 'Contact Messages', href: '/admin/contacts',   icon: MessageSquare },
       { label: 'Blog Posts',       href: '/admin/blog',       icon: BookOpen },
       { label: 'Invoice Generator',href: '/admin/invoice',    icon: FileText },
+    ],
+  },
+  {
+    label: 'Account',
+    items: [
+      { label: 'Settings', href: '/admin/settings', icon: Settings },
     ],
   },
 ]

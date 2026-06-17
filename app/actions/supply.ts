@@ -79,3 +79,15 @@ export async function updateSupplyStatus(id: string, status: string) {
   await requireAdmin()
   return prisma.supplyOrder.update({ where: { id }, data: { status } })
 }
+
+export async function deleteSupplyOrder(id: string) {
+  await requireAdmin()
+  try {
+    await prisma.supplyOrder.delete({ where: { id } })
+    revalidatePath('/admin/supply-orders')
+    return { success: true }
+  } catch (error) {
+    console.error('[Supply] Delete error:', error)
+    return { success: false, error: 'Failed to delete order.' }
+  }
+}

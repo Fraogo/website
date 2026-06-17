@@ -1,57 +1,30 @@
 # Fraogo Logo
 
-## Files
+## Files (`public/logo/`)
 
 | File | Background | Use |
 |------|-----------|-----|
-| `public/logo/logo.png` | Transparent | White pages, light cards, light navbars |
-| `public/logo/logo-white.png` | Transparent | Dark backgrounds, hero sections, dark/scrolled navbars |
+| `logo.png` | Transparent | Light pages/cards/navbars |
+| `logo-white.png` | Transparent | Dark backgrounds, hero, dark/scrolled navbars |
 
-> Current files are `.jpeg` — replace with `.png` versions for correct transparency support.
-
----
+> Current files are `.jpeg` — replace with `.png` for transparency. Code expects `.png`.
 
 ## Placement
 
-### Navbar
-- Scrolled (solid white navbar): `logo.png`
-- Transparent (over hero): `logo-white.png`
-- Height: `36px` (`h-9`), width: `120px` max, `object-contain`
-- Falls back to text **"F FRAOGO"** if image fails to load (handled in `Navbar.tsx`)
-
-### Admin Sidebar
-- Always dark background → `logo-white.png`
-- Same dimensions as navbar
-
-### Footer
-- Text-only fallback: **"F · FRAOGO"** — no image logo in footer
-
----
+- **Navbar:** `logo-white.png` over hero (transparent), `logo.png` when scrolled (solid white). Height `36px` (`h-9`), max width `120px`, `object-contain`. Falls back to text **"F FRAOGO"** if image fails (`Navbar.tsx`).
+- **Admin sidebar:** always dark → `logo-white.png`. Same dimensions.
+- **Footer:** text-only **"F · FRAOGO"** — no image logo.
 
 ## Clearspace
 
-Maintain a minimum clearspace equal to the height of the logo's letter "F" on all sides.
-Never place the logo directly against a busy photo or dark-pattern background without a clear backing.
-
----
+Minimum clearspace = height of the logo's "F" on all sides. Never place on a busy photo/dark pattern without a clear backing.
 
 ## Don'ts
 
-- Do not stretch or distort the logo
-- Do not apply colour filters or tints to the logo
-- Do not place `logo.png` (full colour) on a dark background — use `logo-white.png`
-- Do not place `logo-white.png` on a white or light background
-- Do not use a logo size smaller than 80px wide
-
----
+- Don't stretch, distort, tint, or colour-filter the logo.
+- Don't put `logo.png` (full colour) on dark bg — use `logo-white.png`. Don't put `logo-white.png` on light bg.
+- Don't use smaller than 80px wide.
 
 ## Fallback Text Mark
 
-When the logo image is unavailable, the site shows:
-
-```
-F FRAOGO
-```
-
-Styled as: bold, brand blue (`#1B4AD4`) for `F`, dark text for `FRAOGO`.
-This is intentional — it must always be readable.
+When the image is unavailable: `F FRAOGO` — `F` in brand blue (`#1B4AD4`), `FRAOGO` in dark text, bold. Must always be readable.

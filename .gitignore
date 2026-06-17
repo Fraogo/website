@@ -30,9 +30,8 @@ yarn-debug.log*
 yarn-error.log*
 .pnpm-debug.log*
 
-# env files — real secrets are ignored, example template is committed
+# env files — ALL env files are ignored (they hold real secrets, never commit)
 .env*
-!.env.example
 
 # vercel
 .vercel

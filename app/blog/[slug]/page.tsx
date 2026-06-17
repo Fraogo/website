@@ -1,6 +1,7 @@
 import { notFound } from 'next/navigation'
 import Link from 'next/link'
 import { prisma } from '@/lib/db'
+import { sanitizeHtml } from '@/lib/sanitize'
 import { formatDate } from '@/lib/utils'
 import { ArrowLeft, Calendar } from 'lucide-react'
 import type { Metadata } from 'next'
@@ -63,7 +64,7 @@ export default async function BlogPostPage({ params }: Props) {
             prose-a:text-[#1B4AD4] prose-a:no-underline hover:prose-a:underline
             prose-strong:text-gray-900
             prose-img:rounded-xl"
-          dangerouslySetInnerHTML={{ __html: post.content }}
+          dangerouslySetInnerHTML={{ __html: sanitizeHtml(post.content) }}
         />
       </article>
 

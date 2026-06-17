@@ -2,6 +2,7 @@
 
 import { z } from 'zod'
 import { prisma } from '@/lib/db'
+import { requireAdmin } from '@/lib/auth'
 import {
   sendVendorRegistrationConfirmation,
   sendVendorAdminNotification,
@@ -76,6 +77,7 @@ export async function registerVendor(data: VendorFormData) {
 }
 
 export async function approveVendor(vendorId: string) {
+  await requireAdmin()
   try {
     const vendor = await prisma.vendor.findUnique({ where: { id: vendorId } })
     if (!vendor) return { success: false, error: 'Vendor not found' }
@@ -113,6 +115,7 @@ export async function approveVendor(vendorId: string) {
 }
 
 export async function rejectVendor(vendorId: string) {
+  await requireAdmin()
   try {
     await prisma.vendor.update({ where: { id: vendorId }, data: { status: 'rejected' } })
     revalidatePath('/admin/vendors')
@@ -124,6 +127,7 @@ export async function rejectVendor(vendorId: string) {
 }
 
 export async function getVendors(status?: string) {
+  await requireAdmin()
   return prisma.vendor.findMany({
     where: status ? { status } : undefined,
     include: { portfolioImages: true, _count: { select: { requests: true } } },
@@ -131,10 +135,23 @@ export async function getVendors(status?: string) {
   })
 }
 
+// Public — used on the hire-vendor page. Selects ONLY public-safe fields so the
+// browser payload never includes vendor email, phone, or NIN document path.
 export async function getActiveVendors() {
   return prisma.vendor.findMany({
     where: { status: 'active' },
-    include: { portfolioImages: { take: 5, orderBy: { createdAt: 'desc' } } },
+    select: {
+      id: true,
+      businessName: true,
+      description: true,
+      location: true,
+      businessType: true,
+      portfolioImages: {
+        take: 5,
+        orderBy: { createdAt: 'desc' },
+        select: { id: true, url: true },
+      },
+    },
     orderBy: { createdAt: 'desc' },
   })
 }

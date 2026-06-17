@@ -2,6 +2,7 @@
 
 import { z } from 'zod'
 import { prisma } from '@/lib/db'
+import { requireAdmin } from '@/lib/auth'
 import { sendSupplyOrderConfirmation } from '@/lib/email'
 import { revalidatePath } from 'next/cache'
 
@@ -67,6 +68,7 @@ export async function submitSupplyOrder(data: SupplyFormData) {
 }
 
 export async function getSupplyOrders(status?: string) {
+  await requireAdmin()
   return prisma.supplyOrder.findMany({
     where: status ? { status } : undefined,
     orderBy: { createdAt: 'desc' },
@@ -74,5 +76,6 @@ export async function getSupplyOrders(status?: string) {
 }
 
 export async function updateSupplyStatus(id: string, status: string) {
+  await requireAdmin()
   return prisma.supplyOrder.update({ where: { id }, data: { status } })
 }

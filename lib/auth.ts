@@ -75,6 +75,15 @@ export async function destroyAdminSession() {
   }
 }
 
+// ─── Authorization guard for Server Actions ───────────────────────────────────
+// Server Actions are public POST endpoints — the /admin proxy does NOT protect
+// them. Every admin-only action must call this first. Throws if not signed in.
+export async function requireAdmin(): Promise<{ email: string }> {
+  const session = await verifyAdminSession()
+  if (!session) throw new Error('Unauthorized')
+  return session
+}
+
 // ─── Admin credentials validation ─────────────────────────────────────────────
 export function getAdminCredentials() {
   return {

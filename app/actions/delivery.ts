@@ -2,6 +2,7 @@
 
 import { z } from 'zod'
 import { prisma } from '@/lib/db'
+import { requireAdmin } from '@/lib/auth'
 import { sendDeliveryConfirmation } from '@/lib/email'
 import { revalidatePath } from 'next/cache'
 
@@ -58,6 +59,7 @@ export async function submitDeliveryRequest(data: DeliveryFormData) {
 }
 
 export async function getDeliveryRequests(status?: string) {
+  await requireAdmin()
   return prisma.deliveryRequest.findMany({
     where: status ? { status } : undefined,
     orderBy: { createdAt: 'desc' },
@@ -65,5 +67,6 @@ export async function getDeliveryRequests(status?: string) {
 }
 
 export async function updateDeliveryStatus(id: string, status: string) {
+  await requireAdmin()
   return prisma.deliveryRequest.update({ where: { id }, data: { status } })
 }

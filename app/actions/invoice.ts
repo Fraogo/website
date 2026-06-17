@@ -2,6 +2,7 @@
 
 import { z } from 'zod'
 import { prisma } from '@/lib/db'
+import { requireAdmin } from '@/lib/auth'
 
 const lineItemSchema = z.object({
   name: z.string().min(1, 'Item name is required'),
@@ -25,6 +26,7 @@ const invoiceSchema = z.object({
 export type InvoiceFormData = z.infer<typeof invoiceSchema>
 
 export async function saveInvoice(data: InvoiceFormData) {
+  await requireAdmin()
   const parsed = invoiceSchema.safeParse(data)
   if (!parsed.success) {
     return { success: false, error: parsed.error.flatten().fieldErrors }
@@ -58,10 +60,12 @@ export async function saveInvoice(data: InvoiceFormData) {
 }
 
 export async function getInvoices() {
+  await requireAdmin()
   return prisma.invoice.findMany({ orderBy: { createdAt: 'desc' } })
 }
 
 export async function getNextInvoiceNumber(): Promise<string> {
+  await requireAdmin()
   const year = new Date().getFullYear()
   const lastInvoice = await prisma.invoice.findFirst({
     where: { invoiceNumber: { startsWith: `FRG-${year}-` } },

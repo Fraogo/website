@@ -2,6 +2,8 @@
 
 import { z } from 'zod'
 import { prisma } from '@/lib/db'
+import { requireAdmin } from '@/lib/auth'
+import { sanitizeHtml } from '@/lib/sanitize'
 import { revalidatePath } from 'next/cache'
 
 function slugify(text: string): string {
@@ -23,10 +25,13 @@ const postSchema = z.object({
 export type BlogPostData = z.infer<typeof postSchema>
 
 export async function createBlogPost(data: BlogPostData) {
+  await requireAdmin()
+
   const parsed = postSchema.safeParse(data)
   if (!parsed.success) return { success: false, error: parsed.error.flatten().fieldErrors }
 
   const d = parsed.data
+  d.content = sanitizeHtml(d.content)
   const baseSlug = slugify(d.title)
 
   // Ensure unique slug
@@ -59,10 +64,13 @@ export async function createBlogPost(data: BlogPostData) {
 }
 
 export async function updateBlogPost(id: string, data: BlogPostData & { publish?: boolean }) {
+  await requireAdmin()
+
   const parsed = postSchema.safeParse(data)
   if (!parsed.success) return { success: false, error: parsed.error.flatten().fieldErrors }
 
   const d = parsed.data
+  d.content = sanitizeHtml(d.content)
 
   try {
     const existing = await prisma.blogPost.findUnique({ where: { id } })
@@ -93,6 +101,8 @@ export async function updateBlogPost(id: string, data: BlogPostData & { publish?
 }
 
 export async function deleteBlogPost(id: string) {
+  await requireAdmin()
+
   try {
     const post = await prisma.blogPost.delete({ where: { id } })
     revalidatePath('/blog')

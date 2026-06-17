@@ -57,11 +57,23 @@ Tick items off as you go. Two kinds of tasks: **in the code/repo** and **outside
 
 ---
 
+## 🔐 Security — needs your action (outside the code)
+
+- [ ] **Supabase Storage policies (important).** NIN documents upload from the browser using the
+      anon key. In Supabase → Storage, make sure:
+      - `vendor-documents` bucket is **Private** with an RLS policy that only allows uploads (no
+        public read). Admins read it via short-lived signed URLs (already handled in code).
+      - `vendor-portfolio` bucket is public-read but restrict who can upload/delete.
+- [ ] Set `SUPABASE_URL` in your env (the portfolio image-URL allowlist depends on it).
+
 ## 🔐 Optional hardening (later, not urgent)
 
-- [ ] The admin-login rate limiter is in-memory (resets when the server restarts / between
-      serverless instances). For stronger protection across instances, move it to a durable
-      store like **Upstash Redis**. Fine to leave as-is for launch.
+- [ ] Admin-login rate limiter is in-memory (resets on restart / per serverless instance). For
+      stronger protection move it to a durable store like **Upstash Redis**. Fine for launch.
+- [ ] Magic-link vendor tokens use `cuid()`. For a security token, a crypto-random value
+      (`crypto.randomUUID()`) is stronger. Low priority — links already expire in 7 days.
+- [ ] The Content-Security-Policy allows inline scripts (needed for Next.js hydration without
+      extra setup). For a stricter CSP, switch to nonce-based scripts later.
 
 ---
 

@@ -2,6 +2,7 @@
 
 import { z } from 'zod'
 import { prisma } from '@/lib/db'
+import { requireAdmin } from '@/lib/auth'
 import { sendEmail } from '@/lib/email'
 import { revalidatePath } from 'next/cache'
 
@@ -63,6 +64,7 @@ export async function submitContactForm(data: ContactFormData) {
 }
 
 export async function getContactInquiries(status?: string) {
+  await requireAdmin()
   return prisma.contactInquiry.findMany({
     where: status && status !== 'all' ? { status } : undefined,
     orderBy: { createdAt: 'desc' },
@@ -70,6 +72,7 @@ export async function getContactInquiries(status?: string) {
 }
 
 export async function markContactRead(id: string, status: 'read' | 'responded') {
+  await requireAdmin()
   await prisma.contactInquiry.update({ where: { id }, data: { status } })
   revalidatePath('/admin/contacts')
 }

@@ -1,7 +1,7 @@
 'use server'
 
 import { prisma } from '@/lib/db'
-import { deletePortfolioImage } from '@/lib/storage'
+import { deletePortfolioImage, VENDOR_PORTFOLIO_BUCKET } from '@/lib/storage'
 import { revalidatePath } from 'next/cache'
 
 export async function validateMagicLink(token: string) {
@@ -17,8 +17,32 @@ export async function validateMagicLink(token: string) {
   return { valid: true, vendor: magicLink.vendor }
 }
 
-export async function addVendorImage(vendorId: string, url: string, fileName?: string) {
-  // Check total image limit (50)
+/** Resolve the vendor a magic-link token belongs to, or null if invalid/expired/inactive. */
+async function vendorIdFromToken(token: string): Promise<string | null> {
+  if (!token) return null
+  const magicLink = await prisma.vendorMagicLink.findUnique({
+    where: { token },
+    include: { vendor: { select: { id: true, status: true } } },
+  })
+  if (!magicLink || magicLink.expiresAt < new Date() || magicLink.vendor.status !== 'active') {
+    return null
+  }
+  return magicLink.vendor.id
+}
+
+export async function addVendorImage(token: string, url: string, fileName?: string) {
+  // Authorize via magic-link token — vendorId is derived, never trusted from input
+  const vendorId = await vendorIdFromToken(token)
+  if (!vendorId) return { success: false, error: 'Unauthorized' }
+
+  // Only accept URLs from our own public storage (blocks arbitrary/hotlinked URLs)
+  const allowedPrefix = process.env.SUPABASE_URL
+    ? `${process.env.SUPABASE_URL}/storage/v1/object/public/${VENDOR_PORTFOLIO_BUCKET}/`
+    : null
+  if (!allowedPrefix || !url.startsWith(allowedPrefix)) {
+    return { success: false, error: 'Invalid image URL' }
+  }
+
   const count = await prisma.vendorImage.count({ where: { vendorId } })
   if (count >= 50) {
     return { success: false, error: 'Maximum 50 images allowed per vendor' }
@@ -36,18 +60,23 @@ export async function addVendorImage(vendorId: string, url: string, fileName?: s
   }
 }
 
-export async function deleteVendorImageAction(imageId: string, vendorId: string, storagePath: string) {
+export async function deleteVendorImageAction(token: string, imageId: string) {
+  const vendorId = await vendorIdFromToken(token)
+  if (!vendorId) return { success: false, error: 'Unauthorized' }
+
   try {
-    // Verify ownership
-    const image = await prisma.vendorImage.findFirst({
-      where: { id: imageId, vendorId },
-    })
+    // Ownership check — the image must belong to this token's vendor
+    const image = await prisma.vendorImage.findFirst({ where: { id: imageId, vendorId } })
     if (!image) return { success: false, error: 'Image not found' }
 
-    // Delete from storage
-    await deletePortfolioImage(storagePath)
+    // Derive the storage path from the owned record — never trust a caller-supplied path
+    const marker = `/${VENDOR_PORTFOLIO_BUCKET}/`
+    const idx = image.url.indexOf(marker)
+    if (idx !== -1) {
+      const storagePath = image.url.slice(idx + marker.length)
+      await deletePortfolioImage(storagePath).catch((e) => console.error('[VendorPortfolio] Storage delete:', e))
+    }
 
-    // Delete from DB
     await prisma.vendorImage.delete({ where: { id: imageId } })
 
     revalidatePath('/vendor/dashboard')

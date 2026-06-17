@@ -2,6 +2,7 @@
 
 import { z } from 'zod'
 import { prisma } from '@/lib/db'
+import { requireAdmin } from '@/lib/auth'
 import {
   sendVendorRequestNotification,
   sendVendorRequestCustomerAck,
@@ -76,6 +77,7 @@ export async function submitVendorRequest(data: VendorRequestFormData) {
 }
 
 export async function getVendorRequests() {
+  await requireAdmin()
   return prisma.vendorRequest.findMany({
     include: { vendor: true },
     orderBy: { createdAt: 'desc' },

@@ -2,6 +2,7 @@
 
 import { z } from 'zod'
 import { prisma } from '@/lib/db'
+import { requireAdmin } from '@/lib/auth'
 import { sendRelocationConfirmation } from '@/lib/email'
 import { revalidatePath } from 'next/cache'
 
@@ -52,6 +53,7 @@ export async function submitRelocationRequest(data: RelocationFormData) {
 }
 
 export async function getRelocationRequests(status?: string) {
+  await requireAdmin()
   return prisma.relocationRequest.findMany({
     where: status ? { status } : undefined,
     orderBy: { createdAt: 'desc' },
@@ -59,5 +61,6 @@ export async function getRelocationRequests(status?: string) {
 }
 
 export async function updateRelocationStatus(id: string, status: string) {
+  await requireAdmin()
   return prisma.relocationRequest.update({ where: { id }, data: { status } })
 }

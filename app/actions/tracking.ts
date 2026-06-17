@@ -2,6 +2,7 @@
 
 import { z } from 'zod'
 import { prisma } from '@/lib/db'
+import { requireAdmin } from '@/lib/auth'
 import { revalidatePath } from 'next/cache'
 
 function generateTrackingNumber(): string {
@@ -31,6 +32,7 @@ export type CreateTrackingData = z.infer<typeof createSchema>
 export type TrackingUpdateData = z.infer<typeof updateSchema>
 
 export async function createTrackingRecord(data: CreateTrackingData) {
+  await requireAdmin()
   const parsed = createSchema.safeParse(data)
   if (!parsed.success) return { success: false, error: parsed.error.flatten().fieldErrors }
 
@@ -64,6 +66,7 @@ export async function createTrackingRecord(data: CreateTrackingData) {
 }
 
 export async function addTrackingUpdate(data: TrackingUpdateData) {
+  await requireAdmin()
   const parsed = updateSchema.safeParse(data)
   if (!parsed.success) return { success: false, error: parsed.error.flatten().fieldErrors }
 
@@ -101,6 +104,7 @@ export async function lookupTracking(trackingNumber: string) {
 }
 
 export async function getAllTrackingRecords() {
+  await requireAdmin()
   return prisma.trackingRecord.findMany({
     include: { updates: { orderBy: { createdAt: 'desc' }, take: 1 } },
     orderBy: { createdAt: 'desc' },

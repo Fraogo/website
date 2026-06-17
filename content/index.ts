@@ -42,7 +42,9 @@ export const contact = {
   email:    'fraogo6@gmail.com',
   whatsapp: '2348028229002',
 
-  // Google Maps embed URL — paste the URL from the Google Maps "Embed a map" dialog
+  // Google Maps: the contact page auto-generates a map from `address` above.
+  // To pin an exact spot instead, open Google Maps → Share → "Embed a map",
+  // copy the src="..." URL from the iframe, and paste it here (it overrides the auto map).
   googleMapsEmbedUrl: '',
 
   social: {
@@ -50,6 +52,7 @@ export const contact = {
     facebook:  'https://facebook.com/fraogo',
     twitter:   'https://x.com/fraogo',
     linkedin:  'https://linkedin.com/company/fraogo',
+    tiktok:    'https://www.tiktok.com/@fraogo_services',
   },
 }
 
@@ -70,23 +73,23 @@ export const team: {
   linkedin?: string
 }[] = [
   {
-    name:     '[TEAM MEMBER 1 FULL NAME]',
-    role:     'Chief Executive Officer',
-    bio:      '[Short bio — 1–2 sentences about their background and role at Fraogo.]',
+    name:     'Franklin Obuke',
+    role:     'Team Lead',
+    bio:      "Obuke Franklin is an Industrial Maintenance Engineer, Operations Analyst, and Energy Performance Analyst with over 7 years of combined experience spanning industrial maintenance, operations analysis, procurement, and energy optimization. He possesses strong expertise in operational efficiency, preventive and corrective maintenance, data analysis, and energy management solutions for organizations seeking improved performance and cost reduction. Currently serving as an Operations Analyst at Starsight Energy since 2022, Franklin has played a key role in managing maintenance operations across over 600 sites, coordinating OEM support, monitoring diesel consumption trends, improving site visibility, and analyzing PV injection and operational performance data. His analytical expertise enables him to identify inefficiencies and provide practical, data-driven solutions that improve energy utilization and operational reliability for organizations. Prior to this role, he worked with FrieslandCampina WAMCO Nigeria PLC as a Maintenance Engineer Trainee from 2018 to 2019, where he was involved in preventive and corrective maintenance of industrial production equipment, machine lubrication systems, and maintenance planning. He also gained hands-on fabrication and industrial field experience as a Welder/Fitter Trainee at Dorman Long Engineering Limited in 2017. Franklin is also the Team Lead of FRAOGO VENTURE, a procurement and sourcing organization focused on delivering reliable procurement solutions, industrial sourcing, equipment supply, maintenance support, and operational services to businesses across multiple sectors. Franklin combines technical expertise with advanced analytical skills to help organizations optimize operations, reduce energy waste, and improve overall business performance. He is certified in Six Sigma, Power BI, Sustainability Management, and Project Management, with strong proficiency in Microsoft Excel, ERP systems, CRM systems, and data analytics tools.",
     image:    '/team/member-1.jpg',
     linkedin: '',
   },
   {
-    name:     '[TEAM MEMBER 2 FULL NAME]',
-    role:     '[ROLE TITLE]',
-    bio:      '[Short bio here.]',
+    name:     'Olamide Soyobi',
+    role:     'Social Media & Communications Lead',
+    bio:      'Soyobi Favour Olamide is a Mass Communication graduate with a strong passion for digital communication and brand storytelling. As a skilled social media manager, she specializes in content strategy, audience engagement, and online brand growth. With a blend of creativity and communication expertise, she helps brands build meaningful connections and maintain a compelling digital presence.',
     image:    '/team/member-2.jpg',
     linkedin: '',
   },
   {
-    name:     '[TEAM MEMBER 3 FULL NAME]',
-    role:     '[ROLE TITLE]',
-    bio:      '[Short bio here.]',
+    name:     'Marvellous Adepoju',
+    role:     'IT Specialist',
+    bio:      'Marvellous Adepoju is a Software Developer and System Architect, he specializes in developing Software solutions for businesses and individuals He also focuses on building and maintaining automation systems for businesses, meeting their technological needs, while currently undergoing his bachelor\'s of Engineering programme in Computer Engineering ',
     image:    '/team/member-3.jpg',
     linkedin: '',
   },
@@ -95,7 +98,7 @@ export const team: {
 // ─── ABOUT PAGE ───────────────────────────────────────────────────────────────
 
 export const about = {
-  story: `Fraogo was founded in 2024 after its founders witnessed firsthand how difficult it was for Nigerian businesses and individuals to reliably source products, coordinate shipments, and access quality service providers. Too many people were losing money to unreliable suppliers, delayed logistics, or vendors who simply didn't show up — and there was no single trusted partner to turn to.
+  story: `Fraogo was founded in 2025 after its founders witnessed firsthand how difficult it was for Nigerian businesses and individuals to reliably source products, coordinate shipments, and access quality service providers. Too many people were losing money to unreliable suppliers, delayed logistics, or vendors who simply didn't show up — and there was no single trusted partner to turn to.
 
 We built Fraogo to change that. Headquartered in Ikeja, Lagos, and registered with the Corporate Affairs Commission (RC8967311), we bring together procurement, logistics, and general services under one roof. Whether you need to import goods from abroad, ship cargo within Nigeria, or hire a vetted vendor for an upcoming project, Fraogo handles the complexity so you can focus on what matters most.
 

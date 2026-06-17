@@ -1,15 +1,16 @@
 'use client'
 
 import { useState } from 'react'
-import { Send, Loader2, CheckCircle2 } from 'lucide-react'
+import { Send, Loader2, CheckCircle2, MapPin } from 'lucide-react'
 import { contact, company } from '@/content'
 import { submitContactForm, type ContactFormData } from '@/app/actions/contact'
-import { InstagramIcon, FacebookIcon, TwitterIcon, LinkedInIcon } from '@/components/ui/social-icons'
+import { InstagramIcon, FacebookIcon, TwitterIcon, LinkedInIcon, TikTokIcon } from '@/components/ui/social-icons'
 
 const socials = [
   { href: contact.social.instagram, Icon: InstagramIcon, label: 'Instagram' },
   { href: contact.social.facebook,  Icon: FacebookIcon,  label: 'Facebook' },
   { href: contact.social.twitter,   Icon: TwitterIcon,   label: 'Twitter / X' },
+  { href: contact.social.tiktok,    Icon: TikTokIcon,    label: 'TikTok' },
   { href: contact.social.linkedin,  Icon: LinkedInIcon,  label: 'LinkedIn' },
 ].filter((s) => s.href)
 
@@ -48,6 +49,17 @@ export default function ContactPage() {
 
   const whatsappUrl = contact.whatsapp && contact.whatsapp !== '[WHATSAPP_NUMBER_DIGITS_ONLY]'
     ? `https://wa.me/${contact.whatsapp}?text=${encodeURIComponent("Hi Fraogo, I'd like to enquire about your services.")}`
+    : null
+
+  // Use an explicit embed URL if provided, otherwise build a no-API-key map from the address
+  const mapSrc =
+    contact.googleMapsEmbedUrl ||
+    (contact.address
+      ? `https://maps.google.com/maps?q=${encodeURIComponent(contact.address)}&z=15&output=embed`
+      : '')
+
+  const directionsUrl = contact.address
+    ? `https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(contact.address)}`
     : null
 
   return (
@@ -248,20 +260,41 @@ export default function ContactPage() {
         </div>
       </section>
 
-      {/* ── Google Maps ── */}
-      {contact.googleMapsEmbedUrl && (
-        <div className="w-full h-80 lg:h-96 border-t border-gray-100">
-          <iframe
-            src={contact.googleMapsEmbedUrl}
-            width="100%"
-            height="100%"
-            style={{ border: 0 }}
-            allowFullScreen
-            loading="lazy"
-            referrerPolicy="no-referrer-when-downgrade"
-            title={`${company.name} location on Google Maps`}
-          />
-        </div>
+      {/* ── Find Us (map) ── */}
+      {mapSrc && (
+        <section className="border-t border-gray-100">
+          <div className="section-container pt-14 lg:pt-20 pb-7">
+            <p className="text-xs font-bold uppercase tracking-widest mb-3 text-[#1B4AD4]">Find Us</p>
+            <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4">
+              <h2 className="text-2xl lg:text-3xl font-black text-gray-900 leading-tight">
+                Visit our office
+              </h2>
+              {directionsUrl && (
+                <a
+                  href={directionsUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-2 text-sm font-bold text-[#1B4AD4] hover:underline"
+                >
+                  <MapPin className="w-4 h-4" />
+                  Get directions
+                </a>
+              )}
+            </div>
+          </div>
+          <div className="w-full h-80 lg:h-[28rem]">
+            <iframe
+              src={mapSrc}
+              width="100%"
+              height="100%"
+              style={{ border: 0 }}
+              allowFullScreen
+              loading="lazy"
+              referrerPolicy="no-referrer-when-downgrade"
+              title={`${company.name} location on Google Maps`}
+            />
+          </div>
+        </section>
       )}
     </div>
   )

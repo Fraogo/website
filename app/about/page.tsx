@@ -110,12 +110,21 @@ export default function AboutPage() {
         <section className="section-padding border-t border-gray-100" style={{ background: '#F5F7FF' }}>
           <div className="section-container">
             <p className="text-xs font-bold uppercase tracking-widest mb-3 text-[#1B4AD4]">The People</p>
-            <h2 className="text-3xl lg:text-4xl font-black text-gray-900 mb-10">Meet Our Team</h2>
-            <div className="grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-5">
-              {visibleTeam.map((member) => (
-                <TeamCard key={member.name} member={member} />
-              ))}
+            <h2 className="text-3xl lg:text-4xl font-black text-gray-900 mb-8 lg:mb-10">Meet Our Team</h2>
+
+            {/* Team lead — featured, larger across all devices */}
+            <div className="mb-5 sm:mb-6">
+              <TeamCard member={visibleTeam[0]} featured />
             </div>
+
+            {/* Remaining members */}
+            {visibleTeam.length > 1 && (
+              <div className="grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">
+                {visibleTeam.slice(1).map((member) => (
+                  <TeamCard key={member.name} member={member} />
+                ))}
+              </div>
+            )}
           </div>
         </section>
       )}

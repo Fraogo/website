@@ -1,7 +1,7 @@
 import Link from 'next/link'
 import { Phone, Mail, MapPin } from 'lucide-react'
 import { contact, company } from '@/content'
-import { InstagramIcon, FacebookIcon, TwitterIcon, LinkedInIcon } from '@/components/ui/social-icons'
+import { InstagramIcon, FacebookIcon, TwitterIcon, LinkedInIcon, TikTokIcon } from '@/components/ui/social-icons'
 
 export default function Footer() {
   return (
@@ -46,6 +46,12 @@ export default function Footer() {
                 <a href={contact.social.linkedin} target="_blank" rel="noopener noreferrer" aria-label="LinkedIn"
                   className="w-8 h-8 rounded-lg flex items-center justify-center text-white/40 hover:text-white hover:bg-white/10 transition-all">
                   <LinkedInIcon />
+                </a>
+              )}
+              {contact.social.tiktok && (
+                <a href={contact.social.tiktok} target="_blank" rel="noopener noreferrer" aria-label="TikTok"
+                  className="w-8 h-8 rounded-lg flex items-center justify-center text-white/40 hover:text-white hover:bg-white/10 transition-all">
+                  <TikTokIcon />
                 </a>
               )}
             </div>

@@ -5,16 +5,17 @@
 /* ─────────────────────────────────────────────────────────────────────────────
    BRAND COLOUR TOKENS
    ─────────────────────────────────────────────────────────────────────────────
-   When your designer sends the final colours, change ONLY the four values
-   labelled "Primary brand blue" and "Section bg" below. Everything on the
-   site updates automatically.
+   When your designer sends the final colours, change ONLY the five values
+   under "Primary brand blue" below. Everything on the site updates
+   automatically. These mirror brand/colors.md — keep the two in sync.
    ──────────────────────────────────────────────────────────────────────────── */
 :root {
-  /* ── Primary brand blue ───────────────────────────────────────── */
-  --blue-deep:   #0E2A82;   /* darkest — used for footers, sidebar, deep gradients */
+  /* ── Primary brand blue (see brand/colors.md) ─────────────────── */
+  --blue-deep:   #070F2B;   /* darkest — hero/dark backgrounds, deepest gradients */
+  --blue-dark:   #0E2A82;   /* deep — footers, sidebar, deep section backgrounds  */
   --blue-primary:#1B4AD4;   /* main brand blue — buttons, links, headings         */
-  --blue-mid:    #2A5EE8;   /* slightly brighter — gradient lighter end            */
-  --blue-pale:   #EEF2FF;   /* section background tint                             */
+  --blue-mid:    #2A5EE8;   /* brighter — gradient lighter end                    */
+  --blue-pale:   #EEF2FF;   /* section background tint                            */
 
   /* ── Neutrals ─────────────────────────────────────────────────── */
   --white:       #FFFFFF;
@@ -212,7 +213,7 @@
 
   /* ── Page Header (blue gradient banner at top of inner pages) ───── */
   .page-header {
-    background: linear-gradient(135deg, var(--blue-deep) 0%, var(--blue-primary) 60%, var(--blue-mid) 100%);
+    background: linear-gradient(135deg, var(--blue-deep) 0%, var(--blue-dark) 60%, var(--blue-primary) 100%);
     color: white;
     padding-top: 5rem;
     padding-bottom: 3.5rem;

@@ -81,23 +81,22 @@ export default function HomePage() {
         <div className="section-container relative z-10 w-full pb-14 sm:pb-18 lg:pb-24">
           <div className="max-w-3xl">
             <p className="text-blue-300 text-xs font-semibold uppercase tracking-widest mb-5 sm:mb-6">
-              Ikeja, Lagos · Nigeria
+              {company.heroEyebrow}
             </p>
 
             <h1 className="font-black text-white leading-[1.0] tracking-tight mb-6 sm:mb-7"
               style={{ fontSize: 'clamp(2.5rem, 8vw, 5rem)' }}
             >
-              Procurement.<br />
-              Logistics.<br />
-              General Services —<br />
-              <span style={{ color: '#93B4F8' }}>Done in Nigeria.</span>
+              {company.heroHeadlineLines.map((line) => (
+                <span key={line}>{line}<br /></span>
+              ))}
+              <span style={{ color: '#93B4F8' }}>{company.heroHeadlineAccent}</span>
             </h1>
 
             <p className="text-white/55 leading-relaxed mb-8 sm:mb-10 max-w-xl"
               style={{ fontSize: 'clamp(0.95rem, 2.5vw, 1.125rem)' }}
             >
-              From sourcing products globally to transporting goods across Nigeria —
-              Fraogo handles the complexity so you can focus on your business.
+              {company.heroSubtext}
             </p>
 
             <div className="flex flex-col sm:flex-row items-start gap-3 sm:gap-4">

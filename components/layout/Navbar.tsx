@@ -78,6 +78,12 @@ export default function Navbar() {
     return () => document.removeEventListener('mousedown', onOutside)
   }, [])
 
+  // Lock body scroll while the mobile menu is open
+  useEffect(() => {
+    document.body.style.overflow = mobileOpen ? 'hidden' : ''
+    return () => { document.body.style.overflow = '' }
+  }, [mobileOpen])
+
   const isAdminPage = pathname.startsWith('/admin')
   const solidBg = scrolled || isAdminPage || mobileOpen
 
@@ -119,6 +125,8 @@ export default function Navbar() {
               <div key={item.label} className="relative">
                 <button
                   onClick={() => setOpenDropdown(openDropdown === item.label ? null : item.label)}
+                  aria-haspopup="true"
+                  aria-expanded={openDropdown === item.label}
                   className={cn(
                     'flex items-center gap-1.5 px-3.5 py-2 rounded-lg text-sm font-semibold transition-all duration-150',
                     solidBg
@@ -207,6 +215,8 @@ export default function Navbar() {
                 <div key={item.label}>
                   <button
                     onClick={() => setOpenDropdown(openDropdown === item.label ? null : item.label)}
+                    aria-haspopup="true"
+                    aria-expanded={openDropdown === item.label}
                     className="w-full flex items-center justify-between px-4 py-3 text-sm font-semibold text-gray-800 hover:bg-blue-50 hover:text-[#1B4AD4] transition-colors"
                   >
                     <span className="flex items-center gap-2">

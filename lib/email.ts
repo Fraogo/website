@@ -3,7 +3,7 @@ import { Resend } from 'resend'
 const resend = new Resend(process.env.RESEND_API_KEY || 're_dummy_key_for_build')
 
 const FROM = process.env.EMAIL_FROM ?? 'FRAOGO <noreply@fraogo.com>'
-const ADMIN_EMAIL = process.env.ADMIN_EMAIL ?? 'info@fraogo.com'
+const ADMIN_EMAIL = process.env.ADMIN_EMAIL ?? 'fraogo6@gmail.com'
 const ADMIN_EMAIL_CC = process.env.ADMIN_EMAIL_CC
 
 interface SendEmailOptions {
@@ -57,22 +57,22 @@ export async function sendProcurementConfirmation(order: {
     .join('')
 
   const html = emailLayout(`
-    <h2 style="color:#0A4D2E;margin-bottom:8px">We've received your order!</h2>
+    <h2 style="color:#0E2A82;margin-bottom:8px">We've received your order!</h2>
     <p style="color:#374151;margin-bottom:24px">Hi <strong>${order.customerName}</strong>, thank you for placing an order with FRAOGO. Our team will review your request and contact you within <strong>24–48 hours</strong> to discuss next steps.</p>
     
-    <div style="background:#f0fdf4;border-left:4px solid #0A4D2E;padding:16px;margin-bottom:24px;border-radius:4px">
-      <p style="margin:0;font-size:14px;color:#166534"><strong>Order Type:</strong> ${order.type === 'nigeria' ? '🇳🇬 Nigeria Order' : '🌍 International Order'}</p>
-      <p style="margin:4px 0 0;font-size:14px;color:#166534"><strong>Contact:</strong> ${order.customerPhone}</p>
+    <div style="background:#EEF2FF;border-left:4px solid #0E2A82;padding:16px;margin-bottom:24px;border-radius:4px">
+      <p style="margin:0;font-size:14px;color:#0E2A82"><strong>Order Type:</strong> ${order.type === 'nigeria' ? '🇳🇬 Nigeria Order' : '🌍 International Order'}</p>
+      <p style="margin:4px 0 0;font-size:14px;color:#0E2A82"><strong>Contact:</strong> ${order.customerPhone}</p>
     </div>
 
-    <h3 style="color:#0A4D2E;margin-bottom:12px">Order Summary</h3>
+    <h3 style="color:#0E2A82;margin-bottom:12px">Order Summary</h3>
     <table style="width:100%;border-collapse:collapse;font-size:14px;margin-bottom:24px">
       <thead>
-        <tr style="background:#0A4D2E;color:#ffffff">
-          <th style="padding:10px 12px;text-align:left;border:1px solid #0A4D2E">Item Name</th>
-          <th style="padding:10px 12px;text-align:left;border:1px solid #0A4D2E">Specification</th>
-          <th style="padding:10px 12px;text-align:center;border:1px solid #0A4D2E">Qty</th>
-          <th style="padding:10px 12px;text-align:left;border:1px solid #0A4D2E">Delivery Mode</th>
+        <tr style="background:#0E2A82;color:#ffffff">
+          <th style="padding:10px 12px;text-align:left;border:1px solid #0E2A82">Item Name</th>
+          <th style="padding:10px 12px;text-align:left;border:1px solid #0E2A82">Specification</th>
+          <th style="padding:10px 12px;text-align:center;border:1px solid #0E2A82">Qty</th>
+          <th style="padding:10px 12px;text-align:left;border:1px solid #0E2A82">Delivery Mode</th>
         </tr>
       </thead>
       <tbody>${itemRows}</tbody>
@@ -89,19 +89,19 @@ export async function sendProcurementConfirmation(order: {
 
   // Admin notification
   const adminHtml = emailLayout(`
-    <h2 style="color:#0A4D2E">New Procurement Order</h2>
+    <h2 style="color:#0E2A82">New Procurement Order</h2>
     <p><strong>Customer:</strong> ${order.customerName}<br>
     <strong>Email:</strong> ${order.customerEmail}<br>
     <strong>Phone:</strong> ${order.customerPhone}<br>
     <strong>Type:</strong> ${order.type}</p>
-    <h3 style="color:#0A4D2E">Items</h3>
+    <h3 style="color:#0E2A82">Items</h3>
     <table style="width:100%;border-collapse:collapse;font-size:14px">
       <thead>
-        <tr style="background:#0A4D2E;color:#fff">
-          <th style="padding:8px;border:1px solid #0A4D2E;text-align:left">Item</th>
-          <th style="padding:8px;border:1px solid #0A4D2E;text-align:left">Spec</th>
-          <th style="padding:8px;border:1px solid #0A4D2E">Qty</th>
-          <th style="padding:8px;border:1px solid #0A4D2E;text-align:left">Delivery</th>
+        <tr style="background:#0E2A82;color:#fff">
+          <th style="padding:8px;border:1px solid #0E2A82;text-align:left">Item</th>
+          <th style="padding:8px;border:1px solid #0E2A82;text-align:left">Spec</th>
+          <th style="padding:8px;border:1px solid #0E2A82">Qty</th>
+          <th style="padding:8px;border:1px solid #0E2A82;text-align:left">Delivery</th>
         </tr>
       </thead>
       <tbody>${itemRows}</tbody>
@@ -131,7 +131,7 @@ export async function sendDeliveryConfirmation(req: {
   receiverContact: string
 }) {
   const html = emailLayout(`
-    <h2 style="color:#0A4D2E">Delivery Request Received</h2>
+    <h2 style="color:#0E2A82">Delivery Request Received</h2>
     <p>Hi <strong>${req.senderName}</strong>, we've received your delivery request. Our team will reach out shortly.</p>
     <table style="width:100%;border-collapse:collapse;font-size:14px;margin-top:16px">
       <tbody>
@@ -154,7 +154,7 @@ export async function sendDeliveryConfirmation(req: {
     cc: ADMIN_EMAIL_CC,
     subject: `[FRAOGO] New Delivery Request — ${req.senderName}`,
     html: emailLayout(`
-      <h2 style="color:#0A4D2E">New Delivery Request</h2>
+      <h2 style="color:#0E2A82">New Delivery Request</h2>
       <table style="width:100%;border-collapse:collapse;font-size:14px">
         <tbody>
           ${detailRow('Sender', `${req.senderName} — ${req.senderEmail} — ${req.senderPhone}`)}
@@ -182,7 +182,7 @@ export async function sendRelocationConfirmation(req: {
   transportBy: string
 }) {
   const html = emailLayout(`
-    <h2 style="color:#0A4D2E">Relocation Request Received</h2>
+    <h2 style="color:#0E2A82">Relocation Request Received</h2>
     <p>Hi <strong>${req.customerName}</strong>, we've received your relocation request.</p>
     <table style="width:100%;border-collapse:collapse;font-size:14px;margin-top:16px">
       <tbody>
@@ -202,7 +202,7 @@ export async function sendRelocationConfirmation(req: {
     cc: ADMIN_EMAIL_CC,
     subject: `[FRAOGO] New Relocation Request — ${req.customerName}`,
     html: emailLayout(`
-      <h2 style="color:#0A4D2E">New Relocation Request</h2>
+      <h2 style="color:#0E2A82">New Relocation Request</h2>
       <table style="width:100%;border-collapse:collapse;font-size:14px">
         <tbody>
           ${detailRow('Customer', `${req.customerName} — ${req.customerEmail} — ${req.customerPhone}`)}
@@ -226,7 +226,7 @@ export async function sendVendorRegistrationConfirmation(vendor: {
   location: string
 }) {
   const html = emailLayout(`
-    <h2 style="color:#0A4D2E">Vendor Application Received</h2>
+    <h2 style="color:#0E2A82">Vendor Application Received</h2>
     <p>Hi <strong>${vendor.businessName}</strong>, thank you for applying to join the FRAOGO vendor network.</p>
     <p>Your application is currently <strong>under review</strong>. We'll notify you once it's been approved, which typically takes 1–3 business days.</p>
     <table style="width:100%;border-collapse:collapse;font-size:14px;margin-top:16px">
@@ -236,8 +236,8 @@ export async function sendVendorRegistrationConfirmation(vendor: {
         ${detailRow('Location', vendor.location)}
       </tbody>
     </table>
-    <div style="background:#f0fdf4;border-left:4px solid #0A4D2E;padding:16px;margin-top:20px;border-radius:4px">
-      <p style="margin:0;font-size:13px;color:#166534">By joining FRAOGO, you agreed that FRAOGO takes 10% of the total bargain as a service fee, and that you will not negotiate with customers directly outside the FRAOGO platform.</p>
+    <div style="background:#EEF2FF;border-left:4px solid #0E2A82;padding:16px;margin-top:20px;border-radius:4px">
+      <p style="margin:0;font-size:13px;color:#0E2A82">By joining FRAOGO, you agreed that FRAOGO takes 10% of the total bargain as a service fee, and that you will not negotiate with customers directly outside the FRAOGO platform.</p>
     </div>
   `)
 
@@ -257,7 +257,7 @@ export async function sendVendorAdminNotification(vendor: {
   ninDocumentUrl: string
 }) {
   const html = emailLayout(`
-    <h2 style="color:#0A4D2E">New Vendor Application</h2>
+    <h2 style="color:#0E2A82">New Vendor Application</h2>
     <table style="width:100%;border-collapse:collapse;font-size:14px">
       <tbody>
         ${detailRow('Business Name', vendor.businessName)}
@@ -265,10 +265,10 @@ export async function sendVendorAdminNotification(vendor: {
         ${detailRow('Phone', vendor.phone)}
         ${detailRow('Service Type', vendor.businessType)}
         ${detailRow('Location', vendor.location)}
-        ${detailRow('NIN Document', `<a href="${vendor.ninDocumentUrl}" style="color:#0A4D2E">View Document</a>`)}
+        ${detailRow('NIN Document', `<a href="${vendor.ninDocumentUrl}" style="color:#0E2A82">View Document</a>`)}
       </tbody>
     </table>
-    <p style="margin-top:16px"><a href="${process.env.NEXTAUTH_URL}/admin/vendors" style="background:#0A4D2E;color:#fff;padding:10px 20px;text-decoration:none;border-radius:6px;display:inline-block">Review in Admin Panel</a></p>
+    <p style="margin-top:16px"><a href="${process.env.NEXTAUTH_URL}/admin/vendors" style="background:#0E2A82;color:#fff;padding:10px 20px;text-decoration:none;border-radius:6px;display:inline-block">Review in Admin Panel</a></p>
   `)
 
   await sendEmail({
@@ -285,11 +285,11 @@ export async function sendVendorApprovalWithMagicLink(vendor: {
   magicLinkUrl: string
 }) {
   const html = emailLayout(`
-    <h2 style="color:#0A4D2E">Your Application Has Been Approved! 🎉</h2>
+    <h2 style="color:#0E2A82">Your Application Has Been Approved! 🎉</h2>
     <p>Hi <strong>${vendor.businessName}</strong>, congratulations! Your vendor application has been approved by FRAOGO.</p>
     <p>You can now access your vendor dashboard to upload portfolio images that customers will see when browsing vendors.</p>
     <p style="margin:24px 0;text-align:center">
-      <a href="${vendor.magicLinkUrl}" style="background:#0A4D2E;color:#fff;padding:14px 32px;text-decoration:none;border-radius:8px;display:inline-block;font-size:16px;font-weight:600">Access My Dashboard</a>
+      <a href="${vendor.magicLinkUrl}" style="background:#0E2A82;color:#fff;padding:14px 32px;text-decoration:none;border-radius:8px;display:inline-block;font-size:16px;font-weight:600">Access My Dashboard</a>
     </p>
     <div style="background:#fef3c7;border-left:4px solid #C9A84C;padding:12px;border-radius:4px">
       <p style="margin:0;font-size:13px;color:#92400e">⚠️ This link expires in 7 days. If it expires, contact us to get a new link.</p>
@@ -316,7 +316,7 @@ export async function sendVendorRequestNotification(data: {
   budget?: string
 }) {
   const html = emailLayout(`
-    <h2 style="color:#0A4D2E">New Customer Request</h2>
+    <h2 style="color:#0E2A82">New Customer Request</h2>
     <p>Hi <strong>${data.vendorBusinessName}</strong>, a customer has requested your services through FRAOGO.</p>
     <table style="width:100%;border-collapse:collapse;font-size:14px;margin-top:16px">
       <tbody>
@@ -328,8 +328,8 @@ export async function sendVendorRequestNotification(data: {
         ${data.budget ? detailRow('Budget', data.budget) : ''}
       </tbody>
     </table>
-    <div style="background:#f0fdf4;border-left:4px solid #0A4D2E;padding:16px;margin-top:20px;border-radius:4px">
-      <p style="margin:0;font-size:13px;color:#166534">FRAOGO will facilitate the connection. Please do not negotiate directly with the customer outside the FRAOGO platform.</p>
+    <div style="background:#EEF2FF;border-left:4px solid #0E2A82;padding:16px;margin-top:20px;border-radius:4px">
+      <p style="margin:0;font-size:13px;color:#0E2A82">FRAOGO will facilitate the connection. Please do not negotiate directly with the customer outside the FRAOGO platform.</p>
     </div>
   `)
 
@@ -346,7 +346,7 @@ export async function sendVendorRequestCustomerAck(data: {
   vendorBusinessName: string
 }) {
   const html = emailLayout(`
-    <h2 style="color:#0A4D2E">Request Sent Successfully ✅</h2>
+    <h2 style="color:#0E2A82">Request Sent Successfully ✅</h2>
     <p>Hi <strong>${data.customerName}</strong>, your request has been sent to <strong>${data.vendorBusinessName}</strong>.</p>
     <p>FRAOGO will facilitate the connection and our team will reach out to you shortly to confirm the arrangement.</p>
     <div style="background:#fef3c7;border-left:4px solid #C9A84C;padding:12px;border-radius:4px;margin-top:16px">
@@ -383,14 +383,14 @@ export async function sendSupplyOrderConfirmation(order: {
     .join('')
 
   const html = emailLayout(`
-    <h2 style="color:#0A4D2E">Supply Order Received ✅</h2>
+    <h2 style="color:#0E2A82">Supply Order Received ✅</h2>
     <p>Hi <strong>${order.customerName}</strong>, we've received your supply order.</p>
     <table style="width:100%;border-collapse:collapse;font-size:14px;margin-top:16px;margin-bottom:16px">
       <thead>
-        <tr style="background:#0A4D2E;color:#fff">
-          <th style="padding:8px 12px;text-align:left;border:1px solid #0A4D2E">Item</th>
-          <th style="padding:8px 12px;text-align:center;border:1px solid #0A4D2E">Qty</th>
-          <th style="padding:8px 12px;text-align:left;border:1px solid #0A4D2E">Unit</th>
+        <tr style="background:#0E2A82;color:#fff">
+          <th style="padding:8px 12px;text-align:left;border:1px solid #0E2A82">Item</th>
+          <th style="padding:8px 12px;text-align:center;border:1px solid #0E2A82">Qty</th>
+          <th style="padding:8px 12px;text-align:left;border:1px solid #0E2A82">Unit</th>
         </tr>
       </thead>
       <tbody>${itemRows}</tbody>
@@ -406,16 +406,16 @@ export async function sendSupplyOrderConfirmation(order: {
     cc: ADMIN_EMAIL_CC,
     subject: `[FRAOGO] New Supply Order — ${order.customerName}`,
     html: emailLayout(`
-      <h2 style="color:#0A4D2E">New Supply Order</h2>
+      <h2 style="color:#0E2A82">New Supply Order</h2>
       <p><strong>Customer:</strong> ${order.customerName} — ${order.customerEmail} — ${order.customerPhone}</p>
       <p><strong>Destination:</strong> ${order.destination}</p>
       <p><strong>Preferred Date:</strong> ${new Date(order.preferredDate).toLocaleDateString('en-NG', { dateStyle: 'full' })}</p>
       <table style="width:100%;border-collapse:collapse;font-size:14px">
         <thead>
-          <tr style="background:#0A4D2E;color:#fff">
-            <th style="padding:8px;text-align:left;border:1px solid #0A4D2E">Item</th>
-            <th style="padding:8px;text-align:center;border:1px solid #0A4D2E">Qty</th>
-            <th style="padding:8px;text-align:left;border:1px solid #0A4D2E">Unit</th>
+          <tr style="background:#0E2A82;color:#fff">
+            <th style="padding:8px;text-align:left;border:1px solid #0E2A82">Item</th>
+            <th style="padding:8px;text-align:center;border:1px solid #0E2A82">Qty</th>
+            <th style="padding:8px;text-align:left;border:1px solid #0E2A82">Unit</th>
           </tr>
         </thead>
         <tbody>${itemRows}</tbody>
@@ -446,9 +446,9 @@ function emailLayout(content: string) {
         <table width="600" cellpadding="0" cellspacing="0" style="background:#ffffff;border-radius:12px;overflow:hidden;box-shadow:0 4px 6px rgba(0,0,0,0.05)">
           <!-- Header -->
           <tr>
-            <td style="background:linear-gradient(135deg,#0A4D2E 0%,#1A6B42 100%);padding:32px 40px;text-align:center">
+            <td style="background:linear-gradient(135deg,#0E2A82 0%,#1B4AD4 100%);padding:32px 40px;text-align:center">
               <h1 style="margin:0;color:#ffffff;font-size:28px;font-weight:800;letter-spacing:-0.5px">FRAOGO</h1>
-              <p style="margin:6px 0 0;color:#86efac;font-size:13px">Procurement · Logistics · General Service</p>
+              <p style="margin:6px 0 0;color:#93B4F8;font-size:13px">Procurement · Logistics · General Service</p>
             </td>
           </tr>
           <!-- Body -->

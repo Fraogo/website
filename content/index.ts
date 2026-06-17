@@ -13,16 +13,21 @@ export const company = {
   name: 'Fraogo',
   legalName: 'Fraogo Limited',
   tagline: 'Procurement · Logistics · General Services',
-  shortDescription: "Nigeria's trusted partner for procurement, freight, and business services.",
+  shortDescription: 'Procurement, freight, and business services for Nigerian businesses and individuals.',
   longDescription: `Fraogo is a Nigerian company built to simplify how businesses and individuals
 source products, move goods, and access quality services. We handle the complexity —
 you focus on what matters.`,
   rc: 'RC8967311',
   founded: '2024',
 
-  heroHeadline: 'Source it.\nMove it. Done.',
+  // ── Homepage hero ──────────────────────────────────────────────────────────
+  // The headline is shown as stacked lines; the last line is highlighted.
+  // Edit the text here and the homepage updates automatically.
+  heroEyebrow: 'Ikeja, Lagos · Nigeria',
+  heroHeadlineLines: ['Procurement.', 'Logistics.', 'General Services —'],
+  heroHeadlineAccent: 'Done in Nigeria.',
   heroSubtext:
-    'From sourcing products globally to transporting goods across Nigeria and beyond — Fraogo handles everything so you can focus on growing your business.',
+    'From sourcing products globally to transporting goods across Nigeria — Fraogo handles the complexity so you can focus on your business.',
 
   // Leave stats as an empty array — fake numbers hurt trust more than no numbers
   stats: [] as { value: string; label: string }[],

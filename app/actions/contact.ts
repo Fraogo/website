@@ -28,7 +28,7 @@ export async function submitContactForm(data: ContactFormData) {
       data: { name, email, phone: phone ?? null, subject, message },
     })
 
-    const ADMIN_EMAIL = process.env.ADMIN_EMAIL ?? 'info@fraogo.com'
+    const ADMIN_EMAIL = process.env.ADMIN_EMAIL ?? 'fraogo6@gmail.com'
     const ADMIN_CC    = process.env.ADMIN_EMAIL_CC
 
     await sendEmail({

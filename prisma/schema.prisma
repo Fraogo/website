@@ -60,7 +60,7 @@ model Vendor {
   location       String
   phone          String
   businessType   String
-  ninDocumentUrl String
+  ninDocumentUrl String?
   email          String?
   status         String          @default("pending_review") // pending_review | active | rejected
   portfolioImages VendorImage[]

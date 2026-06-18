@@ -5,6 +5,7 @@ import type { Metadata } from 'next'
 import { revalidatePath } from 'next/cache'
 import DeleteButton from '@/components/admin/DeleteButton'
 import RefreshButton from '@/components/admin/RefreshButton'
+import ContactButtons from '@/components/admin/ContactButtons'
 
 export const metadata: Metadata = { title: 'Contact Messages — Admin' }
 export const dynamic = 'force-dynamic'
@@ -108,12 +109,12 @@ export default async function AdminContactsPage() {
                     </button>
                   </form>
                 )}
-                <a
-                  href={`mailto:${inquiry.email}?subject=Re: ${encodeURIComponent(inquiry.subject)}`}
-                  className="text-xs font-semibold px-3 py-1.5 rounded-lg bg-blue-50 text-[#1B4AD4] hover:bg-blue-100 transition-colors"
-                >
-                  Reply via Email
-                </a>
+                <ContactButtons
+                  phone={inquiry.phone}
+                  email={inquiry.email}
+                  subject={`Re: ${inquiry.subject}`}
+                  message={`Hi ${inquiry.name}, thank you for contacting Fraogo regarding "${inquiry.subject}".`}
+                />
                 <DeleteButton id={inquiry.id} action={deleteContactInquiry} label="Delete" confirmText="Delete this message permanently?" />
               </div>
             </div>

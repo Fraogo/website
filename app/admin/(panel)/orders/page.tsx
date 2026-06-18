@@ -1,10 +1,11 @@
-﻿import { getProcurementOrders, deleteProcurementOrder } from '@/app/actions/procurement'
+import { getProcurementOrders, deleteProcurementOrder } from '@/app/actions/procurement'
 import { formatDateTime, getStatusColor } from '@/lib/utils'
 import Link from 'next/link'
 import { Package } from 'lucide-react'
 import type { Metadata } from 'next'
 import DeleteButton from '@/components/admin/DeleteButton'
 import RefreshButton from '@/components/admin/RefreshButton'
+import ContactButtons from '@/components/admin/ContactButtons'
 
 export const metadata: Metadata = { title: 'Procurement Orders' }
 export const dynamic = 'force-dynamic'
@@ -48,56 +49,69 @@ export default async function AdminOrdersPage({
         ))}
       </div>
 
-      {/* Table */}
-      <div className="bg-white rounded-2xl shadow-soft border border-border overflow-hidden">
-        {orders.length === 0 ? (
-          <div className="p-12 text-center">
-            <Package className="w-10 h-10 text-gray-300 mx-auto mb-3" />
-            <p className="text-gray-500 text-sm">No orders found</p>
-          </div>
-        ) : (
-          <div className="overflow-x-auto">
-            <table className="data-table">
-              <thead>
-                <tr>
-                  <th>Customer</th>
-                  <th>Email</th>
-                  <th>Phone</th>
-                  <th>Type</th>
-                  <th>Items</th>
-                  <th>Status</th>
-                  <th>Date</th>
-                  <th></th>
-                </tr>
-              </thead>
-              <tbody>
-                {orders.map((order: any) => {
-                  const items = Array.isArray(order.items) ? order.items : []
-                  return (
-                    <tr key={order.id}>
-                      <td className="font-semibold text-gray-900 whitespace-nowrap">{order.customerName}</td>
-                      <td className="text-gray-600">{order.customerEmail}</td>
-                      <td className="text-gray-600 whitespace-nowrap">{order.customerPhone}</td>
-                      <td>
-                        <span className="text-xs font-semibold px-2 py-0.5 rounded-full bg-gray-100 text-gray-700">
-                          {order.type === 'nigeria' ? '🇳🇬 Nigeria' : '🌍 Intl'}
-                        </span>
-                      </td>
-                      <td className="text-gray-600 text-xs">{items.length} item{items.length !== 1 ? 's' : ''}</td>
-                      <td>
-                        <span className={`status-badge ${getStatusColor(order.status)}`}>{order.status}</span>
-                      </td>
-                      <td className="text-gray-500 text-xs whitespace-nowrap">{formatDateTime(order.createdAt)}</td>
-                      <td><DeleteButton id={order.id} action={deleteProcurementOrder} confirmText="Delete this order permanently?" /></td>
-                    </tr>
-                  )
-                })}
-              </tbody>
-            </table>
-          </div>
-        )}
-      </div>
+      {orders.length === 0 ? (
+        <div className="bg-white rounded-2xl border border-gray-100 p-12 text-center shadow-soft">
+          <Package className="w-10 h-10 text-gray-300 mx-auto mb-3" />
+          <p className="text-gray-500 text-sm">No orders found</p>
+        </div>
+      ) : (
+        <div className="space-y-4">
+          {orders.map((order: any) => {
+            const items = Array.isArray(order.items) ? order.items : []
+            const itemSummary = items.map((it: any) => `${it.quantity}x ${it.name}`).join(', ')
+            const message = `Hi ${order.customerName}, regarding your Fraogo procurement order (${order.type === 'nigeria' ? 'Nigeria' : 'International'})${itemSummary ? ` — ${itemSummary}` : ''}:`
+            return (
+              <div key={order.id} className="bg-white rounded-2xl border border-gray-100 shadow-soft p-5">
+                <div className="flex flex-wrap items-start justify-between gap-3 mb-3">
+                  <div>
+                    <div className="flex items-center gap-2 flex-wrap">
+                      <h2 className="font-black text-gray-900 text-base">{order.customerName}</h2>
+                      <span className={`status-badge ${getStatusColor(order.status)}`}>{order.status}</span>
+                      <span className="text-xs font-semibold px-2 py-0.5 rounded-full bg-gray-100 text-gray-700">
+                        {order.type === 'nigeria' ? '🇳🇬 Nigeria' : '🌍 International'}
+                      </span>
+                    </div>
+                    <p className="text-xs text-gray-400 mt-1">{formatDateTime(order.createdAt)}</p>
+                  </div>
+                  <DeleteButton id={order.id} action={deleteProcurementOrder} confirmText="Delete this order permanently?" />
+                </div>
+
+                <div className="flex flex-wrap gap-x-4 gap-y-1 text-xs mb-4">
+                  <span className="text-gray-500"><strong className="text-gray-700">Email:</strong> {order.customerEmail}</span>
+                  <span className="text-gray-500"><strong className="text-gray-700">Phone:</strong> {order.customerPhone}</span>
+                </div>
+
+                {items.length > 0 && (
+                  <div className="rounded-xl border border-gray-100 overflow-hidden mb-4 overflow-x-auto">
+                    <table className="w-full text-xs min-w-[28rem]">
+                      <thead className="bg-gray-50 text-gray-500">
+                        <tr>
+                          <th className="text-left px-3 py-2 font-semibold">Item</th>
+                          <th className="text-left px-3 py-2 font-semibold">Specification</th>
+                          <th className="text-center px-3 py-2 font-semibold">Qty</th>
+                          <th className="text-left px-3 py-2 font-semibold">Delivery</th>
+                        </tr>
+                      </thead>
+                      <tbody className="divide-y divide-gray-50">
+                        {items.map((it: any, i: number) => (
+                          <tr key={i}>
+                            <td className="px-3 py-2 text-gray-800 font-medium">{it.name}</td>
+                            <td className="px-3 py-2 text-gray-500">{it.specification}</td>
+                            <td className="px-3 py-2 text-center text-gray-700">{it.quantity}</td>
+                            <td className="px-3 py-2 text-gray-500">{it.deliveryMode}{it.deliveryAddress ? ` — ${it.deliveryAddress}` : ''}</td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+                )}
+
+                <ContactButtons phone={order.customerPhone} email={order.customerEmail} subject="Your Fraogo procurement order" message={message} />
+              </div>
+            )
+          })}
+        </div>
+      )}
     </div>
   )
 }
-

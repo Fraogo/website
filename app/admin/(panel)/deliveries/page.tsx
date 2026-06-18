@@ -1,10 +1,12 @@
-﻿import { getDeliveryRequests, deleteDeliveryRequest } from '@/app/actions/delivery'
+import { getDeliveryRequests, deleteDeliveryRequest } from '@/app/actions/delivery'
 import { formatDateTime, getStatusColor } from '@/lib/utils'
 import Link from 'next/link'
 import { Truck } from 'lucide-react'
 import type { Metadata } from 'next'
 import DeleteButton from '@/components/admin/DeleteButton'
 import RefreshButton from '@/components/admin/RefreshButton'
+import ContactButtons from '@/components/admin/ContactButtons'
+import Field from '@/components/admin/Field'
 
 export const metadata: Metadata = { title: 'Delivery Requests' }
 export const dynamic = 'force-dynamic'
@@ -27,7 +29,7 @@ export default async function AdminDeliveriesPage({
         <RefreshButton />
       </div>
 
-      <div className="flex gap-2">
+      <div className="flex flex-wrap gap-2">
         {['all', 'pending', 'confirmed', 'completed', 'cancelled'].map((s) => (
           <Link key={s} href={s === 'all' ? '/admin/deliveries' : `/admin/deliveries?status=${s}`}
             className={`px-3 py-1.5 rounded-lg text-xs font-semibold capitalize transition-all ${(s === 'all' && !status) || status === s ? 'text-white' : 'bg-white border border-border text-gray-600 hover:border-gray-400'}`}
@@ -36,37 +38,49 @@ export default async function AdminDeliveriesPage({
         ))}
       </div>
 
-      <div className="bg-white rounded-2xl shadow-soft border border-border overflow-hidden">
-        {deliveries.length === 0 ? (
-          <div className="p-12 text-center"><Truck className="w-10 h-10 text-gray-300 mx-auto mb-3" /><p className="text-gray-500 text-sm">No delivery requests found</p></div>
-        ) : (
-          <div className="overflow-x-auto">
-            <table className="data-table">
-              <thead>
-                <tr>
-                  <th>Sender</th><th>Email</th><th>Type</th><th>Destination</th><th>Receiver</th><th>Weight</th><th>Status</th><th>Date</th><th></th>
-                </tr>
-              </thead>
-              <tbody>
-                {deliveries.map((d: any) => (
-                  <tr key={d.id}>
-                    <td className="font-semibold whitespace-nowrap">{d.senderName}</td>
-                    <td className="text-gray-600 text-xs">{d.senderEmail}</td>
-                    <td><span className="text-xs px-2 py-0.5 rounded-full bg-gray-100 font-semibold">{d.type}</span></td>
-                    <td className="text-gray-600 max-w-32 truncate text-sm">{d.destination}</td>
-                    <td className="text-gray-600 text-sm whitespace-nowrap">{d.receiverName}</td>
-                    <td className="text-gray-600 text-xs whitespace-nowrap">{d.itemWeight} {d.weightUnit}</td>
-                    <td><span className={`status-badge ${getStatusColor(d.status)}`}>{d.status}</span></td>
-                    <td className="text-gray-500 text-xs whitespace-nowrap">{formatDateTime(d.createdAt)}</td>
-                    <td><DeleteButton id={d.id} action={deleteDeliveryRequest} confirmText="Delete this request permanently?" /></td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        )}
-      </div>
+      {deliveries.length === 0 ? (
+        <div className="bg-white rounded-2xl border border-gray-100 p-12 text-center shadow-soft">
+          <Truck className="w-10 h-10 text-gray-300 mx-auto mb-3" />
+          <p className="text-gray-500 text-sm">No delivery requests found</p>
+        </div>
+      ) : (
+        <div className="space-y-4">
+          {deliveries.map((d: any) => {
+            const message = `Hi ${d.senderName}, regarding your Fraogo ${d.type} delivery of "${d.itemDescription}" to ${d.destination} (receiver: ${d.receiverName}):`
+            return (
+              <div key={d.id} className="bg-white rounded-2xl border border-gray-100 shadow-soft p-5">
+                <div className="flex flex-wrap items-start justify-between gap-3 mb-4">
+                  <div>
+                    <div className="flex items-center gap-2 flex-wrap">
+                      <h2 className="font-black text-gray-900 text-base">{d.senderName}</h2>
+                      <span className={`status-badge ${getStatusColor(d.status)}`}>{d.status}</span>
+                      <span className="text-xs font-semibold px-2 py-0.5 rounded-full bg-gray-100 text-gray-700 capitalize">{d.type}</span>
+                    </div>
+                    <p className="text-xs text-gray-400 mt-1">{formatDateTime(d.createdAt)}</p>
+                  </div>
+                  <DeleteButton id={d.id} action={deleteDeliveryRequest} confirmText="Delete this request permanently?" />
+                </div>
+
+                <div className="grid grid-cols-2 sm:grid-cols-3 gap-4 mb-4">
+                  <Field label="Sender Email" value={d.senderEmail} />
+                  <Field label="Sender Phone" value={d.senderPhone} />
+                  <Field label="Weight" value={`${d.itemWeight} ${d.weightUnit}`} />
+                  <Field label="Destination" value={d.destination} />
+                  <Field label="Receiver" value={d.receiverName} />
+                  <Field label="Receiver Contact" value={d.receiverContact} />
+                  <div className="col-span-2 sm:col-span-3">
+                    <p className="text-[10px] font-bold uppercase tracking-wide text-gray-400">Item Description</p>
+                    <p className="text-sm text-gray-800">{d.itemDescription}</p>
+                  </div>
+                  <Field label="Inspection Consent" value={d.consentGiven ? 'Yes' : 'No'} />
+                </div>
+
+                <ContactButtons phone={d.senderPhone} email={d.senderEmail} subject="Your Fraogo delivery request" message={message} />
+              </div>
+            )
+          })}
+        </div>
+      )}
     </div>
   )
 }
-

@@ -1,10 +1,12 @@
-﻿import { getSupplyOrders, deleteSupplyOrder } from '@/app/actions/supply'
+import { getSupplyOrders, deleteSupplyOrder } from '@/app/actions/supply'
 import { formatDateTime, formatDate, getStatusColor } from '@/lib/utils'
 import Link from 'next/link'
 import { ShoppingBag } from 'lucide-react'
 import type { Metadata } from 'next'
 import DeleteButton from '@/components/admin/DeleteButton'
 import RefreshButton from '@/components/admin/RefreshButton'
+import ContactButtons from '@/components/admin/ContactButtons'
+import Field from '@/components/admin/Field'
 
 export const metadata: Metadata = { title: 'Supply Orders' }
 export const dynamic = 'force-dynamic'
@@ -25,7 +27,7 @@ export default async function AdminSupplyOrdersPage({
         <RefreshButton />
       </div>
 
-      <div className="flex gap-2">
+      <div className="flex flex-wrap gap-2">
         {['all', 'pending', 'confirmed', 'completed', 'cancelled'].map((s) => (
           <Link key={s} href={s === 'all' ? '/admin/supply-orders' : `/admin/supply-orders?status=${s}`}
             className={`px-3 py-1.5 rounded-lg text-xs font-semibold capitalize transition-all ${(s === 'all' && !status) || status === s ? 'text-white' : 'bg-white border border-border text-gray-600 hover:border-gray-400'}`}
@@ -34,41 +36,48 @@ export default async function AdminSupplyOrdersPage({
         ))}
       </div>
 
-      <div className="bg-white rounded-2xl shadow-soft border border-border overflow-hidden">
-        {orders.length === 0 ? (
-          <div className="p-12 text-center"><ShoppingBag className="w-10 h-10 text-gray-300 mx-auto mb-3" /><p className="text-gray-500 text-sm">No supply orders</p></div>
-        ) : (
-          <div className="overflow-x-auto">
-            <table className="data-table">
-              <thead>
-                <tr><th>Customer</th><th>Items</th><th>Destination</th><th>Preferred Date</th><th>Status</th><th>Submitted</th><th></th></tr>
-              </thead>
-              <tbody>
-                {orders.map((o: any) => {
-                  const items = Array.isArray(o.items) ? o.items as Array<{name: string; quantity: number; unit: string}> : []
-                  return (
-                    <tr key={o.id}>
-                      <td>
-                        <div className="font-semibold text-sm">{o.customerName}</div>
-                        <div className="text-xs text-gray-500">{o.customerEmail}</div>
-                      </td>
-                      <td className="text-xs text-gray-600">
-                        {items.map((item) => `${item.quantity} ${item.unit} ${item.name}`).join(', ')}
-                      </td>
-                      <td className="text-xs text-gray-600 max-w-32 truncate">{o.destination}</td>
-                      <td className="text-xs whitespace-nowrap">{formatDate(o.preferredDate)}</td>
-                      <td><span className={`status-badge ${getStatusColor(o.status)}`}>{o.status}</span></td>
-                      <td className="text-xs text-gray-500 whitespace-nowrap">{formatDateTime(o.createdAt)}</td>
-                      <td><DeleteButton id={o.id} action={deleteSupplyOrder} confirmText="Delete this order permanently?" /></td>
-                    </tr>
-                  )
-                })}
-              </tbody>
-            </table>
-          </div>
-        )}
-      </div>
+      {orders.length === 0 ? (
+        <div className="bg-white rounded-2xl border border-gray-100 p-12 text-center shadow-soft">
+          <ShoppingBag className="w-10 h-10 text-gray-300 mx-auto mb-3" />
+          <p className="text-gray-500 text-sm">No supply orders</p>
+        </div>
+      ) : (
+        <div className="space-y-4">
+          {orders.map((o: any) => {
+            const items = Array.isArray(o.items) ? o.items as Array<{ name: string; quantity: number; unit: string }> : []
+            const itemSummary = items.map((it) => `${it.quantity} ${it.unit} ${it.name}`).join(', ')
+            const message = `Hi ${o.customerName}, regarding your Fraogo supply order${itemSummary ? ` (${itemSummary})` : ''} to ${o.destination}:`
+            return (
+              <div key={o.id} className="bg-white rounded-2xl border border-gray-100 shadow-soft p-5">
+                <div className="flex flex-wrap items-start justify-between gap-3 mb-4">
+                  <div>
+                    <div className="flex items-center gap-2 flex-wrap">
+                      <h2 className="font-black text-gray-900 text-base">{o.customerName}</h2>
+                      <span className={`status-badge ${getStatusColor(o.status)}`}>{o.status}</span>
+                    </div>
+                    <p className="text-xs text-gray-400 mt-1">{formatDateTime(o.createdAt)}</p>
+                  </div>
+                  <DeleteButton id={o.id} action={deleteSupplyOrder} confirmText="Delete this order permanently?" />
+                </div>
+
+                <div className="grid grid-cols-2 sm:grid-cols-3 gap-4 mb-4">
+                  <Field label="Email" value={o.customerEmail} />
+                  <Field label="Phone" value={o.customerPhone} />
+                  <Field label="Preferred Date" value={formatDate(o.preferredDate)} />
+                  <div className="col-span-2 sm:col-span-3">
+                    <Field label="Delivery Destination" value={o.destination} />
+                  </div>
+                  <div className="col-span-2 sm:col-span-3">
+                    <Field label="Items" value={itemSummary} />
+                  </div>
+                </div>
+
+                <ContactButtons phone={o.customerPhone} email={o.customerEmail} subject="Your Fraogo supply order" message={message} />
+              </div>
+            )
+          })}
+        </div>
+      )}
     </div>
   )
 }
-

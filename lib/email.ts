@@ -254,7 +254,6 @@ export async function sendVendorAdminNotification(vendor: {
   businessType: string
   location: string
   phone: string
-  ninDocumentUrl: string
 }) {
   const html = emailLayout(`
     <h2 style="color:#0E2A82">New Vendor Application</h2>
@@ -265,7 +264,6 @@ export async function sendVendorAdminNotification(vendor: {
         ${detailRow('Phone', vendor.phone)}
         ${detailRow('Service Type', vendor.businessType)}
         ${detailRow('Location', vendor.location)}
-        ${detailRow('NIN Document', `<a href="${vendor.ninDocumentUrl}" style="color:#0E2A82">View Document</a>`)}
       </tbody>
     </table>
     <p style="margin-top:16px"><a href="${process.env.NEXTAUTH_URL}/admin/vendors" style="background:#0E2A82;color:#fff;padding:10px 20px;text-decoration:none;border-radius:6px;display:inline-block">Review in Admin Panel</a></p>

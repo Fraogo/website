@@ -18,7 +18,6 @@ const vendorSchema = z.object({
   phone: z.string().min(7, 'Phone number is required'),
   businessType: z.string().min(1, 'Business type is required'),
   businessTypeOther: z.string().optional(),
-  ninDocumentUrl: z.string().min(1, 'NIN document upload is required'),
   consentFee: z.literal(true, { message: 'You must agree to the 10% service fee' }),
   consentNoDirect: z.literal(true, { message: 'You must agree not to negotiate directly with customers' }),
 }).refine(
@@ -46,7 +45,6 @@ export async function registerVendor(data: VendorFormData) {
         location: d.location,
         phone: d.phone,
         businessType: finalBusinessType,
-        ninDocumentUrl: d.ninDocumentUrl,
         status: 'pending_review',
       },
     })
@@ -64,7 +62,6 @@ export async function registerVendor(data: VendorFormData) {
       phone: d.phone,
       businessType: finalBusinessType,
       location: d.location,
-      ninDocumentUrl: d.ninDocumentUrl,
     }).catch(console.error)
 
     revalidatePath('/admin/vendors')

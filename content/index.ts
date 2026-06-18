@@ -24,8 +24,8 @@ you focus on what matters.`,
   // The headline is shown as stacked lines; the last line is highlighted.
   // Edit the text here and the homepage updates automatically.
   heroEyebrow: 'Ikeja, Lagos · Nigeria',
-  heroHeadlineLines: ['Procurement.', 'Logistics.', 'General Services —'],
-  heroHeadlineAccent: 'Done in Nigeria.',
+  heroHeadlineLines: ['Procurement.', 'Logistics.'],
+  heroHeadlineAccent: 'General Services.',
   heroSubtext:
     'From sourcing products globally to transporting goods across Nigeria — Fraogo handles the complexity so you can focus on your business.',
 

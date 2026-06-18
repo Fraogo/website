@@ -8,6 +8,7 @@ import { Toaster } from '@/components/ui/sonner'
 import { company, contact } from '@/content'
 
 export const metadata: Metadata = {
+  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL ?? 'https://fraogo.com'),
   title: {
     default: `${company.name} — ${company.tagline}`,
     template: `%s | ${company.name}`,
@@ -33,7 +34,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="en">
       <body className="min-h-screen flex flex-col font-sans antialiased">
-        <Navbar />
+        <PublicChrome>
+          <Navbar />
+        </PublicChrome>
         <main className="flex-1">{children}</main>
         <PublicChrome>
           <Footer />

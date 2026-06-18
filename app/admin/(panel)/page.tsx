@@ -7,37 +7,52 @@ import type { Metadata } from 'next'
 export const metadata: Metadata = { title: 'Admin Dashboard' }
 export const dynamic = 'force-dynamic'
 
+const EMPTY_STATS = {
+  pendingOrders: 0, deliveries: 0, relocations: 0, supplyOrders: 0,
+  pendingVendors: 0, activeVendors: 0, vendorRequests: 0,
+}
+
 async function getDashboardStats() {
-  const [
-    pendingOrders,
-    deliveries,
-    relocations,
-    supplyOrders,
-    pendingVendors,
-    activeVendors,
-    vendorRequests,
-  ] = await Promise.all([
-    prisma.procurementOrder.count({ where: { status: 'pending' } }),
-    prisma.deliveryRequest.count({ where: { status: 'pending' } }),
-    prisma.relocationRequest.count({ where: { status: 'pending' } }),
-    prisma.supplyOrder.count({ where: { status: 'pending' } }),
-    prisma.vendor.count({ where: { status: 'pending_review' } }),
-    prisma.vendor.count({ where: { status: 'active' } }),
-    prisma.vendorRequest.count({ where: { status: 'pending' } }),
-  ])
-  return { pendingOrders, deliveries, relocations, supplyOrders, pendingVendors, activeVendors, vendorRequests }
+  try {
+    const [
+      pendingOrders,
+      deliveries,
+      relocations,
+      supplyOrders,
+      pendingVendors,
+      activeVendors,
+      vendorRequests,
+    ] = await Promise.all([
+      prisma.procurementOrder.count({ where: { status: 'pending' } }),
+      prisma.deliveryRequest.count({ where: { status: 'pending' } }),
+      prisma.relocationRequest.count({ where: { status: 'pending' } }),
+      prisma.supplyOrder.count({ where: { status: 'pending' } }),
+      prisma.vendor.count({ where: { status: 'pending_review' } }),
+      prisma.vendor.count({ where: { status: 'active' } }),
+      prisma.vendorRequest.count({ where: { status: 'pending' } }),
+    ])
+    return { stats: { pendingOrders, deliveries, relocations, supplyOrders, pendingVendors, activeVendors, vendorRequests }, ok: true }
+  } catch (err) {
+    console.error('[Dashboard] Failed to load stats:', err)
+    return { stats: EMPTY_STATS, ok: false }
+  }
 }
 
 async function getRecentActivity() {
-  const [orders, deliveries] = await Promise.all([
-    prisma.procurementOrder.findMany({ take: 5, orderBy: { createdAt: 'desc' }, select: { id: true, customerName: true, type: true, status: true, createdAt: true } }),
-    prisma.deliveryRequest.findMany({ take: 3, orderBy: { createdAt: 'desc' }, select: { id: true, senderName: true, type: true, status: true, createdAt: true } }),
-  ])
-  return { orders, deliveries }
+  try {
+    const [orders, deliveries] = await Promise.all([
+      prisma.procurementOrder.findMany({ take: 5, orderBy: { createdAt: 'desc' }, select: { id: true, customerName: true, type: true, status: true, createdAt: true } }),
+      prisma.deliveryRequest.findMany({ take: 3, orderBy: { createdAt: 'desc' }, select: { id: true, senderName: true, type: true, status: true, createdAt: true } }),
+    ])
+    return { orders, deliveries }
+  } catch (err) {
+    console.error('[Dashboard] Failed to load recent activity:', err)
+    return { orders: [], deliveries: [] }
+  }
 }
 
 export default async function AdminDashboardPage() {
-  const stats = await getDashboardStats()
+  const { stats, ok } = await getDashboardStats()
   const recent = await getRecentActivity()
 
   const statCards = [
@@ -59,6 +74,13 @@ export default async function AdminDashboardPage() {
           Overview of all FRAOGO operations · Updated just now
         </p>
       </div>
+
+      {!ok && (
+        <div className="flex items-center gap-2 p-3 rounded-xl bg-amber-50 border border-amber-200 text-sm text-amber-800">
+          <Clock className="w-4 h-4 flex-shrink-0" />
+          Couldn&apos;t reach the database just now — figures may be incomplete. Refresh in a moment.
+        </div>
+      )}
 
       {/* Stat Cards */}
       <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">

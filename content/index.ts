@@ -50,7 +50,7 @@ export const contact = {
   social: {
     instagram: 'https://instagram.com/fraogo',
     facebook:  'https://facebook.com/fraogo',
-    twitter:   'https://x.com/fraogo',
+    twitter:   'https://x.com/fraogo92031',
     linkedin:  'https://linkedin.com/company/fraogo',
     tiktok:    'https://www.tiktok.com/@fraogo_services',
   },

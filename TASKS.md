@@ -4,9 +4,9 @@
 
 - [ ] Rename logo files from .jpeg to .png (public/logo/logo.png, logo-white.png)
 - [ ] Create public/og-image.jpg (1200x630)
-- [ ] Fix tracking endpoint - add auth check to lookupTracking() or mask customer data
-- [ ] Add ADMIN_LOGIN_PASSWORD_HASH validation - throw error if empty in production
-- [ ] Replace in-memory rate limiter with Upstash Redis for multi-instance
+- [x] Fix tracking endpoint - public lookup no longer returns customer name or email
+- [x] Add admin password guard - login fails closed when no password is configured
+- [ ] Replace in-memory rate limiter with Upstash Redis for multi-instance (needs Upstash account)
 
 ## URGENT - Security
 
@@ -19,12 +19,12 @@
 
 ## WARNINGS - Before Deploy
 
-- [ ] Replace 14+ as any type casts with proper types
-- [ ] Add input length limits to text fields (.max(5000) in Zod)
-- [ ] Use crypto.randomUUID() for vendor magic-link tokens
+- [x] Replace as any type casts with Prisma.InputJsonValue
+- [x] Add input length limits to text fields (.max in Zod)
+- [x] Use crypto random for vendor magic-link tokens (256-bit)
+- [x] Sanitize contact form subject line
 - [ ] Add email API key validation at build time
-- [ ] Make vendor email required in schema
-- [ ] Sanitize contact form subject line
+- [ ] Make vendor email required in schema (needs DB migration)
 - [ ] Add pagination to admin list queries (.take(50).skip())
 
 ## Assets

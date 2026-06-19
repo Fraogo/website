@@ -7,13 +7,13 @@ import { sendRelocationConfirmation } from '@/lib/email'
 import { revalidatePath } from 'next/cache'
 
 const relocationSchema = z.object({
-  customerName: z.string().min(2, 'Full name is required'),
-  customerEmail: z.string().email('Invalid email address'),
-  customerPhone: z.string().min(7, 'Phone number is required'),
-  pickupLocation: z.string().min(5, 'Pick-up location is required'),
-  destination: z.string().min(5, 'Destination is required'),
-  itemsList: z.string().min(3, 'Please list the items to be moved'),
-  itemDescription: z.string().min(10, 'Please provide a description of the items'),
+  customerName: z.string().min(2, 'Full name is required').max(200),
+  customerEmail: z.string().email('Invalid email address').max(200),
+  customerPhone: z.string().min(7, 'Phone number is required').max(40),
+  pickupLocation: z.string().min(5, 'Pick-up location is required').max(500),
+  destination: z.string().min(5, 'Destination is required').max(500),
+  itemsList: z.string().min(3, 'Please list the items to be moved').max(3000),
+  itemDescription: z.string().min(10, 'Please provide a description of the items').max(3000),
   transportBy: z.enum(['self', 'fraogo']),
 })
 

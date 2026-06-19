@@ -14,18 +14,18 @@ function generateTrackingNumber(): string {
 
 const createSchema = z.object({
   serviceType:   z.enum(['procurement', 'logistics-local', 'logistics-abroad', 'supply', 'vendor-service']),
-  customerName:  z.string().min(2),
-  customerEmail: z.string().email().optional().or(z.literal('')),
-  description:   z.string().min(3),
-  initialStatus: z.string().default('Order Confirmed'),
-  initialNote:   z.string().optional(),
+  customerName:  z.string().min(2).max(200),
+  customerEmail: z.string().email().max(200).optional().or(z.literal('')),
+  description:   z.string().min(3).max(2000),
+  initialStatus: z.string().max(120).default('Order Confirmed'),
+  initialNote:   z.string().max(1000).optional(),
 })
 
 const updateSchema = z.object({
-  trackingId: z.string(),
-  status:     z.string().min(2),
-  note:       z.string().optional(),
-  location:   z.string().optional(),
+  trackingId: z.string().max(60),
+  status:     z.string().min(2).max(120),
+  note:       z.string().max(1000).optional(),
+  location:   z.string().max(300).optional(),
 })
 
 export type CreateTrackingData = z.infer<typeof createSchema>
@@ -95,11 +95,23 @@ export async function addTrackingUpdate(data: TrackingUpdateData) {
   }
 }
 
+// Public lookup — used on the customer-facing /track page. Selects ONLY
+// non-sensitive fields. Customer name and email are never returned here, so
+// knowing a tracking number does not expose who placed the order.
 export async function lookupTracking(trackingNumber: string) {
   const normalized = trackingNumber.trim().toUpperCase()
   return prisma.trackingRecord.findUnique({
-    where:   { trackingNumber: normalized },
-    include: { updates: { orderBy: { createdAt: 'asc' } } },
+    where: { trackingNumber: normalized },
+    select: {
+      trackingNumber: true,
+      serviceType:    true,
+      description:    true,
+      currentStatus:  true,
+      updates: {
+        orderBy: { createdAt: 'asc' },
+        select: { id: true, status: true, note: true, location: true, createdAt: true },
+      },
+    },
   })
 }
 

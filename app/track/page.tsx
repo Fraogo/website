@@ -110,14 +110,10 @@ export default async function TrackPage({ searchParams }: Props) {
                   </span>
                 </div>
 
-                <div className="grid sm:grid-cols-3 gap-4 pt-5 border-t border-gray-100 text-sm">
+                <div className="grid sm:grid-cols-2 gap-4 pt-5 border-t border-gray-100 text-sm">
                   <div>
                     <p className="text-xs text-gray-400 font-bold uppercase tracking-wide mb-1">Service Type</p>
                     <p className="font-semibold text-gray-800">{SERVICE_LABELS[record.serviceType] ?? record.serviceType}</p>
-                  </div>
-                  <div>
-                    <p className="text-xs text-gray-400 font-bold uppercase tracking-wide mb-1">Customer</p>
-                    <p className="font-semibold text-gray-800">{record.customerName}</p>
                   </div>
                   <div>
                     <p className="text-xs text-gray-400 font-bold uppercase tracking-wide mb-1">Description</p>

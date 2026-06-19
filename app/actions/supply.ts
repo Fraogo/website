@@ -1,29 +1,30 @@
 'use server'
 
 import { z } from 'zod'
+import { Prisma } from '@prisma/client'
 import { prisma } from '@/lib/db'
 import { requireAdmin } from '@/lib/auth'
 import { sendSupplyOrderConfirmation } from '@/lib/email'
 import { revalidatePath } from 'next/cache'
 
 const supplyItemSchema = z.object({
-  name: z.string().min(1),
+  name: z.string().min(1).max(300),
   quantity: z.number().min(1, 'Quantity must be at least 1'),
   unit: z.enum(['Packs', 'Cartons']),
 })
 
 const supplySchema = z.object({
-  customerName: z.string().min(2, 'Full name is required'),
-  customerEmail: z.string().email('Invalid email address'),
-  customerPhone: z.string().min(7, 'Phone number is required'),
-  destination: z.string().min(5, 'Delivery destination is required'),
+  customerName: z.string().min(2, 'Full name is required').max(200),
+  customerEmail: z.string().email('Invalid email address').max(200),
+  customerPhone: z.string().min(7, 'Phone number is required').max(40),
+  destination: z.string().min(5, 'Delivery destination is required').max(500),
   preferredDate: z.string().refine((date) => {
     const d = new Date(date)
     const minDate = new Date()
     minDate.setDate(minDate.getDate() + 2)
     return d >= minDate
   }, { message: 'Preferred date must be at least 2 days from today' }),
-  items: z.array(supplyItemSchema).min(1, 'Select at least one item'),
+  items: z.array(supplyItemSchema).min(1, 'Select at least one item').max(50),
 })
 
 export type SupplyFormData = z.infer<typeof supplySchema>
@@ -44,7 +45,7 @@ export async function submitSupplyOrder(data: SupplyFormData) {
         customerPhone: d.customerPhone,
         destination: d.destination,
         preferredDate: new Date(d.preferredDate),
-        items: d.items as any,
+        items: d.items as Prisma.InputJsonValue,
         status: 'pending',
       },
     })

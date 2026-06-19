@@ -1,24 +1,25 @@
 'use server'
 
 import { z } from 'zod'
+import { Prisma } from '@prisma/client'
 import { prisma } from '@/lib/db'
 import { requireAdmin } from '@/lib/auth'
 import { revalidatePath } from 'next/cache'
 
 const lineItemSchema = z.object({
-  name: z.string().min(1, 'Item name is required'),
+  name: z.string().min(1, 'Item name is required').max(200),
   quantity: z.number().min(1),
   unitPrice: z.number().min(0),
   total: z.number().min(0),
 })
 
 const invoiceSchema = z.object({
-  invoiceNumber: z.string().min(1, 'Invoice number is required'),
-  clientName: z.string().min(2, 'Client name is required'),
-  clientEmail: z.string().email().optional().or(z.literal('')),
+  invoiceNumber: z.string().min(1, 'Invoice number is required').max(60),
+  clientName: z.string().min(2, 'Client name is required').max(200),
+  clientEmail: z.string().email().max(200).optional().or(z.literal('')),
   invoiceDate: z.string(),
   taxRate: z.number().min(0).max(100),
-  lineItems: z.array(lineItemSchema).min(1),
+  lineItems: z.array(lineItemSchema).min(1).max(100),
   subtotal: z.number().min(0),
   tax: z.number().min(0),
   grandTotal: z.number().min(0),
@@ -43,7 +44,7 @@ export async function saveInvoice(data: InvoiceFormData) {
         clientEmail: d.clientEmail || null,
         invoiceDate: new Date(d.invoiceDate),
         taxRate: d.taxRate,
-        lineItems: d.lineItems as any,
+        lineItems: d.lineItems as Prisma.InputJsonValue,
         subtotal: d.subtotal,
         tax: d.tax,
         grandTotal: d.grandTotal,

@@ -43,7 +43,15 @@ export async function adminLogin(formData: FormData) {
 
   const { email: adminEmail } = getAdminCredentials()
   const passwordHash = await getActivePasswordHash()
-  const isValid = email === adminEmail && !!passwordHash && (await compare(password, passwordHash))
+
+  // Fail closed if no password is configured anywhere (DB setting or env).
+  // Without this, an empty hash combined with a weak compare could let any
+  // password through. Never allow login when there is nothing to verify against.
+  if (!adminEmail || !passwordHash) {
+    return { error: 'Admin login is not configured. Set an admin password first.' }
+  }
+
+  const isValid = email === adminEmail && (await compare(password, passwordHash))
 
   if (!isValid) {
     registerFailedAttempt(key, WINDOW_MS)

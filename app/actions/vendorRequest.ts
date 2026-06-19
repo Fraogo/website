@@ -10,13 +10,13 @@ import {
 import { revalidatePath } from 'next/cache'
 
 const vendorRequestSchema = z.object({
-  vendorId: z.string().min(1),
-  customerName: z.string().min(2, 'Full name is required'),
-  customerEmail: z.string().email('Invalid email address'),
-  customerPhone: z.string().min(7, 'Phone number is required'),
-  eventDate: z.string().optional(),
-  description: z.string().min(10, 'Please describe what you need'),
-  budget: z.string().optional(),
+  vendorId: z.string().min(1).max(60),
+  customerName: z.string().min(2, 'Full name is required').max(200),
+  customerEmail: z.string().email('Invalid email address').max(200),
+  customerPhone: z.string().min(7, 'Phone number is required').max(40),
+  eventDate: z.string().max(40).optional(),
+  description: z.string().min(10, 'Please describe what you need').max(3000),
+  budget: z.string().max(120).optional(),
 })
 
 export type VendorRequestFormData = z.infer<typeof vendorRequestSchema>

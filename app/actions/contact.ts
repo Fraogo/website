@@ -7,12 +7,18 @@ import { sendEmail } from '@/lib/email'
 import { revalidatePath } from 'next/cache'
 
 const contactSchema = z.object({
-  name:    z.string().min(2, 'Name is required'),
-  email:   z.string().email('A valid email address is required'),
-  phone:   z.string().optional(),
-  subject: z.string().min(3, 'Subject is required'),
-  message: z.string().min(10, 'Message must be at least 10 characters'),
+  name:    z.string().min(2, 'Name is required').max(120),
+  email:   z.string().email('A valid email address is required').max(200),
+  phone:   z.string().max(40).optional(),
+  subject: z.string().min(3, 'Subject is required').max(200),
+  message: z.string().min(10, 'Message must be at least 10 characters').max(5000),
 })
+
+// Strip CR/LF (and collapse runs of whitespace) so user input can't inject
+// extra email headers when interpolated into the Subject line.
+function singleLine(value: string): string {
+  return value.replace(/[\r\n]+/g, ' ').replace(/\s{2,}/g, ' ').trim()
+}
 
 export type ContactFormData = z.infer<typeof contactSchema>
 
@@ -35,7 +41,7 @@ export async function submitContactForm(data: ContactFormData) {
     await sendEmail({
       to: ADMIN_EMAIL,
       cc: ADMIN_CC,
-      subject: `[FRAOGO] New Contact Inquiry — ${subject}`,
+      subject: `[FRAOGO] New Contact Inquiry — ${singleLine(subject)}`,
       html: `
         <div style="font-family:sans-serif;max-width:600px;margin:auto">
           <div style="background:#1B4AD4;padding:28px 32px;border-radius:8px 8px 0 0">

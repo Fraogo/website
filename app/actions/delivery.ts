@@ -8,15 +8,15 @@ import { revalidatePath } from 'next/cache'
 
 const deliverySchema = z.object({
   type: z.enum(['local', 'international']),
-  senderName: z.string().min(2, 'Sender name is required'),
-  senderEmail: z.string().email('Invalid email address'),
-  senderPhone: z.string().min(7, 'Phone number is required'),
-  itemDescription: z.string().min(5, 'Please describe the item(s)'),
-  itemWeight: z.number().min(0.01, 'Weight must be greater than 0'),
+  senderName: z.string().min(2, 'Sender name is required').max(200),
+  senderEmail: z.string().email('Invalid email address').max(200),
+  senderPhone: z.string().min(7, 'Phone number is required').max(40),
+  itemDescription: z.string().min(5, 'Please describe the item(s)').max(2000),
+  itemWeight: z.number().min(0.01, 'Weight must be greater than 0').max(1_000_000),
   weightUnit: z.enum(['kg', 'lbs']),
-  destination: z.string().min(3, 'Destination is required'),
-  receiverName: z.string().min(2, 'Receiver name is required'),
-  receiverContact: z.string().min(7, 'Receiver contact is required'),
+  destination: z.string().min(3, 'Destination is required').max(500),
+  receiverName: z.string().min(2, 'Receiver name is required').max(200),
+  receiverContact: z.string().min(7, 'Receiver contact is required').max(200),
   consentGiven: z.literal(true, { message: 'You must agree to the inspection consent' }),
 })
 

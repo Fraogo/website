@@ -1,17 +1,18 @@
 'use server'
 
 import { z } from 'zod'
+import { Prisma } from '@prisma/client'
 import { prisma } from '@/lib/db'
 import { requireAdmin } from '@/lib/auth'
 import { sendProcurementConfirmation } from '@/lib/email'
 import { revalidatePath } from 'next/cache'
 
 const itemSchema = z.object({
-  name: z.string().min(1, 'Item name is required'),
-  specification: z.string().min(1, 'Specification is required'),
+  name: z.string().min(1, 'Item name is required').max(300),
+  specification: z.string().min(1, 'Specification is required').max(1000),
   quantity: z.number().min(1, 'Quantity must be at least 1'),
   deliveryMode: z.enum(['pickup', 'dispatch']),
-  deliveryAddress: z.string().optional(),
+  deliveryAddress: z.string().max(500).optional(),
 }).refine(
   (data) => data.deliveryMode !== 'dispatch' || (data.deliveryAddress && data.deliveryAddress.trim().length > 0),
   { message: 'Delivery address is required for dispatch orders', path: ['deliveryAddress'] }
@@ -19,9 +20,9 @@ const itemSchema = z.object({
 
 const procurementSchema = z.object({
   type: z.enum(['nigeria', 'international']),
-  customerName: z.string().min(2, 'Full name is required'),
-  customerEmail: z.string().email('Invalid email address'),
-  customerPhone: z.string().min(7, 'Phone number is required'),
+  customerName: z.string().min(2, 'Full name is required').max(200),
+  customerEmail: z.string().email('Invalid email address').max(200),
+  customerPhone: z.string().min(7, 'Phone number is required').max(40),
   items: z.array(itemSchema).min(1, 'At least one item is required').max(20, 'Maximum 20 items'),
 })
 
@@ -44,7 +45,7 @@ export async function submitProcurementOrder(data: ProcurementFormData) {
         customerName,
         customerEmail,
         customerPhone,
-        items: items as any,
+        items: items as Prisma.InputJsonValue,
         status: 'pending',
       },
     })

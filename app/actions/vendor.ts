@@ -1,6 +1,7 @@
 'use server'
 
 import { z } from 'zod'
+import { randomBytes } from 'crypto'
 import { prisma } from '@/lib/db'
 import { requireAdmin } from '@/lib/auth'
 import {
@@ -11,13 +12,13 @@ import {
 import { revalidatePath } from 'next/cache'
 
 const vendorSchema = z.object({
-  businessName: z.string().min(2, 'Business name is required'),
-  email: z.string().email('Invalid email address'),
-  description: z.string().min(20, 'Please provide a detailed description of your service'),
-  location: z.string().min(3, 'Location is required'),
-  phone: z.string().min(7, 'Phone number is required'),
-  businessType: z.string().min(1, 'Business type is required'),
-  businessTypeOther: z.string().optional(),
+  businessName: z.string().min(2, 'Business name is required').max(200),
+  email: z.string().email('Invalid email address').max(200),
+  description: z.string().min(20, 'Please provide a detailed description of your service').max(3000),
+  location: z.string().min(3, 'Location is required').max(300),
+  phone: z.string().min(7, 'Phone number is required').max(40),
+  businessType: z.string().min(1, 'Business type is required').max(120),
+  businessTypeOther: z.string().max(120).optional(),
   consentFee: z.literal(true, { message: 'You must agree to the 10% service fee' }),
   consentNoDirect: z.literal(true, { message: 'You must agree not to negotiate directly with customers' }),
 }).refine(
@@ -87,9 +88,13 @@ export async function approveVendor(vendorId: string) {
       const expiresAt = new Date()
       expiresAt.setDate(expiresAt.getDate() + 7)
 
+      // Cryptographically random token (256-bit) — not guessable, unlike cuid().
+      const token = randomBytes(32).toString('hex')
+
       const magicLink = await prisma.vendorMagicLink.create({
         data: {
           vendorId,
+          token,
           expiresAt,
         },
       })

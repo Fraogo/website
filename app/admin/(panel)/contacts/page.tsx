@@ -1,4 +1,4 @@
-import { getContactInquiries, markContactRead, deleteContactInquiry } from '@/app/actions/contact'
+import { getContactInquiries, getContactStats, markContactRead, deleteContactInquiry } from '@/app/actions/contact'
 import { formatDateTime } from '@/lib/utils'
 import { MessageSquare, Mail, Phone, CheckCircle2 } from 'lucide-react'
 import type { Metadata } from 'next'
@@ -6,6 +6,7 @@ import { revalidatePath } from 'next/cache'
 import DeleteButton from '@/components/admin/DeleteButton'
 import RefreshButton from '@/components/admin/RefreshButton'
 import ContactButtons from '@/components/admin/ContactButtons'
+import Pagination from '@/components/admin/Pagination'
 
 export const metadata: Metadata = { title: 'Contact Messages — Admin' }
 export const dynamic = 'force-dynamic'
@@ -24,10 +25,13 @@ async function markAsRead(formData: FormData) {
   revalidatePath('/admin/contacts')
 }
 
-export default async function AdminContactsPage() {
-  const [all, newOnly] = await Promise.all([
-    getContactInquiries(),
-    getContactInquiries('new'),
+export default async function AdminContactsPage({
+  searchParams,
+}: { searchParams: Promise<{ page?: string }> }) {
+  const { page } = await searchParams
+  const [{ inquiries, total, page: currentPage, totalPages }, stats] = await Promise.all([
+    getContactInquiries(undefined, Number(page) || 1),
+    getContactStats(),
   ])
 
   return (
@@ -40,21 +44,21 @@ export default async function AdminContactsPage() {
           <div>
             <h1 className="text-2xl font-black text-gray-900">Contact Messages</h1>
             <p className="text-sm text-gray-400">
-              {newOnly.length} unread · {all.length} total
+              {stats.unread} unread · {stats.total} total
             </p>
           </div>
         </div>
         <RefreshButton />
       </div>
 
-      {all.length === 0 ? (
+      {inquiries.length === 0 ? (
         <div className="bg-white rounded-2xl border border-gray-100 p-12 text-center shadow-soft">
           <MessageSquare className="w-12 h-12 mx-auto mb-4 text-gray-200" />
           <p className="text-gray-400 font-semibold">No messages yet</p>
         </div>
       ) : (
         <div className="space-y-4">
-          {all.map((inquiry) => (
+          {inquiries.map((inquiry) => (
             <div
               key={inquiry.id}
               className={`bg-white rounded-2xl border shadow-soft p-5 ${inquiry.status === 'new' ? 'border-blue-200' : 'border-gray-100'}`}
@@ -121,6 +125,10 @@ export default async function AdminContactsPage() {
           ))}
         </div>
       )}
+
+      <div className="mt-6">
+        <Pagination page={currentPage} totalPages={totalPages} basePath="/admin/contacts" />
+      </div>
     </div>
   )
 }

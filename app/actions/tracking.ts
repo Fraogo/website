@@ -3,6 +3,7 @@
 import { z } from 'zod'
 import { prisma } from '@/lib/db'
 import { requireAdmin } from '@/lib/auth'
+import { paginationParams, totalPages } from '@/lib/pagination'
 import { revalidatePath } from 'next/cache'
 
 function generateTrackingNumber(): string {
@@ -115,12 +116,19 @@ export async function lookupTracking(trackingNumber: string) {
   })
 }
 
-export async function getAllTrackingRecords() {
+export async function getAllTrackingRecords(page?: number) {
   await requireAdmin()
-  return prisma.trackingRecord.findMany({
-    include: { updates: { orderBy: { createdAt: 'desc' }, take: 1 } },
-    orderBy: { createdAt: 'desc' },
-  })
+  const { skip, take, page: safePage } = paginationParams(page)
+  const [records, total] = await Promise.all([
+    prisma.trackingRecord.findMany({
+      include: { updates: { orderBy: { createdAt: 'desc' }, take: 1 } },
+      orderBy: { createdAt: 'desc' },
+      skip,
+      take,
+    }),
+    prisma.trackingRecord.count(),
+  ])
+  return { records, total, page: safePage, totalPages: totalPages(total) }
 }
 
 export async function deleteTrackingRecord(id: string) {

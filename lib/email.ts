@@ -1,6 +1,10 @@
 import { Resend } from 'resend'
 
-const resend = new Resend(process.env.RESEND_API_KEY || 're_dummy_key_for_build')
+// A placeholder key lets `next build` import this module (e.g. for static
+// analysis) without a real Resend account configured. Actual sends are
+// blocked below if the real key was never provided.
+const RESEND_API_KEY = process.env.RESEND_API_KEY
+const resend = new Resend(RESEND_API_KEY || 're_dummy_key_for_build')
 
 const FROM = process.env.EMAIL_FROM ?? 'FRAOGO <noreply@fraogo.com>'
 const ADMIN_EMAIL = process.env.ADMIN_EMAIL ?? 'fraogo6@gmail.com'
@@ -14,6 +18,10 @@ interface SendEmailOptions {
 }
 
 export async function sendEmail({ to, subject, html, cc }: SendEmailOptions) {
+  if (!RESEND_API_KEY) {
+    console.error(`[Email Error] RESEND_API_KEY is not set — email NOT sent. Subject: "${subject}"`)
+    return { success: false, error: 'RESEND_API_KEY is not configured' }
+  }
   try {
     const result = await resend.emails.send({
       from: FROM,

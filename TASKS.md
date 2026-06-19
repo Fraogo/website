@@ -43,9 +43,9 @@
 - [x] Add input length limits to text fields (.max in Zod)
 - [x] Use crypto random for vendor magic-link tokens (256-bit)
 - [x] Sanitize contact form subject line
-- [ ] Add email API key validation at build time
-- [ ] Make vendor email required in schema (needs DB migration)
-- [ ] Add pagination to admin list queries (.take(50).skip())
+- [x] Add email API key validation - sendEmail() now fails loudly if RESEND_API_KEY missing
+- [x] Make vendor email required in schema - migration pushed to DB (0 vendors existed, no data risk)
+- [x] Add pagination to all 8 admin list pages (20 per page, Previous/Next)
 
 ## Assets
 
@@ -72,7 +72,7 @@ Edit content/index.ts
 
 ## Supabase
 
-- [ ] Run npx prisma db push
+- [x] Schema synced with npx prisma db push
 - [ ] Test vendor registration saves to DB
 - [ ] Set up Storage policies: vendor-documents Private, vendor-portfolio Public
 - [ ] Add SUPABASE_URL to .env

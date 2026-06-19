@@ -4,6 +4,7 @@ import { z } from 'zod'
 import { prisma } from '@/lib/db'
 import { requireAdmin } from '@/lib/auth'
 import { sendEmail } from '@/lib/email'
+import { paginationParams, totalPages } from '@/lib/pagination'
 import { revalidatePath } from 'next/cache'
 
 const contactSchema = z.object({
@@ -69,12 +70,24 @@ export async function submitContactForm(data: ContactFormData) {
   }
 }
 
-export async function getContactInquiries(status?: string) {
+export async function getContactInquiries(status?: string, page?: number) {
   await requireAdmin()
-  return prisma.contactInquiry.findMany({
-    where: status && status !== 'all' ? { status } : undefined,
-    orderBy: { createdAt: 'desc' },
-  })
+  const where = status && status !== 'all' ? { status } : undefined
+  const { skip, take, page: safePage } = paginationParams(page)
+  const [inquiries, total] = await Promise.all([
+    prisma.contactInquiry.findMany({ where, orderBy: { createdAt: 'desc' }, skip, take }),
+    prisma.contactInquiry.count({ where }),
+  ])
+  return { inquiries, total, page: safePage, totalPages: totalPages(total) }
+}
+
+export async function getContactStats() {
+  await requireAdmin()
+  const [total, unread] = await Promise.all([
+    prisma.contactInquiry.count(),
+    prisma.contactInquiry.count({ where: { status: 'new' } }),
+  ])
+  return { total, unread }
 }
 
 export async function markContactRead(id: string, status: 'read' | 'responded') {

@@ -4,6 +4,7 @@ import { z } from 'zod'
 import { prisma } from '@/lib/db'
 import { requireAdmin } from '@/lib/auth'
 import { sendRelocationConfirmation } from '@/lib/email'
+import { paginationParams, totalPages } from '@/lib/pagination'
 import { revalidatePath } from 'next/cache'
 
 const relocationSchema = z.object({
@@ -52,12 +53,15 @@ export async function submitRelocationRequest(data: RelocationFormData) {
   }
 }
 
-export async function getRelocationRequests(status?: string) {
+export async function getRelocationRequests(status?: string, page?: number) {
   await requireAdmin()
-  return prisma.relocationRequest.findMany({
-    where: status ? { status } : undefined,
-    orderBy: { createdAt: 'desc' },
-  })
+  const where = status ? { status } : undefined
+  const { skip, take, page: safePage } = paginationParams(page)
+  const [relocations, total] = await Promise.all([
+    prisma.relocationRequest.findMany({ where, orderBy: { createdAt: 'desc' }, skip, take }),
+    prisma.relocationRequest.count({ where }),
+  ])
+  return { relocations, total, page: safePage, totalPages: totalPages(total) }
 }
 
 export async function updateRelocationStatus(id: string, status: string) {

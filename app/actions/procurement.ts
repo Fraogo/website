@@ -5,6 +5,7 @@ import { Prisma } from '@prisma/client'
 import { prisma } from '@/lib/db'
 import { requireAdmin } from '@/lib/auth'
 import { sendProcurementConfirmation } from '@/lib/email'
+import { paginationParams, totalPages } from '@/lib/pagination'
 import { revalidatePath } from 'next/cache'
 
 const itemSchema = z.object({
@@ -68,12 +69,15 @@ export async function submitProcurementOrder(data: ProcurementFormData) {
   }
 }
 
-export async function getProcurementOrders(status?: string) {
+export async function getProcurementOrders(status?: string, page?: number) {
   await requireAdmin()
-  return prisma.procurementOrder.findMany({
-    where: status ? { status } : undefined,
-    orderBy: { createdAt: 'desc' },
-  })
+  const where = status ? { status } : undefined
+  const { skip, take, page: safePage } = paginationParams(page)
+  const [orders, total] = await Promise.all([
+    prisma.procurementOrder.findMany({ where, orderBy: { createdAt: 'desc' }, skip, take }),
+    prisma.procurementOrder.count({ where }),
+  ])
+  return { orders, total, page: safePage, totalPages: totalPages(total) }
 }
 
 export async function updateProcurementStatus(id: string, status: string) {

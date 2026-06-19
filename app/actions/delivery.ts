@@ -4,6 +4,7 @@ import { z } from 'zod'
 import { prisma } from '@/lib/db'
 import { requireAdmin } from '@/lib/auth'
 import { sendDeliveryConfirmation } from '@/lib/email'
+import { paginationParams, totalPages } from '@/lib/pagination'
 import { revalidatePath } from 'next/cache'
 
 const deliverySchema = z.object({
@@ -58,12 +59,15 @@ export async function submitDeliveryRequest(data: DeliveryFormData) {
   }
 }
 
-export async function getDeliveryRequests(status?: string) {
+export async function getDeliveryRequests(status?: string, page?: number) {
   await requireAdmin()
-  return prisma.deliveryRequest.findMany({
-    where: status ? { status } : undefined,
-    orderBy: { createdAt: 'desc' },
-  })
+  const where = status ? { status } : undefined
+  const { skip, take, page: safePage } = paginationParams(page)
+  const [deliveries, total] = await Promise.all([
+    prisma.deliveryRequest.findMany({ where, orderBy: { createdAt: 'desc' }, skip, take }),
+    prisma.deliveryRequest.count({ where }),
+  ])
+  return { deliveries, total, page: safePage, totalPages: totalPages(total) }
 }
 
 export async function updateDeliveryStatus(id: string, status: string) {

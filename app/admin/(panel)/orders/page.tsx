@@ -6,6 +6,7 @@ import type { Metadata } from 'next'
 import DeleteButton from '@/components/admin/DeleteButton'
 import RefreshButton from '@/components/admin/RefreshButton'
 import ContactButtons from '@/components/admin/ContactButtons'
+import Pagination from '@/components/admin/Pagination'
 
 export const metadata: Metadata = { title: 'Procurement Orders' }
 export const dynamic = 'force-dynamic'
@@ -15,18 +16,18 @@ const STATUSES = ['all', 'pending', 'confirmed', 'completed', 'cancelled']
 export default async function AdminOrdersPage({
   searchParams,
 }: {
-  searchParams: Promise<{ status?: string }>
+  searchParams: Promise<{ status?: string; page?: string }>
 }) {
-  const { status } = await searchParams
+  const { status, page } = await searchParams
   const activeStatus = status && status !== 'all' ? status : undefined
-  const orders = await getProcurementOrders(activeStatus)
+  const { orders, total, page: currentPage, totalPages } = await getProcurementOrders(activeStatus, Number(page) || 1)
 
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between gap-3">
         <div>
           <h1 className="text-2xl font-black text-gray-900">Procurement Orders</h1>
-          <p className="text-sm text-gray-500 mt-1">{orders.length} order{orders.length !== 1 ? 's' : ''} found</p>
+          <p className="text-sm text-gray-500 mt-1">{total} order{total !== 1 ? 's' : ''} found</p>
         </div>
         <RefreshButton />
       </div>
@@ -112,6 +113,8 @@ export default async function AdminOrdersPage({
           })}
         </div>
       )}
+
+      <Pagination page={currentPage} totalPages={totalPages} basePath="/admin/orders" query={{ status }} />
     </div>
   )
 }

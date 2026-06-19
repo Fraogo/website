@@ -7,6 +7,7 @@ import {
   sendVendorRequestNotification,
   sendVendorRequestCustomerAck,
 } from '@/lib/email'
+import { paginationParams, totalPages } from '@/lib/pagination'
 import { revalidatePath } from 'next/cache'
 
 const vendorRequestSchema = z.object({
@@ -48,18 +49,16 @@ export async function submitVendorRequest(data: VendorRequestFormData) {
       },
     })
 
-    if (vendor.email) {
-      sendVendorRequestNotification({
-        vendorEmail: vendor.email,
-        vendorBusinessName: vendor.businessName,
-        customerName: d.customerName,
-        customerEmail: d.customerEmail,
-        customerPhone: d.customerPhone,
-        eventDate: d.eventDate ? new Date(d.eventDate) : undefined,
-        description: d.description,
-        budget: d.budget,
-      }).catch(console.error)
-    }
+    sendVendorRequestNotification({
+      vendorEmail: vendor.email,
+      vendorBusinessName: vendor.businessName,
+      customerName: d.customerName,
+      customerEmail: d.customerEmail,
+      customerPhone: d.customerPhone,
+      eventDate: d.eventDate ? new Date(d.eventDate) : undefined,
+      description: d.description,
+      budget: d.budget,
+    }).catch(console.error)
 
     sendVendorRequestCustomerAck({
       customerName: d.customerName,
@@ -76,12 +75,19 @@ export async function submitVendorRequest(data: VendorRequestFormData) {
   }
 }
 
-export async function getVendorRequests() {
+export async function getVendorRequests(page?: number) {
   await requireAdmin()
-  return prisma.vendorRequest.findMany({
-    include: { vendor: true },
-    orderBy: { createdAt: 'desc' },
-  })
+  const { skip, take, page: safePage } = paginationParams(page)
+  const [requests, total] = await Promise.all([
+    prisma.vendorRequest.findMany({
+      include: { vendor: true },
+      orderBy: { createdAt: 'desc' },
+      skip,
+      take,
+    }),
+    prisma.vendorRequest.count(),
+  ])
+  return { requests, total, page: safePage, totalPages: totalPages(total) }
 }
 
 export async function deleteVendorRequest(id: string) {

@@ -5,6 +5,7 @@ import { Prisma } from '@prisma/client'
 import { prisma } from '@/lib/db'
 import { requireAdmin } from '@/lib/auth'
 import { sendSupplyOrderConfirmation } from '@/lib/email'
+import { paginationParams, totalPages } from '@/lib/pagination'
 import { revalidatePath } from 'next/cache'
 
 const supplyItemSchema = z.object({
@@ -68,12 +69,15 @@ export async function submitSupplyOrder(data: SupplyFormData) {
   }
 }
 
-export async function getSupplyOrders(status?: string) {
+export async function getSupplyOrders(status?: string, page?: number) {
   await requireAdmin()
-  return prisma.supplyOrder.findMany({
-    where: status ? { status } : undefined,
-    orderBy: { createdAt: 'desc' },
-  })
+  const where = status ? { status } : undefined
+  const { skip, take, page: safePage } = paginationParams(page)
+  const [orders, total] = await Promise.all([
+    prisma.supplyOrder.findMany({ where, orderBy: { createdAt: 'desc' }, skip, take }),
+    prisma.supplyOrder.count({ where }),
+  ])
+  return { orders, total, page: safePage, totalPages: totalPages(total) }
 }
 
 export async function updateSupplyStatus(id: string, status: string) {

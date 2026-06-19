@@ -7,6 +7,7 @@ import DeleteButton from '@/components/admin/DeleteButton'
 import RefreshButton from '@/components/admin/RefreshButton'
 import ContactButtons from '@/components/admin/ContactButtons'
 import Field from '@/components/admin/Field'
+import Pagination from '@/components/admin/Pagination'
 
 export const metadata: Metadata = { title: 'Delivery Requests' }
 export const dynamic = 'force-dynamic'
@@ -14,17 +15,20 @@ export const dynamic = 'force-dynamic'
 export default async function AdminDeliveriesPage({
   searchParams,
 }: {
-  searchParams: Promise<{ status?: string }>
+  searchParams: Promise<{ status?: string; page?: string }>
 }) {
-  const { status } = await searchParams
-  const deliveries = await getDeliveryRequests(status && status !== 'all' ? status : undefined)
+  const { status, page } = await searchParams
+  const { deliveries, total, page: currentPage, totalPages } = await getDeliveryRequests(
+    status && status !== 'all' ? status : undefined,
+    Number(page) || 1
+  )
 
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between gap-3">
         <div>
           <h1 className="text-2xl font-black text-gray-900">Delivery Requests</h1>
-          <p className="text-sm text-gray-500 mt-1">{deliveries.length} request{deliveries.length !== 1 ? 's' : ''}</p>
+          <p className="text-sm text-gray-500 mt-1">{total} request{total !== 1 ? 's' : ''}</p>
         </div>
         <RefreshButton />
       </div>
@@ -81,6 +85,8 @@ export default async function AdminDeliveriesPage({
           })}
         </div>
       )}
+
+      <Pagination page={currentPage} totalPages={totalPages} basePath="/admin/deliveries" query={{ status }} />
     </div>
   )
 }

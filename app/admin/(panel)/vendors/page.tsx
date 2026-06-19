@@ -4,6 +4,7 @@ import { formatDateTime, getStatusColor } from '@/lib/utils'
 import { Users, ExternalLink } from 'lucide-react'
 import Link from 'next/link'
 import VendorActionButtons from '@/components/admin/VendorActionButtons'
+import Pagination from '@/components/admin/Pagination'
 import type { Metadata } from 'next'
 
 export const metadata: Metadata = { title: 'Vendor Management' }
@@ -11,16 +12,16 @@ export const dynamic = 'force-dynamic'
 
 export default async function AdminVendorsPage({
   searchParams,
-}: { searchParams: Promise<{ status?: string }> }) {
-  const { status } = await searchParams
+}: { searchParams: Promise<{ status?: string; page?: string }> }) {
+  const { status, page } = await searchParams
   const activeStatus = status && status !== 'all' ? status : undefined
-  const vendors = await getVendors(activeStatus)
+  const { vendors, total, page: currentPage, totalPages } = await getVendors(activeStatus, Number(page) || 1)
 
   return (
     <div className="space-y-6">
       <div>
         <h1 className="text-2xl font-black text-gray-900">Vendor Management</h1>
-        <p className="text-sm text-gray-500 mt-1">{vendors.length} vendor{vendors.length !== 1 ? 's' : ''}</p>
+        <p className="text-sm text-gray-500 mt-1">{total} vendor{total !== 1 ? 's' : ''}</p>
       </div>
 
       <div className="flex gap-2">
@@ -72,6 +73,8 @@ export default async function AdminVendorsPage({
           ))
         )}
       </div>
+
+      <Pagination page={currentPage} totalPages={totalPages} basePath="/admin/vendors" query={{ status }} />
     </div>
   )
 }

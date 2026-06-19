@@ -5,6 +5,7 @@ import Link from 'next/link'
 import type { Metadata } from 'next'
 import DeleteButton from '@/components/admin/DeleteButton'
 import RefreshButton from '@/components/admin/RefreshButton'
+import Pagination from '@/components/admin/Pagination'
 
 export const metadata: Metadata = { title: 'Order Tracking — Admin' }
 export const dynamic = 'force-dynamic'
@@ -24,8 +25,11 @@ const STATUS_COLORS: Record<string, string> = {
   'Delivered':       'bg-green-100 text-green-700',
 }
 
-export default async function AdminTrackingPage() {
-  const records = await getAllTrackingRecords()
+export default async function AdminTrackingPage({
+  searchParams,
+}: { searchParams: Promise<{ page?: string }> }) {
+  const { page } = await searchParams
+  const { records, total, page: currentPage, totalPages } = await getAllTrackingRecords(Number(page) || 1)
 
   return (
     <div className="p-6 lg:p-8 max-w-5xl">
@@ -36,7 +40,7 @@ export default async function AdminTrackingPage() {
           </div>
           <div>
             <h1 className="text-2xl font-black text-gray-900">Order Tracking</h1>
-            <p className="text-sm text-gray-400">{records.length} total records</p>
+            <p className="text-sm text-gray-400">{total} total records</p>
           </div>
         </div>
         <div className="flex items-center gap-2">
@@ -111,6 +115,10 @@ export default async function AdminTrackingPage() {
           </table>
         </div>
       )}
+
+      <div className="mt-6">
+        <Pagination page={currentPage} totalPages={totalPages} basePath="/admin/tracking" />
+      </div>
     </div>
   )
 }

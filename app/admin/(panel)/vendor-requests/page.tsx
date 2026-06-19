@@ -6,19 +6,23 @@ import DeleteButton from '@/components/admin/DeleteButton'
 import RefreshButton from '@/components/admin/RefreshButton'
 import ContactButtons from '@/components/admin/ContactButtons'
 import Field from '@/components/admin/Field'
+import Pagination from '@/components/admin/Pagination'
 
 export const metadata: Metadata = { title: 'Vendor Requests' }
 export const dynamic = 'force-dynamic'
 
-export default async function AdminVendorRequestsPage() {
-  const requests = await getVendorRequests()
+export default async function AdminVendorRequestsPage({
+  searchParams,
+}: { searchParams: Promise<{ page?: string }> }) {
+  const { page } = await searchParams
+  const { requests, total, page: currentPage, totalPages } = await getVendorRequests(Number(page) || 1)
 
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between gap-3">
         <div>
           <h1 className="text-2xl font-black text-gray-900">Vendor Hire Requests</h1>
-          <p className="text-sm text-gray-500 mt-1">{requests.length} request{requests.length !== 1 ? 's' : ''} total</p>
+          <p className="text-sm text-gray-500 mt-1">{total} request{total !== 1 ? 's' : ''} total</p>
         </div>
         <RefreshButton />
       </div>
@@ -66,6 +70,8 @@ export default async function AdminVendorRequestsPage() {
           })}
         </div>
       )}
+
+      <Pagination page={currentPage} totalPages={totalPages} basePath="/admin/vendor-requests" />
     </div>
   )
 }

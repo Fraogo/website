@@ -9,6 +9,7 @@ import {
   sendVendorAdminNotification,
   sendVendorApprovalWithMagicLink,
 } from '@/lib/email'
+import { paginationParams, totalPages } from '@/lib/pagination'
 import { revalidatePath } from 'next/cache'
 
 const vendorSchema = z.object({
@@ -84,29 +85,27 @@ export async function approveVendor(vendorId: string) {
     await prisma.vendor.update({ where: { id: vendorId }, data: { status: 'active' } })
 
     // Create magic link (7 days expiry)
-    if (vendor.email) {
-      const expiresAt = new Date()
-      expiresAt.setDate(expiresAt.getDate() + 7)
+    const expiresAt = new Date()
+    expiresAt.setDate(expiresAt.getDate() + 7)
 
-      // Cryptographically random token (256-bit) — not guessable, unlike cuid().
-      const token = randomBytes(32).toString('hex')
+    // Cryptographically random token (256-bit) — not guessable, unlike cuid().
+    const token = randomBytes(32).toString('hex')
 
-      const magicLink = await prisma.vendorMagicLink.create({
-        data: {
-          vendorId,
-          token,
-          expiresAt,
-        },
-      })
+    const magicLink = await prisma.vendorMagicLink.create({
+      data: {
+        vendorId,
+        token,
+        expiresAt,
+      },
+    })
 
-      const magicLinkUrl = `${process.env.NEXTAUTH_URL}/vendor/dashboard?token=${magicLink.token}`
+    const magicLinkUrl = `${process.env.NEXTAUTH_URL}/vendor/dashboard?token=${magicLink.token}`
 
-      sendVendorApprovalWithMagicLink({
-        businessName: vendor.businessName,
-        email: vendor.email,
-        magicLinkUrl,
-      }).catch(console.error)
-    }
+    sendVendorApprovalWithMagicLink({
+      businessName: vendor.businessName,
+      email: vendor.email,
+      magicLinkUrl,
+    }).catch(console.error)
 
     revalidatePath('/admin/vendors')
     return { success: true }
@@ -141,13 +140,21 @@ export async function deleteVendor(id: string) {
   }
 }
 
-export async function getVendors(status?: string) {
+export async function getVendors(status?: string, page?: number) {
   await requireAdmin()
-  return prisma.vendor.findMany({
-    where: status ? { status } : undefined,
-    include: { portfolioImages: true, _count: { select: { requests: true } } },
-    orderBy: { createdAt: 'desc' },
-  })
+  const where = status ? { status } : undefined
+  const { skip, take, page: safePage } = paginationParams(page)
+  const [vendors, total] = await Promise.all([
+    prisma.vendor.findMany({
+      where,
+      include: { portfolioImages: true, _count: { select: { requests: true } } },
+      orderBy: { createdAt: 'desc' },
+      skip,
+      take,
+    }),
+    prisma.vendor.count({ where }),
+  ])
+  return { vendors, total, page: safePage, totalPages: totalPages(total) }
 }
 
 // Public — used on the hire-vendor page. Selects ONLY public-safe fields so the

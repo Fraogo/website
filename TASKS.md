@@ -10,12 +10,32 @@
 
 ## URGENT - Security
 
-.env.example exposed secrets on GitHub
+.env.example exposed secrets on GitHub. Replace these IMMEDIATELY:
 
-- [ ] Rotate Supabase API keys (anon and service-role)
-- [ ] Rotate database password
-- [ ] Revoke and reissue Resend API key
-- [ ] Run npx tsx scripts/set-admin-password.ts "YourNewPassword"
+### Rotate (replace with new values from dashboards)
+- [ ] SUPABASE_ANON_KEY - go to Supabase dashboard → Settings → API Keys, copy the new anon key
+- [ ] SUPABASE_SERVICE_ROLE_KEY - Supabase dashboard → Settings → API Keys, copy the new service role key
+- [ ] RESEND_API_KEY - go to Resend dashboard → API Keys, revoke old key and create new one
+- [ ] DATABASE_URL - if password was exposed, change password in Supabase → Database → Password, then update DATABASE_URL connection string
+- [ ] DIRECT_URL - same as DATABASE_URL but for direct pool connection
+
+### Get (you don't have these yet)
+- [ ] SUPABASE_URL - Supabase dashboard → Settings → API, copy Project URL (looks like https://abc123.supabase.co)
+- [ ] NEXTAUTH_SECRET - generate with: node -e "console.log(require('crypto').randomBytes(32).toString('hex'))"
+- [ ] EMAIL_FROM - set to your Resend verified domain sender (e.g. noreply@fraogo.com)
+
+### Already set (verify these are correct)
+- [ ] DATABASE_URL - check in .env, matches Supabase connection string
+- [ ] DIRECT_URL - check in .env, matches Supabase direct connection string
+- [ ] NEXTAUTH_URL - check in .env, should be http://localhost:3000 locally, https://fraogo.com on Vercel
+- [ ] ADMIN_LOGIN_EMAIL - check in .env, your admin email
+- [ ] ADMIN_EMAIL - check in .env, where to send customer messages (fraogo6@gmail.com)
+- [ ] NEXT_PUBLIC_SITE_URL - check in .env, http://localhost:3000 locally, https://fraogo.com on Vercel
+
+### Set password (after rotating secrets)
+- [ ] Log in to admin page (http://localhost:3000/admin/login) with current password
+- [ ] Go to /admin/settings and use the password form to change to something strong
+- [ ] (Or if you can't log in yet: run npx tsx scripts/set-admin-password.ts "YourNewPassword")
 
 ## WARNINGS - Before Deploy
 

@@ -310,22 +310,46 @@ export async function sendVendorApprovalWithMagicLink(vendor: {
   businessName: string
   email: string
   magicLinkUrl: string
+  profileUrl?: string
 }) {
   const html = emailLayout(`
     <h2 style="color:#0E2A82">Your Application Has Been Approved! 🎉</h2>
     <p>Hi <strong>${vendor.businessName}</strong>, congratulations! Your vendor application has been approved by FRAOGO.</p>
-    <p>You can now access your vendor dashboard to upload portfolio images that customers will see when browsing vendors.</p>
+    <p>You can now access your vendor dashboard to upload images that customers will see when browsing vendors.</p>
     <p style="margin:24px 0;text-align:center">
       <a href="${vendor.magicLinkUrl}" style="background:#0E2A82;color:#fff;padding:14px 32px;text-decoration:none;border-radius:8px;display:inline-block;font-size:16px;font-weight:600">Access My Dashboard</a>
     </p>
+    ${vendor.profileUrl ? `
+    <div style="background:#EEF2FF;border-left:4px solid #0E2A82;padding:16px;border-radius:4px;margin-bottom:16px">
+      <p style="margin:0 0 6px;font-size:13px;color:#0E2A82"><strong>Your shareable profile link</strong> — share it anywhere to get customers:</p>
+      <p style="margin:0;font-size:13px"><a href="${vendor.profileUrl}" style="color:#1B4AD4">${vendor.profileUrl}</a></p>
+    </div>` : ''}
     <div style="background:#fef3c7;border-left:4px solid #C9A84C;padding:12px;border-radius:4px">
-      <p style="margin:0;font-size:13px;color:#92400e">⚠️ This link expires in 7 days. If it expires, contact us to get a new link.</p>
+      <p style="margin:0;font-size:13px;color:#92400e">⚠️ The dashboard link expires in 7 days. If it expires, contact us to get a new one.</p>
     </div>
   `)
 
   await sendEmail({
     to: vendor.email,
     subject: 'FRAOGO — Your Vendor Application is Approved! 🎉',
+    html,
+  })
+}
+
+export async function sendVendorRejectionEmail(vendor: {
+  businessName: string
+  email: string
+}) {
+  const html = emailLayout(`
+    <h2 style="color:#0E2A82">Update on Your Vendor Application</h2>
+    <p>Hi <strong>${vendor.businessName}</strong>, thank you for your interest in joining the FRAOGO vendor network.</p>
+    <p>After reviewing your application, we're unable to approve it at this time. This isn't necessarily permanent — you're welcome to reach out or apply again in the future with updated details.</p>
+    <p style="color:#6b7280;font-size:14px">If you have any questions, just reply to this email and our team will assist you.</p>
+  `)
+
+  await sendEmail({
+    to: vendor.email,
+    subject: 'FRAOGO — Update on Your Vendor Application',
     html,
   })
 }

@@ -8,6 +8,7 @@ import {
   sendVendorRegistrationConfirmation,
   sendVendorAdminNotification,
   sendVendorApprovalWithMagicLink,
+  sendVendorRejectionEmail,
 } from '@/lib/email'
 import { paginationParams, totalPages } from '@/lib/pagination'
 import { revalidatePath } from 'next/cache'
@@ -100,11 +101,13 @@ export async function approveVendor(vendorId: string) {
     })
 
     const magicLinkUrl = `${process.env.NEXTAUTH_URL}/vendor/dashboard?token=${magicLink.token}`
+    const profileUrl = `${process.env.NEXTAUTH_URL}/vendor/${vendorId}`
 
     sendVendorApprovalWithMagicLink({
       businessName: vendor.businessName,
       email: vendor.email,
       magicLinkUrl,
+      profileUrl,
     }).catch(console.error)
 
     revalidatePath('/admin/vendors')
@@ -118,7 +121,8 @@ export async function approveVendor(vendorId: string) {
 export async function rejectVendor(vendorId: string) {
   await requireAdmin()
   try {
-    await prisma.vendor.update({ where: { id: vendorId }, data: { status: 'rejected' } })
+    const vendor = await prisma.vendor.update({ where: { id: vendorId }, data: { status: 'rejected' } })
+    sendVendorRejectionEmail({ businessName: vendor.businessName, email: vendor.email }).catch(console.error)
     revalidatePath('/admin/vendors')
     return { success: true }
   } catch (error) {
@@ -142,6 +146,13 @@ export async function deleteVendor(id: string) {
 
 export async function getVendors(status?: string, page?: number) {
   await requireAdmin()
+
+  // Housekeeping: rejected vendors are purged 14 days after rejection.
+  const cutoff = new Date(Date.now() - 14 * 24 * 60 * 60 * 1000)
+  await prisma.vendor
+    .deleteMany({ where: { status: 'rejected', updatedAt: { lt: cutoff } } })
+    .catch((e) => console.error('[Vendor] rejected-cleanup error:', e))
+
   const where = status ? { status } : undefined
   const { skip, take, page: safePage } = paginationParams(page)
   const [vendors, total] = await Promise.all([
@@ -155,6 +166,25 @@ export async function getVendors(status?: string, page?: number) {
     prisma.vendor.count({ where }),
   ])
   return { vendors, total, page: safePage, totalPages: totalPages(total) }
+}
+
+// Public — single vendor profile for the shareable /vendor/[id] page. Active
+// vendors only, and ONLY public-safe fields (never email/phone/NIN).
+export async function getPublicVendor(id: string) {
+  return prisma.vendor.findFirst({
+    where: { id, status: 'active' },
+    select: {
+      id: true,
+      businessName: true,
+      description: true,
+      location: true,
+      businessType: true,
+      portfolioImages: {
+        orderBy: { createdAt: 'desc' },
+        select: { id: true, url: true },
+      },
+    },
+  })
 }
 
 // Public — used on the hire-vendor page. Selects ONLY public-safe fields so the

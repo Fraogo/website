@@ -1,9 +1,9 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import Image from 'next/image'
-import { Upload, Trash2, Loader2 } from 'lucide-react'
+import { Upload, Trash2, Loader2, Copy, Check, Link2 } from 'lucide-react'
 import { addVendorImage, deleteVendorImageAction } from '@/app/actions/vendorPortfolio'
 import { supabaseClient, VENDOR_PORTFOLIO_BUCKET } from '@/lib/storage'
 
@@ -21,6 +21,22 @@ export default function VendorDashboard({ token, vendor }: { token: string; vend
   const router = useRouter()
   const [uploading, setUploading] = useState(false)
   const [error, setError] = useState<string | null>(null)
+  const [profileUrl, setProfileUrl] = useState(`/vendor/${vendor.id}`)
+  const [copied, setCopied] = useState(false)
+
+  useEffect(() => {
+    setProfileUrl(`${window.location.origin}/vendor/${vendor.id}`)
+  }, [vendor.id])
+
+  async function copyLink() {
+    try {
+      await navigator.clipboard.writeText(profileUrl)
+      setCopied(true)
+      setTimeout(() => setCopied(false), 2000)
+    } catch {
+      setError('Could not copy automatically — please copy the link manually.')
+    }
+  }
 
   async function handleFiles(e: React.ChangeEvent<HTMLInputElement>) {
     const files = Array.from(e.target.files ?? [])
@@ -76,6 +92,27 @@ export default function VendorDashboard({ token, vendor }: { token: string; vend
       </div>
 
       <div className="section-container py-10 max-w-4xl">
+        {/* Shareable profile link */}
+        <div className="bg-white rounded-2xl border border-gray-100 shadow-soft p-6 mb-6">
+          <h2 className="font-bold text-gray-900 mb-1 flex items-center gap-2">
+            <Link2 className="w-4 h-4 text-[#1B4AD4]" /> Your Shareable Profile Link
+          </h2>
+          <p className="text-sm text-gray-400 mb-4">
+            Share this link anywhere — customers can view your profile and request you directly.
+          </p>
+          <div className="flex gap-2">
+            <input
+              readOnly
+              value={profileUrl}
+              onFocus={(e) => e.currentTarget.select()}
+              className="form-input flex-1 text-sm"
+            />
+            <button onClick={copyLink} className="btn-primary px-4 rounded-xl text-sm whitespace-nowrap">
+              {copied ? <><Check className="w-4 h-4" /> Copied</> : <><Copy className="w-4 h-4" /> Copy</>}
+            </button>
+          </div>
+        </div>
+
         <div className="bg-white rounded-2xl border border-gray-100 shadow-soft p-6 mb-8">
           <h2 className="font-bold text-gray-900 mb-1">Portfolio Images</h2>
           <p className="text-sm text-gray-400 mb-4">

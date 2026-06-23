@@ -1,10 +1,11 @@
-﻿import { getVendors } from '@/app/actions/vendor'
+﻿import { getVendors, deleteVendor } from '@/app/actions/vendor'
 import { getNinSignedUrl } from '@/lib/storage'
 import { formatDateTime, getStatusColor } from '@/lib/utils'
 import { Users, ExternalLink } from 'lucide-react'
 import Link from 'next/link'
 import VendorActionButtons from '@/components/admin/VendorActionButtons'
 import ContactButtons from '@/components/admin/ContactButtons'
+import DeleteButton from '@/components/admin/DeleteButton'
 import Pagination from '@/components/admin/Pagination'
 import type { Metadata } from 'next'
 
@@ -75,6 +76,13 @@ export default async function AdminVendorsPage({
                   {vendor.status === 'pending_review' && (
                     <VendorActionButtons vendorId={vendor.id} />
                   )}
+
+                  {/* Delete — works for any status (rejection is not deletion) */}
+                  <DeleteButton
+                    id={vendor.id}
+                    action={deleteVendor}
+                    confirmText={`Delete ${vendor.businessName} permanently? This removes their images and data and cannot be undone.`}
+                  />
                 </div>
               </div>
 

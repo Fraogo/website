@@ -1,8 +1,10 @@
 import { prisma } from '@/lib/db'
 import { formatDate } from '@/lib/utils'
-import { BookOpen, Plus, Eye, EyeOff } from 'lucide-react'
+import { BookOpen, Plus, Eye } from 'lucide-react'
 import Link from 'next/link'
 import type { Metadata } from 'next'
+import DeleteButton from '@/components/admin/DeleteButton'
+import { deleteBlogPost } from '@/app/actions/blog'
 
 export const metadata: Metadata = { title: 'Blog Posts — Admin' }
 export const dynamic = 'force-dynamic'
@@ -96,6 +98,7 @@ export default async function AdminBlogPage() {
                 >
                   Edit
                 </Link>
+                <DeleteButton id={post.id} action={deleteBlogPost} confirmText={`Delete "${post.title}" permanently?`} />
               </div>
             </div>
           ))}

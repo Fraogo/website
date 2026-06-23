@@ -2,13 +2,14 @@
 
 import { useState } from 'react'
 import Image from 'next/image'
-import { MapPin, ChevronLeft, ChevronRight, X, Calendar, AlertCircle, AlertTriangle, Loader2, CheckCircle2 } from 'lucide-react'
+import { MapPin, ChevronLeft, ChevronRight, X, Calendar, AlertCircle, AlertTriangle, CheckCircle2 } from 'lucide-react'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { z } from 'zod'
 import { submitVendorRequest } from '@/app/actions/vendorRequest'
 import { cn } from '@/lib/utils'
 import PhoneField from '@/components/ui/PhoneField'
+import ConfirmSubmitModal from '@/components/ui/ConfirmSubmitModal'
 
 interface VendorImage {
   id: string
@@ -58,6 +59,8 @@ export default function VendorDetailModal({ vendor, onClose }: VendorDetailModal
   const [requestSuccess, setRequestSuccess] = useState(false)
   const [serverError, setServerError] = useState<string | null>(null)
   const [currency, setCurrency] = useState('₦')
+  const [pending, setPending] = useState<RequestFormValues | null>(null)
+  const [submitting, setSubmitting] = useState(false)
 
   const images = vendor.portfolioImages
   const hasImages = images.length > 0
@@ -67,23 +70,43 @@ export default function VendorDetailModal({ vendor, onClose }: VendorDetailModal
     handleSubmit,
     watch,
     setValue,
-    formState: { errors, isSubmitting },
+    formState: { errors },
   } = useForm<RequestFormValues>({
     resolver: zodResolver(requestSchema),
   })
 
-  const onSubmit = async (data: RequestFormValues) => {
+  const openReview = (data: RequestFormValues) => {
     setServerError(null)
     const budget = data.budget?.trim() ? `${currency}${data.budget.trim()}` : data.budget
-    const result = await submitVendorRequest({ ...data, budget, vendorId: vendor.id })
+    setPending({ ...data, budget })
+  }
+
+  const confirmSubmit = async () => {
+    if (!pending) return
+    setServerError(null)
+    setSubmitting(true)
+    const result = await submitVendorRequest({ ...pending, vendorId: vendor.id })
+    setSubmitting(false)
     if (result.success) {
+      setPending(null)
       setRequestSuccess(true)
     } else {
       setServerError(typeof result.error === 'string' ? result.error : 'Something went wrong.')
     }
   }
 
+  const reviewRows = pending ? [
+    { label: 'Vendor', value: vendor.businessName },
+    { label: 'Your name', value: pending.customerName },
+    { label: 'Email', value: pending.customerEmail },
+    { label: 'Phone', value: pending.customerPhone },
+    { label: 'Event date', value: pending.eventDate },
+    { label: 'What you need', value: pending.description },
+    { label: 'Budget', value: pending.budget },
+  ] : []
+
   return (
+    <>
     <div
       className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 p-4"
       onClick={(e) => { if (e.target === e.currentTarget) onClose() }}
@@ -178,7 +201,7 @@ export default function VendorDetailModal({ vendor, onClose }: VendorDetailModal
                 </p>
               </div>
             ) : (
-              <form onSubmit={handleSubmit(onSubmit)} className="space-y-4" noValidate>
+              <form onSubmit={handleSubmit(openReview)} className="space-y-4" noValidate>
                 <div className="grid sm:grid-cols-2 gap-4">
                   <div>
                     <label className="form-label text-xs" htmlFor="req-name">Full Name *</label>
@@ -235,16 +258,10 @@ export default function VendorDetailModal({ vendor, onClose }: VendorDetailModal
 
                 <button
                   type="submit"
-                  disabled={isSubmitting}
-                  className="btn-primary w-full py-3 rounded-xl text-sm disabled:opacity-60"
+                  className="btn-primary w-full py-3 rounded-xl text-sm"
                   id="send-vendor-request-btn"
                 >
-                  {isSubmitting ? (
-                    <span className="flex items-center gap-2 justify-center">
-                      <Loader2 className="w-4 h-4 animate-spin" />
-                      Sending Request...
-                    </span>
-                  ) : 'Send Request to Vendor'}
+                  Review &amp; Send Request
                 </button>
               </form>
             )}
@@ -252,6 +269,17 @@ export default function VendorDetailModal({ vendor, onClose }: VendorDetailModal
         </div>
       </div>
     </div>
+
+    <ConfirmSubmitModal
+      open={!!pending}
+      rows={reviewRows}
+      submitting={submitting}
+      error={serverError}
+      onConfirm={confirmSubmit}
+      onCancel={() => { setPending(null); setServerError(null) }}
+      confirmLabel="Confirm & Send Request"
+    />
+    </>
   )
 }
 

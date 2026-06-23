@@ -4,10 +4,11 @@ import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { z } from 'zod'
 import { useState } from 'react'
-import { AlertCircle, AlertTriangle, CheckCircle2, Loader2 } from 'lucide-react'
+import { AlertCircle, AlertTriangle, CheckCircle2 } from 'lucide-react'
 import { submitRelocationRequest } from '@/app/actions/relocation'
 import { cn } from '@/lib/utils'
 import PhoneField from '@/components/ui/PhoneField'
+import ConfirmSubmitModal from '@/components/ui/ConfirmSubmitModal'
 
 const formSchema = z.object({
   customerName: z.string().min(2, 'Full name is required'),
@@ -25,13 +26,15 @@ type FormValues = z.infer<typeof formSchema>
 export default function RelocationForm() {
   const [success, setSuccess] = useState(false)
   const [serverError, setServerError] = useState<string | null>(null)
+  const [pending, setPending] = useState<FormValues | null>(null)
+  const [submitting, setSubmitting] = useState(false)
 
   const {
     register,
     handleSubmit,
     watch,
     setValue,
-    formState: { errors, isSubmitting },
+    formState: { errors },
   } = useForm<FormValues>({
     resolver: zodResolver(formSchema),
     defaultValues: { transportBy: 'fraogo' },
@@ -39,15 +42,30 @@ export default function RelocationForm() {
 
   const selectedTransport = watch('transportBy')
 
-  const onSubmit = async (data: FormValues) => {
+  const confirmSubmit = async () => {
+    if (!pending) return
     setServerError(null)
-    const result = await submitRelocationRequest(data)
+    setSubmitting(true)
+    const result = await submitRelocationRequest(pending)
+    setSubmitting(false)
     if (result.success) {
+      setPending(null)
       setSuccess(true)
     } else {
       setServerError(typeof result.error === 'string' ? result.error : 'Something went wrong.')
     }
   }
+
+  const reviewRows = pending ? [
+    { label: 'Name', value: pending.customerName },
+    { label: 'Email', value: pending.customerEmail },
+    { label: 'Phone', value: pending.customerPhone },
+    { label: 'Pick-up', value: pending.pickupLocation },
+    { label: 'Destination', value: pending.destination },
+    { label: 'Items', value: pending.itemsList },
+    { label: 'Description', value: pending.itemDescription },
+    { label: 'Transport', value: pending.transportBy === 'fraogo' ? 'FRAOGO provides transport' : 'I arrange transport' },
+  ] : []
 
   if (success) {
     return (
@@ -67,7 +85,7 @@ export default function RelocationForm() {
   }
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)} className="space-y-8" noValidate>
+    <form onSubmit={handleSubmit((data) => setPending(data))} className="space-y-8" noValidate>
       {/* Contact Info */}
       <div className="bg-white rounded-2xl p-6 shadow-soft border border-border">
         <h2 className="text-base font-bold text-foreground mb-5 flex items-center gap-2">
@@ -181,17 +199,20 @@ export default function RelocationForm() {
 
       <button
         type="submit"
-        disabled={isSubmitting}
-        className="btn-primary w-full py-4 text-base rounded-2xl disabled:opacity-60"
+        className="btn-primary w-full py-4 text-base rounded-2xl"
         id="relocation-submit-btn"
       >
-        {isSubmitting ? (
-          <span className="flex items-center gap-2 justify-center">
-            <Loader2 className="w-4 h-4 animate-spin" />
-            Submitting...
-          </span>
-        ) : 'Submit Relocation Request'}
+        Review &amp; Submit
       </button>
+
+      <ConfirmSubmitModal
+        open={!!pending}
+        rows={reviewRows}
+        submitting={submitting}
+        error={serverError}
+        onConfirm={confirmSubmit}
+        onCancel={() => { setPending(null); setServerError(null) }}
+      />
     </form>
   )
 }

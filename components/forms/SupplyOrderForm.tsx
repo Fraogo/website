@@ -1,13 +1,14 @@
 ﻿'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { z } from 'zod'
-import { AlertCircle, AlertTriangle, CheckCircle2, Loader2, ShoppingBag } from 'lucide-react'
+import { AlertCircle, AlertTriangle, CheckCircle2, ShoppingBag } from 'lucide-react'
 import { submitSupplyOrder } from '@/app/actions/supply'
 import { getMinDeliveryDate, cn } from '@/lib/utils'
 import PhoneField from '@/components/ui/PhoneField'
+import ConfirmSubmitModal from '@/components/ui/ConfirmSubmitModal'
 
 const SUPPLY_ITEMS = [
   { id: 'event-supplies', label: 'Supply for Events', emoji: '🎉', description: 'Generic event supplies and materials' },
@@ -42,13 +43,15 @@ export default function SupplyOrderForm() {
   const [quantities, setQuantities] = useState<Record<string, { quantity: number; unit: 'Packs' | 'Cartons' }>>({})
   const [success, setSuccess] = useState(false)
   const [serverError, setServerError] = useState<string | null>(null)
+  const [pending, setPending] = useState<FormValues | null>(null)
+  const [submitting, setSubmitting] = useState(false)
 
   const {
     register,
     handleSubmit,
     watch,
     setValue,
-    formState: { errors, isSubmitting },
+    formState: { errors },
   } = useForm<FormValues>({
     resolver: zodResolver(formSchema),
   })
@@ -70,23 +73,43 @@ export default function SupplyOrderForm() {
     setQuantities((prev) => ({ ...prev, [itemId]: { ...prev[itemId], unit } }))
   }
 
-  const onSubmit = async (data: FormValues) => {
-    if (selectedItems.length === 0) return
-    setServerError(null)
-
+  // Keep RHF's items value in sync with the visual selection so validation passes.
+  useEffect(() => {
     const items = selectedItems.map((itemId) => {
       const item = SUPPLY_ITEMS.find((i) => i.id === itemId)!
-      const qty = quantities[itemId] ?? { quantity: 1, unit: 'Packs' }
+      const qty = quantities[itemId] ?? { quantity: 1, unit: 'Packs' as const }
       return { name: item.label, quantity: qty.quantity, unit: qty.unit }
     })
+    setValue('items', items, { shouldValidate: false })
+  }, [selectedItems, quantities, setValue])
 
-    const result = await submitSupplyOrder({ ...data, items })
+  const openReview = (data: FormValues) => {
+    if (selectedItems.length === 0) return
+    setPending(data)
+  }
+
+  const confirmSubmit = async () => {
+    if (!pending) return
+    setServerError(null)
+    setSubmitting(true)
+    const result = await submitSupplyOrder(pending)
+    setSubmitting(false)
     if (result.success) {
+      setPending(null)
       setSuccess(true)
     } else {
       setServerError(typeof result.error === 'string' ? result.error : 'Something went wrong.')
     }
   }
+
+  const reviewRows = pending ? [
+    { label: 'Name', value: pending.customerName },
+    { label: 'Email', value: pending.customerEmail },
+    { label: 'Phone', value: pending.customerPhone },
+    { label: 'Preferred date', value: pending.preferredDate },
+    { label: 'Destination', value: pending.destination },
+    { label: 'Items', value: pending.items.map((i) => `${i.name} — ${i.quantity} ${i.unit}`).join('\n') },
+  ] : []
 
   if (success) {
     return (
@@ -106,7 +129,7 @@ export default function SupplyOrderForm() {
   }
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)} className="space-y-8" noValidate>
+    <form onSubmit={handleSubmit(openReview)} className="space-y-8" noValidate>
       {/* Item Selection */}
       <div className="bg-white rounded-2xl p-6 shadow-soft border border-border">
         <h2 className="text-base font-bold text-foreground mb-2 flex items-center gap-2">
@@ -245,17 +268,21 @@ export default function SupplyOrderForm() {
 
       <button
         type="submit"
-        disabled={isSubmitting || selectedItems.length === 0}
+        disabled={selectedItems.length === 0}
         className="btn-primary w-full py-4 text-base rounded-2xl disabled:opacity-60"
         id="supply-submit-btn"
       >
-        {isSubmitting ? (
-          <span className="flex items-center gap-2 justify-center">
-            <Loader2 className="w-4 h-4 animate-spin" />
-            Submitting...
-          </span>
-        ) : `Submit Order (${selectedItems.length} item${selectedItems.length !== 1 ? 's' : ''})`}
+        Review &amp; Submit ({selectedItems.length} item{selectedItems.length !== 1 ? 's' : ''})
       </button>
+
+      <ConfirmSubmitModal
+        open={!!pending}
+        rows={reviewRows}
+        submitting={submitting}
+        error={serverError}
+        onConfirm={confirmSubmit}
+        onCancel={() => { setPending(null); setServerError(null) }}
+      />
     </form>
   )
 }

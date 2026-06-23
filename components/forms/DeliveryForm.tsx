@@ -4,10 +4,11 @@ import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { z } from 'zod'
 import { useState } from 'react'
-import { AlertCircle, AlertTriangle, CheckCircle2, Loader2 } from 'lucide-react'
+import { AlertCircle, AlertTriangle, CheckCircle2 } from 'lucide-react'
 import { submitDeliveryRequest } from '@/app/actions/delivery'
 import { cn } from '@/lib/utils'
 import PhoneField from '@/components/ui/PhoneField'
+import ConfirmSubmitModal from '@/components/ui/ConfirmSubmitModal'
 
 const formSchema = z.object({
   type: z.enum(['local', 'international']),
@@ -32,13 +33,15 @@ interface DeliveryFormProps {
 export default function DeliveryForm({ defaultType = 'local' }: DeliveryFormProps) {
   const [success, setSuccess] = useState(false)
   const [serverError, setServerError] = useState<string | null>(null)
+  const [pending, setPending] = useState<FormValues | null>(null)
+  const [submitting, setSubmitting] = useState(false)
 
   const {
     register,
     handleSubmit,
     watch,
     setValue,
-    formState: { errors, isSubmitting },
+    formState: { errors },
   } = useForm<FormValues>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -49,15 +52,30 @@ export default function DeliveryForm({ defaultType = 'local' }: DeliveryFormProp
 
   const selectedType = watch('type')
 
-  const onSubmit = async (data: FormValues) => {
+  const confirmSubmit = async () => {
+    if (!pending) return
     setServerError(null)
-    const result = await submitDeliveryRequest(data)
+    setSubmitting(true)
+    const result = await submitDeliveryRequest(pending)
+    setSubmitting(false)
     if (result.success) {
+      setPending(null)
       setSuccess(true)
     } else {
       setServerError(typeof result.error === 'string' ? result.error : 'Something went wrong.')
     }
   }
+
+  const reviewRows = pending ? [
+    { label: 'Delivery type', value: pending.type === 'local' ? 'Local Delivery' : 'International Delivery' },
+    { label: 'Sender', value: pending.senderName },
+    { label: 'Email', value: pending.senderEmail },
+    { label: 'Phone', value: pending.senderPhone },
+    { label: 'Item(s)', value: pending.itemDescription },
+    { label: 'Weight', value: `${pending.itemWeight} ${pending.weightUnit}` },
+    { label: 'Destination', value: pending.destination },
+    { label: 'Receiver', value: `${pending.receiverName} — ${pending.receiverContact}` },
+  ] : []
 
   if (success) {
     return (
@@ -77,7 +95,7 @@ export default function DeliveryForm({ defaultType = 'local' }: DeliveryFormProp
   }
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)} className="space-y-8" noValidate>
+    <form onSubmit={handleSubmit((data) => setPending(data))} className="space-y-8" noValidate>
       {/* Type toggle */}
       <div className="bg-white rounded-2xl p-6 shadow-soft border border-border">
         <label className="form-label mb-3">Delivery Type *</label>
@@ -232,19 +250,20 @@ export default function DeliveryForm({ defaultType = 'local' }: DeliveryFormProp
 
       <button
         type="submit"
-        disabled={isSubmitting}
-        className="btn-primary w-full py-4 text-base rounded-2xl disabled:opacity-60"
+        className="btn-primary w-full py-4 text-base rounded-2xl"
         id="delivery-submit-btn"
       >
-        {isSubmitting ? (
-          <span className="flex items-center gap-2 justify-center">
-            <Loader2 className="w-4 h-4 animate-spin" />
-            Submitting...
-          </span>
-        ) : (
-          'Submit Delivery Request'
-        )}
+        Review &amp; Submit
       </button>
+
+      <ConfirmSubmitModal
+        open={!!pending}
+        rows={reviewRows}
+        submitting={submitting}
+        error={serverError}
+        onConfirm={confirmSubmit}
+        onCancel={() => { setPending(null); setServerError(null) }}
+      />
     </form>
   )
 }

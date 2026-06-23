@@ -72,29 +72,15 @@ interface SidebarContentProps {
 const SidebarContent = ({ pathname, setMobileOpen, handleLogout }: SidebarContentProps) => {
   const isActive = (href: string, exact?: boolean) =>
     exact ? pathname === href : pathname.startsWith(href)
-  const [logoError, setLogoError] = useState(false)
 
   return (
     <div className="flex flex-col h-full">
       {/* Logo */}
       <div className="px-5 py-5 border-b border-white/10 flex-shrink-0">
         <Link href="/" className="flex items-center gap-2.5">
-          {logoError ? (
-            <span className="flex items-center gap-1.5">
-              <span className="w-7 h-7 rounded-lg bg-white/20 flex items-center justify-center text-white font-black text-xs">F</span>
-              <span className="text-white font-black text-base">FRAOGO</span>
-            </span>
-          ) : (
-            // eslint-disable-next-line @next/next/no-img-element
-            <img
-              src="/logo/logo-white.png"
-              alt="Fraogo"
-              width={100}
-              height={30}
-              className="object-contain"
-              onError={() => setLogoError(true)}
-            />
-          )}
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img src="/logo/icon-white.svg" alt="Fraogo" className="h-7 w-auto" />
+          <span className="text-white font-black text-base tracking-tight">FRAOGO</span>
         </Link>
         <p className="text-white/40 text-xs mt-1 pl-0.5">Admin Panel</p>
       </div>

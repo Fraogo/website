@@ -57,4 +57,4 @@ Three stacked divs (CSS only, works in Server Components — no JS):
 ## Non-Obvious Behaviour
 - Team section only renders when member `name` does not start with `[` (filter in about page)
 - Stats section only renders when `company.stats` array is non-empty (currently empty — intentional)
-- Logo files in `public/logo/` are currently `.jpeg` — navbar code expects `.png`; shows text fallback until renamed
+- Logo is SVG: navbar/footer use `public/logo/icon.svg` (colour) and `icon-white.svg` (dark bg) as the mark, with "FRAOGO" rendered as live text in Plus Jakarta Sans. The full lockup (`logo-full.svg`) uses Trajan Pro `<text>` — do not render it in-browser (font won't load); it's for print/export only. Favicon is `app/icon.svg` (Next.js convention).

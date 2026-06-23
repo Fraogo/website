@@ -2,7 +2,7 @@
 
 ## CRITICAL - Fix Before Frontend Redesign
 
-- [ ] Rename logo files from .jpeg to .png (public/logo/logo.png, logo-white.png)
+- [x] Logo done as SVG (public/logo/icon.svg + icon-white.svg, wordmark as live text) + favicon (app/icon.svg)
 - [ ] Create public/og-image.jpg (1200x630)
 - [x] Fix tracking endpoint - public lookup no longer returns customer name or email
 - [x] Add admin password guard - login fails closed when no password is configured
@@ -27,13 +27,13 @@
 ### Already set (verify these are correct)
 - [ ] DATABASE_URL - check in .env, matches Supabase connection string
 - [ ] DIRECT_URL - check in .env, matches Supabase direct connection string
-- [ ] NEXTAUTH_URL - check in .env, should be http://localhost:3000 locally, https://fraogo.com on Vercel
+- [ ] NEXTAUTH_URL - check in .env, should be http://localhost:3001 locally, https://fraogo.com on Vercel
 - [ ] ADMIN_LOGIN_EMAIL - check in .env, your admin email
 - [ ] ADMIN_EMAIL - check in .env, where to send customer messages (fraogo6@gmail.com)
-- [ ] NEXT_PUBLIC_SITE_URL - check in .env, http://localhost:3000 locally, https://fraogo.com on Vercel
+- [ ] NEXT_PUBLIC_SITE_URL - check in .env, http://localhost:3001 locally, https://fraogo.com on Vercel
 
 ### Set password (after rotating secrets)
-- [ ] Log in to admin page (http://localhost:3000/admin/login) with current password
+- [ ] Log in to admin page (http://localhost:3001/admin/login) with current password
 - [ ] Go to /admin/settings and use the password form to change to something strong
 - [ ] (Or if you can't log in yet: run npx tsx scripts/set-admin-password.ts "YourNewPassword")
 
@@ -51,8 +51,7 @@
 
 Drop into public/
 
-- [ ] logo.png, logo-white.png
-- [ ] favicon.ico
+- [x] logo (SVG in public/logo/) + favicon (app/icon.svg)
 - [ ] og-image.jpg (1200x630)
 - [ ] hero-bg.jpg (1920x1080)
 - [ ] cta-bg.jpg (1920x600)

@@ -40,7 +40,6 @@ export default function Navbar() {
   const [openDropdown, setOpenDropdown] = useState<string | null>(null)
   const [mobileOpen, setMobileOpen]     = useState(false)
   const [scrolled, setScrolled]         = useState(false)
-  const [logoError, setLogoError]       = useState(false)
   const pathname = usePathname()
   const navRef   = useRef<HTMLElement>(null)
   const prevPath = useRef(pathname)
@@ -91,24 +90,17 @@ export default function Navbar() {
       <nav ref={navRef} className="section-container">
         <div className="flex items-center justify-between h-16 lg:h-[4.25rem]">
 
-          {/* ── Logo ── */}
+          {/* ── Logo: icon mark (SVG) + wordmark in the brand font ── */}
           <Link href="/" className="flex items-center gap-2.5 flex-shrink-0">
-            {logoError ? (
-              <span className={cn('flex items-center gap-2', solidBg ? 'text-[#0E2A82]' : 'text-white')}>
-                <span className="w-8 h-8 rounded-lg flex items-center justify-center text-white font-black text-sm" style={{ background: 'linear-gradient(135deg, #0E2A82, #1B4AD4)' }}>F</span>
-                <span className="text-xl font-black tracking-tight">FRAOGO</span>
-              </span>
-            ) : (
-              // eslint-disable-next-line @next/next/no-img-element
-              <img
-                src={solidBg ? '/logo/logo.png' : '/logo/logo-white.png'}
-                alt="Fraogo"
-                width={120}
-                height={36}
-                className="object-contain h-9"
-                onError={() => setLogoError(true)}
-              />
-            )}
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src={solidBg ? '/logo/icon.svg' : '/logo/icon-white.svg'}
+              alt="Fraogo"
+              className="h-7 w-auto"
+            />
+            <span className={cn('text-xl font-black tracking-tight', solidBg ? 'text-[#0E2A82]' : 'text-white')}>
+              FRAOGO
+            </span>
           </Link>
 
           {/* ── Desktop Nav ── */}

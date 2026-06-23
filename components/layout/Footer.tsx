@@ -11,8 +11,9 @@ export default function Footer() {
 
           {/* ── Brand ── */}
           <div className="lg:col-span-1">
-            <Link href="/" className="inline-flex items-center gap-2 mb-5">
-              <span className="w-9 h-9 rounded-lg flex items-center justify-center text-white font-black text-base border border-white/20" style={{ background: 'rgba(255,255,255,0.1)' }}>F</span>
+            <Link href="/" className="inline-flex items-center gap-2.5 mb-5">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img src="/logo/icon-white.svg" alt="Fraogo" className="h-8 w-auto" />
               <span className="text-2xl font-black tracking-tight">FRAOGO</span>
             </Link>
             <p className="text-sm text-white/55 leading-relaxed mb-5">

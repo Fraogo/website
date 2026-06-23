@@ -4,6 +4,7 @@ import { formatDateTime, getStatusColor } from '@/lib/utils'
 import { Users, ExternalLink } from 'lucide-react'
 import Link from 'next/link'
 import VendorActionButtons from '@/components/admin/VendorActionButtons'
+import ContactButtons from '@/components/admin/ContactButtons'
 import Pagination from '@/components/admin/Pagination'
 import type { Metadata } from 'next'
 
@@ -40,7 +41,12 @@ export default async function AdminVendorsPage({
             <p className="text-gray-500 text-sm">No vendors found</p>
           </div>
         ) : (
-          vendors.map((vendor: any) => (
+          vendors.map((vendor: any) => {
+            const contactSubject = `FRAOGO — ${vendor.businessName}`
+            const contactMessage = vendor.status === 'active'
+              ? `Hi ${vendor.businessName}, this is FRAOGO regarding your approved vendor listing.`
+              : `Hi ${vendor.businessName}, this is FRAOGO regarding your vendor application.`
+            return (
             <div key={vendor.id} className="bg-white rounded-2xl shadow-soft border border-border p-5">
               <div className="flex flex-wrap items-start gap-4">
                 <div className="flex-1 min-w-0">
@@ -71,8 +77,13 @@ export default async function AdminVendorsPage({
                   )}
                 </div>
               </div>
+
+              <div className="mt-4 pt-4 border-t border-gray-50">
+                <ContactButtons phone={vendor.phone} email={vendor.email} subject={contactSubject} message={contactMessage} />
+              </div>
             </div>
-          ))
+            )
+          })
         )}
       </div>
 

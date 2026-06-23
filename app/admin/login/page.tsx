@@ -1,6 +1,7 @@
 'use client'
 
 import { useRef, useState } from 'react'
+import Link from 'next/link'
 import { adminLogin } from '@/app/actions/auth'
 import { Eye, EyeOff, Loader2, Lock, Mail, AlertTriangle } from 'lucide-react'
 
@@ -104,6 +105,10 @@ export default function AdminLoginPage() {
                 </span>
               ) : 'Sign In'}
             </button>
+
+            <Link href="/admin/forgot-password" className="block text-center text-sm font-semibold text-[#1B4AD4] hover:underline">
+              Forgot password?
+            </Link>
           </form>
         </div>
 

@@ -5,7 +5,9 @@ export async function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl
 
   // ─── Protect /admin/* routes ──────────────────────────────────────────────
-  if (pathname.startsWith('/admin') && pathname !== '/admin/login') {
+  // /admin/login and /admin/forgot-password must stay reachable while logged out.
+  const PUBLIC_ADMIN_PATHS = ['/admin/login', '/admin/forgot-password']
+  if (pathname.startsWith('/admin') && !PUBLIC_ADMIN_PATHS.includes(pathname)) {
     const isAuthenticated = await verifyAdminSessionFromRequest(request)
     if (!isAuthenticated) {
       const loginUrl = new URL('/admin/login', request.url)

@@ -37,6 +37,27 @@ export async function sendEmail({ to, subject, html, cc }: SendEmailOptions) {
   }
 }
 
+// ─── Admin ────────────────────────────────────────────────────────────────────
+
+// Sends a one-time password-reset code to the admin's own inbox (ADMIN_EMAIL).
+// The code itself is only ever stored hashed; this is the only place it appears.
+export async function sendAdminPasswordResetCode({ code }: { code: string }) {
+  const html = emailLayout(`
+    <h2 style="color:#0E2A82">Admin Password Reset</h2>
+    <p>A request was made to reset your FRAOGO admin password. Enter the code below to set a new password. It expires in <strong>15 minutes</strong>.</p>
+    <div style="text-align:center;margin:28px 0">
+      <span style="display:inline-block;font-size:34px;letter-spacing:10px;font-weight:800;color:#0E2A82;background:#EEF2FF;padding:16px 28px;border-radius:10px">${code}</span>
+    </div>
+    <p style="color:#6b7280;font-size:14px">If you didn't request this, you can safely ignore this email — your password will not change.</p>
+  `)
+
+  await sendEmail({
+    to: ADMIN_EMAIL,
+    subject: 'FRAOGO — Admin password reset code',
+    html,
+  })
+}
+
 // ─── Procurement ──────────────────────────────────────────────────────────────
 
 export async function sendProcurementConfirmation(order: {

@@ -60,8 +60,10 @@ export default async function AdminVendorsPage({
                 </div>
 
                 <div className="flex flex-col gap-2 flex-shrink-0">
-                  {/* View NIN Document */}
-                  <NinDocumentLink ninDocumentUrl={vendor.ninDocumentUrl} />
+                  {/* View NIN Document — only sign when a document actually exists */}
+                  {vendor.ninDocumentUrl
+                    ? <NinDocumentLink ninDocumentUrl={vendor.ninDocumentUrl} />
+                    : <span className="text-xs text-gray-400">No document</span>}
 
                   {/* Approve / Reject — client component */}
                   {vendor.status === 'pending_review' && (

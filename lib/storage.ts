@@ -35,17 +35,26 @@ export async function uploadNinDocument(
 }
 
 // ─── Get signed URL for private NIN document ──────────────────────────────────
-export async function getNinSignedUrl(path: string) {
-  const { data, error } = await supabaseAdmin.storage
-    .from(VENDOR_DOCUMENTS_BUCKET)
-    .createSignedUrl(path, 60 * 15) // 15 mins expiry
+// Must never throw: it's awaited during page render, so a throw would crash the
+// whole page. Returns null on a missing path or any storage/network failure.
+export async function getNinSignedUrl(path: string | null | undefined) {
+  if (!path) return null
 
-  if (error) {
-    console.error('[Storage] Signed URL error:', error)
+  try {
+    const { data, error } = await supabaseAdmin.storage
+      .from(VENDOR_DOCUMENTS_BUCKET)
+      .createSignedUrl(path, 60 * 15) // 15 mins expiry
+
+    if (error) {
+      console.error('[Storage] Signed URL error:', error)
+      return null
+    }
+
+    return data.signedUrl
+  } catch (err) {
+    console.error('[Storage] Signed URL threw:', err)
     return null
   }
-
-  return data.signedUrl
 }
 
 // ─── Upload portfolio image (server-side) ─────────────────────────────────────

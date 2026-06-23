@@ -1,10 +1,10 @@
-﻿import Link from 'next/link'
+import Link from 'next/link'
 import { Users, UserPlus, ArrowRight, Star } from 'lucide-react'
 import type { Metadata } from 'next'
 
 export const metadata: Metadata = {
-  title: 'Rental & Vendors',
-  description: 'Become a verified vendor or hire talented vendors for your events through FRAOGO.',
+  title: 'Hire or Buy from Vendors',
+  description: 'Hire verified vendors or buy gadgets and products from trusted sellers — all safely through FRAOGO. Or join as a vendor to grow your business.',
 }
 
 export default function RentalPage() {
@@ -15,99 +15,66 @@ export default function RentalPage() {
           <p className="text-sm font-bold uppercase tracking-wider mb-2" style={{ color: '#93A9F5' }}>
             General Service
           </p>
-          <h1 className="text-3xl lg:text-4xl font-black mb-3">Rental & Vendor Services</h1>
+          <h1 className="text-3xl lg:text-4xl font-black mb-3">Hire or Buy Through FRAOGO</h1>
           <p className="text-white/70 max-w-xl">
-            Connect with verified vendors for your events, or join our vendor network to grow your business.
+            Hire verified vendors for your events or buy gadgets and products from trusted sellers — every deal is handled safely through FRAOGO.
           </p>
         </div>
       </div>
 
       <div className="section-container py-16">
         <div className="max-w-4xl mx-auto">
-          {/* Action Cards */}
-          <div className="grid md:grid-cols-2 gap-6 mb-16">
-            {/* Become a Vendor */}
-            <div className="bg-white rounded-2xl overflow-hidden shadow-card border border-border card-hover">
-              <div className="p-8" style={{ background: 'linear-gradient(135deg, #0E2A82, #1B4AD4)' }}>
-                <div className="w-14 h-14 rounded-2xl bg-white/15 flex items-center justify-center mb-5">
-                  <UserPlus className="w-7 h-7 text-white" />
-                </div>
-                <h2 className="text-2xl font-black text-white mb-2">Become a Vendor</h2>
-                <p className="text-white/70 text-sm">Join our growing network of verified service providers</p>
-              </div>
-              <div className="p-6">
-                <ul className="space-y-2.5 mb-6">
-                  {[
-                    'Get discovered by customers across Nigeria',
-                    'FRAOGO handles client connections',
-                    'Upload your portfolio to showcase your work',
-                    'Simple 10% service fee on successful jobs',
-                  ].map((benefit) => (
-                    <li key={benefit} className="flex items-start gap-2.5 text-sm text-muted-foreground">
-                      <Star className="w-4 h-4 flex-shrink-0 mt-0.5" style={{ color: '#93A9F5' }} />
-                      {benefit}
-                    </li>
-                  ))}
-                </ul>
-                <Link
-                  href="/general-service/rental/register-vendor"
-                  className="btn-primary w-full justify-center py-3 rounded-xl"
-                  id="become-vendor-btn"
-                >
-                  Register as a Vendor
-                  <ArrowRight className="w-4 h-4" />
-                </Link>
-              </div>
-            </div>
-
-            {/* Hire a Vendor */}
-            <div className="bg-white rounded-2xl overflow-hidden shadow-card border border-border card-hover">
-              <div className="p-8" style={{ background: 'linear-gradient(135deg, #0E2A82, #1B4AD4)' }}>
+          {/* ── Primary action: Hire / Buy ── */}
+          <div className="bg-white rounded-2xl overflow-hidden shadow-card border border-border mb-8">
+            <div className="grid lg:grid-cols-2">
+              <div className="p-8 lg:p-10" style={{ background: 'linear-gradient(135deg, #0E2A82, #1B4AD4)' }}>
                 <div className="w-14 h-14 rounded-2xl bg-white/15 flex items-center justify-center mb-5">
                   <Users className="w-7 h-7 text-white" />
                 </div>
-                <h2 className="text-2xl font-black text-white mb-2">Hire a Vendor</h2>
-                <p className="text-white/70 text-sm">Browse and hire from our verified vendor catalogue</p>
+                <h2 className="text-2xl lg:text-3xl font-black text-white mb-2">Hire or Buy from Vendors</h2>
+                <p className="text-white/75 text-sm lg:text-base">
+                  Browse verified vendors and sellers — book a service or buy a product, all mediated safely by FRAOGO.
+                </p>
               </div>
-              <div className="p-6">
-                <ul className="space-y-2.5 mb-6">
+              <div className="p-8 lg:p-10">
+                <ul className="space-y-3 mb-7">
                   {[
-                    'Browse verified vendors with portfolios',
-                    'Event spaces, catering, makeup & more',
-                    'Send requests directly through FRAOGO',
-                    'All transactions are safely mediated',
+                    'Hire vendors or buy gadgets & products',
+                    'Browse verified profiles with photos',
+                    'Send your request directly through FRAOGO',
+                    'Every transaction is safely mediated',
                   ].map((benefit) => (
                     <li key={benefit} className="flex items-start gap-2.5 text-sm text-muted-foreground">
-                      <Star className="w-4 h-4 flex-shrink-0 mt-0.5" style={{ color: '#93A9F5' }} />
+                      <Star className="w-4 h-4 flex-shrink-0 mt-0.5" style={{ color: '#1B4AD4' }} />
                       {benefit}
                     </li>
                   ))}
                 </ul>
                 <Link
                   href="/general-service/rental/hire-vendor"
-                  className="w-full flex items-center justify-center gap-2 py-3 rounded-xl font-semibold text-sm transition-all"
-                  style={{ background: '#1B4AD4', color: 'white' }}
+                  className="btn-primary w-full justify-center py-3.5 rounded-xl text-base"
                   id="hire-vendor-btn"
                 >
-                  Browse Vendors
+                  Browse Vendors &amp; Sellers
                   <ArrowRight className="w-4 h-4" />
                 </Link>
               </div>
             </div>
           </div>
 
-          {/* Vendor categories */}
-          <div className="text-center mb-10">
-            <h2 className="text-2xl font-black text-foreground mb-3">Vendor Categories</h2>
-            <p className="text-muted-foreground text-sm">We have verified vendors across these service types</p>
+          {/* ── Vendor categories ── */}
+          <div className="text-center mb-6">
+            <h2 className="text-xl font-black text-foreground mb-2">What You&apos;ll Find</h2>
+            <p className="text-muted-foreground text-sm">Verified vendors and sellers across these categories</p>
           </div>
-          <div className="grid grid-cols-2 sm:grid-cols-5 gap-3">
+          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3 mb-14">
             {[
               { emoji: '🏛️', label: 'Event Spaces' },
               { emoji: '🎖️', label: 'Protocol Service' },
               { emoji: '🍽️', label: 'Catering & Chops' },
               { emoji: '💄', label: 'Make Up' },
-              { emoji: '✨', label: 'Other Services' },
+              { emoji: '📱', label: 'Gadgets' },
+              { emoji: '✨', label: 'Other' },
             ].map((cat) => (
               <Link
                 key={cat.label}
@@ -119,9 +86,29 @@ export default function RentalPage() {
               </Link>
             ))}
           </div>
+
+          {/* ── Secondary action: Become a Vendor ── */}
+          <div className="bg-white rounded-2xl border border-border shadow-soft p-6 sm:p-7 flex flex-col sm:flex-row sm:items-center gap-5">
+            <div className="w-12 h-12 rounded-xl flex items-center justify-center flex-shrink-0" style={{ background: '#EEF2FF' }}>
+              <UserPlus className="w-6 h-6" style={{ color: '#1B4AD4' }} />
+            </div>
+            <div className="flex-1">
+              <h3 className="text-lg font-black text-foreground mb-1">Are you a vendor or seller?</h3>
+              <p className="text-sm text-muted-foreground">
+                Join FRAOGO to get discovered by customers across Nigeria. We handle the connections — simple 10% fee on successful deals.
+              </p>
+            </div>
+            <Link
+              href="/general-service/rental/register-vendor"
+              className="btn-outline justify-center py-3 px-6 rounded-xl text-sm flex-shrink-0 whitespace-nowrap"
+              id="become-vendor-btn"
+            >
+              Become a Vendor
+              <ArrowRight className="w-4 h-4" />
+            </Link>
+          </div>
         </div>
       </div>
     </div>
   )
 }
-

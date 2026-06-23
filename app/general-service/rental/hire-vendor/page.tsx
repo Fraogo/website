@@ -9,7 +9,7 @@ export const metadata: Metadata = {
 }
 export const dynamic = 'force-dynamic'
 
-const BUSINESS_TYPES = ['All', 'Event Space', 'Protocol Service', 'Catering & Small Chops', 'Make Up', 'Other']
+const BUSINESS_TYPES = ['All', 'Event Space', 'Protocol Service', 'Catering & Small Chops', 'Make Up', 'Gadgets', 'Other']
 
 export default async function HireVendorPage({
   searchParams,
@@ -32,10 +32,10 @@ export default async function HireVendorPage({
           </p>
           <h1 className="text-3xl lg:text-4xl font-black mb-3 flex items-center gap-3">
             <Users className="w-8 h-8" />
-            Hire a Vendor
+            Hire or Buy from Vendors
           </h1>
           <p className="text-white/70 max-w-xl">
-            Browse our verified vendor catalogue. Click on any vendor to view their portfolio and send a request.
+            Browse our verified vendors and sellers. Open any profile to see their photos, then send a request to hire them or buy through FRAOGO.
           </p>
         </div>
       </div>

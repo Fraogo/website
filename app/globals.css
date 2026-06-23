@@ -69,10 +69,16 @@
 @layer base {
   * { box-sizing: border-box; }
 
+  /* Slightly larger root (~17px) for comfortable reading on all ages. Scales
+     the whole UI proportionally; Tailwind breakpoints are px-based so layouts
+     break at the same widths. */
+  html { font-size: 106.25%; }
+
   body {
     background-color: white;
     color: #0F172A;
     font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+    line-height: 1.6;
   }
 
   ::selection {

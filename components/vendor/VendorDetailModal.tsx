@@ -2,7 +2,7 @@
 
 import { useState } from 'react'
 import Image from 'next/image'
-import { MapPin, ChevronLeft, ChevronRight, X, Calendar, DollarSign, AlertCircle, AlertTriangle, Loader2, CheckCircle2 } from 'lucide-react'
+import { MapPin, ChevronLeft, ChevronRight, X, Calendar, AlertCircle, AlertTriangle, Loader2, CheckCircle2 } from 'lucide-react'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { z } from 'zod'
@@ -40,10 +40,24 @@ const requestSchema = z.object({
 
 type RequestFormValues = z.infer<typeof requestSchema>
 
+// Budget currencies — Naira default, plus common international + diaspora ones.
+const CURRENCIES = [
+  { symbol: '₦',   code: 'NGN', label: '₦ Naira' },
+  { symbol: '$',   code: 'USD', label: '$ Dollar' },
+  { symbol: '£',   code: 'GBP', label: '£ Pound' },
+  { symbol: '€',   code: 'EUR', label: '€ Euro' },
+  { symbol: '₵',   code: 'GHS', label: '₵ Cedi' },
+  { symbol: 'R',   code: 'ZAR', label: 'R Rand' },
+  { symbol: '¥',   code: 'CNY', label: '¥ Yuan' },
+  { symbol: 'C$',  code: 'CAD', label: 'C$ Dollar' },
+  { symbol: 'AED', code: 'AED', label: 'AED Dirham' },
+]
+
 export default function VendorDetailModal({ vendor, onClose }: VendorDetailModalProps) {
   const [imageIndex, setImageIndex] = useState(0)
   const [requestSuccess, setRequestSuccess] = useState(false)
   const [serverError, setServerError] = useState<string | null>(null)
+  const [currency, setCurrency] = useState('₦')
 
   const images = vendor.portfolioImages
   const hasImages = images.length > 0
@@ -60,7 +74,8 @@ export default function VendorDetailModal({ vendor, onClose }: VendorDetailModal
 
   const onSubmit = async (data: RequestFormValues) => {
     setServerError(null)
-    const result = await submitVendorRequest({ ...data, vendorId: vendor.id })
+    const budget = data.budget?.trim() ? `${currency}${data.budget.trim()}` : data.budget
+    const result = await submitVendorRequest({ ...data, budget, vendorId: vendor.id })
     if (result.success) {
       setRequestSuccess(true)
     } else {
@@ -194,10 +209,19 @@ export default function VendorDetailModal({ vendor, onClose }: VendorDetailModal
                     {errors.description && <p className="form-error"><AlertCircle className="w-3 h-3" />{errors.description.message}</p>}
                   </div>
                   <div className="sm:col-span-2">
-                    <label className="form-label text-xs" htmlFor="req-budget">Budget Range (Optional)</label>
-                    <div className="relative">
-                      <DollarSign className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
-                      <input id="req-budget" type="text" className="form-input py-2.5 text-sm pl-9" placeholder="e.g. ₦50,000 – ₦100,000" {...register('budget')} />
+                    <label className="form-label text-xs" htmlFor="req-budget">Budget (Optional)</label>
+                    <div className="flex gap-2">
+                      <select
+                        aria-label="Currency"
+                        value={currency}
+                        onChange={(e) => setCurrency(e.target.value)}
+                        className="form-input py-2.5 text-sm w-28 flex-shrink-0"
+                      >
+                        {CURRENCIES.map((c) => (
+                          <option key={c.code} value={c.symbol}>{c.label}</option>
+                        ))}
+                      </select>
+                      <input id="req-budget" type="text" className="form-input py-2.5 text-sm flex-1" placeholder="e.g. 50,000 – 100,000" {...register('budget')} />
                     </div>
                   </div>
                 </div>

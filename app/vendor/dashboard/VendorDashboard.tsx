@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import Image from 'next/image'
 import { Upload, Trash2, Loader2, Copy, Check, Link2 } from 'lucide-react'
@@ -17,16 +17,11 @@ interface Vendor {
   portfolioImages: VendorImage[]
 }
 
-export default function VendorDashboard({ token, vendor }: { token: string; vendor: Vendor }) {
+export default function VendorDashboard({ token, vendor, profileUrl }: { token: string; vendor: Vendor; profileUrl: string }) {
   const router = useRouter()
   const [uploading, setUploading] = useState(false)
   const [error, setError] = useState<string | null>(null)
-  const [profileUrl, setProfileUrl] = useState(`/vendor/${vendor.id}`)
   const [copied, setCopied] = useState(false)
-
-  useEffect(() => {
-    setProfileUrl(`${window.location.origin}/vendor/${vendor.id}`)
-  }, [vendor.id])
 
   async function copyLink() {
     try {

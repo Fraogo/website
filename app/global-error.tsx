@@ -4,7 +4,6 @@
 // document, so it must render its own <html>/<body> and can't rely on
 // globals.css being applied — styles are inline on purpose.
 export default function GlobalError({
-  error,
   reset,
 }: {
   error: Error & { digest?: string }

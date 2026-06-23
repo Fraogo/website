@@ -28,5 +28,6 @@ export default async function VendorDashboardPage({
     )
   }
 
-  return <VendorDashboard token={token!} vendor={result.vendor} />
+  const profileUrl = `${process.env.NEXTAUTH_URL ?? ''}/vendor/${result.vendor.id}`
+  return <VendorDashboard token={token!} vendor={result.vendor} profileUrl={profileUrl} />
 }

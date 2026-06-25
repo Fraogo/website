@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation'
 import { Trash2 } from 'lucide-react'
 import Link from 'next/link'
 import { updateBlogPost, deleteBlogPost } from '@/app/actions/blog'
+import RichTextEditor from '@/components/admin/RichTextEditor'
 
 interface PostData {
   id: string
@@ -22,6 +23,7 @@ export default function BlogEditForm({ post }: { post: PostData }) {
   const [loading, setLoading] = useState(false)
   const [deleting, setDeleting] = useState(false)
   const [error, setError] = useState('')
+  const [content, setContent] = useState(post.content)
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault()
@@ -35,7 +37,7 @@ export default function BlogEditForm({ post }: { post: PostData }) {
       const result = await updateBlogPost(post.id, {
         title:      data.get('title') as string,
         excerpt:    (data.get('excerpt') as string) || undefined,
-        content:    data.get('content') as string,
+        content,
         coverImage: (data.get('coverImage') as string) || undefined,
         author:     (data.get('author') as string) || undefined,
         published:  data.get('published') === 'true',
@@ -98,14 +100,10 @@ export default function BlogEditForm({ post }: { post: PostData }) {
 
           <div>
             <label className="form-label">Content *</label>
-            <textarea
-              name="content"
-              rows={16}
-              required
-              defaultValue={post.content}
-              className="form-input resize-y font-mono text-xs leading-relaxed"
-            />
-            <p className="text-xs text-gray-400 mt-1">HTML supported: &lt;h2&gt;, &lt;p&gt;, &lt;strong&gt;, &lt;em&gt;, &lt;ul&gt;&lt;li&gt;, &lt;a href="..."&gt;</p>
+            <RichTextEditor value={content} onChange={setContent} />
+            <p className="text-xs text-gray-400 mt-1">
+              Use the toolbar to format your article — headings, lists, quotes, links and images.
+            </p>
           </div>
 
           <div className="flex items-center gap-3 flex-wrap">

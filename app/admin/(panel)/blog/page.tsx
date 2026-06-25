@@ -105,14 +105,6 @@ export default async function AdminBlogPage() {
         </div>
       )}
 
-      {/* Note about rich text editor */}
-      <div className="mt-8 bg-blue-50 border border-blue-100 rounded-2xl p-5 text-sm text-blue-700">
-        <p className="font-bold mb-1">Coming soon: Rich Text Editor</p>
-        <p className="text-blue-600 text-xs leading-relaxed">
-          A full TipTap editor will be added to let team members write posts with formatting, images, and headings without touching any code.
-          For now, posts can be created via the database or a simple HTML textarea.
-        </p>
-      </div>
     </div>
   )
 }

@@ -359,3 +359,17 @@
   .shadow-card   { box-shadow: 0 4px 16px rgba(0,0,0,0.08); }
   .shadow-elevated { box-shadow: 0 8px 32px rgba(0,0,0,0.12); }
 }
+
+/* ── Rich text editor (TipTap) content ─────────────────────────────────────── */
+.tiptap-content { font-size: 0.95rem; line-height: 1.7; color: #1f2937; }
+.tiptap-content > * + * { margin-top: 0.6rem; }
+.tiptap-content h2 { font-size: 1.4rem; font-weight: 800; color: #0E2A82; margin: 1.2rem 0 0.5rem; }
+.tiptap-content h3 { font-size: 1.15rem; font-weight: 700; color: #111827; margin: 1rem 0 0.4rem; }
+.tiptap-content ul { list-style: disc; padding-left: 1.5rem; }
+.tiptap-content ol { list-style: decimal; padding-left: 1.5rem; }
+.tiptap-content li { margin: 0.2rem 0; }
+.tiptap-content blockquote { border-left: 3px solid #1B4AD4; padding-left: 1rem; color: #4b5563; font-style: italic; }
+.tiptap-content a { color: #1B4AD4; text-decoration: underline; }
+.tiptap-content img { max-width: 100%; height: auto; border-radius: 0.5rem; }
+.tiptap-content strong { font-weight: 700; }
+.tiptap-content code { background: #f1f5f9; padding: 0.1rem 0.3rem; border-radius: 0.25rem; font-size: 0.85em; }

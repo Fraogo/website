@@ -5,11 +5,13 @@ import { useRouter } from 'next/navigation'
 import { ArrowLeft, BookOpen } from 'lucide-react'
 import Link from 'next/link'
 import { createBlogPost } from '@/app/actions/blog'
+import RichTextEditor from '@/components/admin/RichTextEditor'
 
 export default function NewBlogPostPage() {
   const router = useRouter()
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
+  const [content, setContent] = useState('')
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault()
@@ -23,7 +25,7 @@ export default function NewBlogPostPage() {
       const result = await createBlogPost({
         title:      data.get('title') as string,
         excerpt:    (data.get('excerpt') as string) || undefined,
-        content:    data.get('content') as string,
+        content,
         coverImage: (data.get('coverImage') as string) || undefined,
         author:     (data.get('author') as string) || undefined,
         published:  data.get('published') === 'true',
@@ -101,16 +103,9 @@ export default function NewBlogPostPage() {
 
           <div>
             <label className="form-label">Content *</label>
-            <textarea
-              name="content"
-              rows={16}
-              required
-              placeholder="Write your article here. You can use basic HTML tags like <h2>, <p>, <strong>, <ul>, <li>, <a href='...'> for formatting."
-              className="form-input resize-y font-mono text-xs leading-relaxed"
-            />
+            <RichTextEditor value={content} onChange={setContent} />
             <p className="text-xs text-gray-400 mt-1">
-              Basic HTML is supported: &lt;h2&gt;, &lt;p&gt;, &lt;strong&gt;, &lt;em&gt;, &lt;ul&gt;&lt;li&gt;, &lt;a href="..."&gt;.
-              A rich text editor will be added soon.
+              Use the toolbar to format your article — headings, lists, quotes, links and images.
             </p>
           </div>
 

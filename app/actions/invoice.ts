@@ -4,6 +4,7 @@ import { z } from 'zod'
 import { Prisma } from '@prisma/client'
 import { prisma } from '@/lib/db'
 import { requireAdmin } from '@/lib/auth'
+import { sendInvoiceEmail } from '@/lib/email'
 import { revalidatePath } from 'next/cache'
 
 const lineItemSchema = z.object({
@@ -64,6 +65,27 @@ export async function saveInvoice(data: InvoiceFormData) {
 export async function getInvoices() {
   await requireAdmin()
   return prisma.invoice.findMany({ orderBy: { createdAt: 'desc' } })
+}
+
+const emailInvoiceSchema = z.object({
+  to: z.string().email('A valid client email is required'),
+  invoiceNumber: z.string().min(1).max(60),
+  clientName: z.string().min(1).max(200),
+  grandTotal: z.string().min(1).max(40),
+  pdfBase64: z.string().min(1),
+})
+
+export async function emailInvoice(data: z.infer<typeof emailInvoiceSchema>) {
+  await requireAdmin()
+  const parsed = emailInvoiceSchema.safeParse(data)
+  if (!parsed.success) {
+    return { success: false, error: 'Invalid invoice email data.' }
+  }
+  const res = await sendInvoiceEmail(parsed.data)
+  if (!res.success) {
+    return { success: false, error: 'Could not send the email. Check the email configuration and try again.' }
+  }
+  return { success: true }
 }
 
 export async function deleteInvoice(id: string) {

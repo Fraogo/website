@@ -15,9 +15,10 @@ interface SendEmailOptions {
   subject: string
   html: string
   cc?: string
+  attachments?: { filename: string; content: string }[]
 }
 
-export async function sendEmail({ to, subject, html, cc }: SendEmailOptions) {
+export async function sendEmail({ to, subject, html, cc, attachments }: SendEmailOptions) {
   if (!RESEND_API_KEY) {
     console.error(`[Email Error] RESEND_API_KEY is not set — email NOT sent. Subject: "${subject}"`)
     return { success: false, error: 'RESEND_API_KEY is not configured' }
@@ -29,12 +30,45 @@ export async function sendEmail({ to, subject, html, cc }: SendEmailOptions) {
       cc: cc ? [cc] : undefined,
       subject,
       html,
+      attachments,
     })
     return { success: true, data: result }
   } catch (error) {
     console.error('[Email Error]', error)
     return { success: false, error }
   }
+}
+
+// ─── Invoice ──────────────────────────────────────────────────────────────────
+
+// Emails a generated invoice to the client with the PDF attached.
+export async function sendInvoiceEmail({
+  to,
+  invoiceNumber,
+  clientName,
+  grandTotal,
+  pdfBase64,
+}: {
+  to: string
+  invoiceNumber: string
+  clientName: string
+  grandTotal: string
+  pdfBase64: string
+}) {
+  const html = emailLayout(`
+    <h2 style="color:#0E2A82;margin:0 0 12px">Invoice ${invoiceNumber}</h2>
+    <p style="margin:0 0 12px">Hello ${clientName},</p>
+    <p style="margin:0 0 12px">Please find your invoice <strong>${invoiceNumber}</strong> attached as a PDF.</p>
+    <p style="font-size:18px;font-weight:800;color:#0E2A82;margin:0 0 16px">Total due: ${grandTotal}</p>
+    <p style="color:#6b7280;font-size:14px;margin:0">The payment details are included on the attached invoice. Thank you for your business.</p>
+  `)
+
+  return sendEmail({
+    to,
+    subject: `Invoice ${invoiceNumber} from FRAOGO`,
+    html,
+    attachments: [{ filename: `${invoiceNumber}.pdf`, content: pdfBase64 }],
+  })
 }
 
 // ─── Admin ────────────────────────────────────────────────────────────────────

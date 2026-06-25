@@ -20,6 +20,14 @@ you focus on what matters.`,
   rc: 'RC8967311',
   founded: '2024',
 
+  // ── Bank / payment details (shown on invoices) ─────────────────────────────
+  // Fill in your real business account so clients know where to pay.
+  bank: {
+    bankName:      '[YOUR BANK NAME]',
+    accountName:   'Fraogo Limited',
+    accountNumber: '[YOUR ACCOUNT NUMBER]',
+  },
+
   // ── Homepage hero ──────────────────────────────────────────────────────────
   // The headline is shown as stacked lines; the last line is highlighted.
   // Edit the text here and the homepage updates automatically.

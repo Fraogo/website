@@ -1,11 +1,11 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { Plus, Trash2, FileText, Download, Mail, Loader2, FolderOpen, Pencil } from 'lucide-react'
+import { Plus, Trash2, FileText, Download, Mail, Loader2, FolderOpen, Pencil, Printer } from 'lucide-react'
 import {
   saveInvoice, getNextInvoiceNumber, getInvoices, deleteInvoice, emailInvoice,
 } from '@/app/actions/invoice'
-import { downloadInvoicePdf, invoicePdfBase64, type InvoicePdfData } from '@/lib/invoicePdf'
+import { downloadInvoicePdf, printInvoicePdf, invoicePdfBase64, type InvoicePdfData } from '@/lib/invoicePdf'
 import { company } from '@/content'
 
 interface LineItem {
@@ -34,6 +34,7 @@ export default function InvoicePage() {
   const [saving, setSaving] = useState(false)
   const [saved, setSaved] = useState(false)
   const [downloading, setDownloading] = useState(false)
+  const [printing, setPrinting] = useState(false)
   const [emailing, setEmailing] = useState(false)
   const [error, setError] = useState('')
   const [emailMsg, setEmailMsg] = useState<{ ok: boolean; text: string } | null>(null)
@@ -113,6 +114,18 @@ export default function InvoicePage() {
     setDownloading(false)
   }
 
+  async function handlePrint() {
+    setPrinting(true)
+    setError('')
+    try {
+      await printInvoicePdf(pdfData())
+    } catch (e) {
+      console.error(e)
+      setError('Could not open the invoice to print.')
+    }
+    setPrinting(false)
+  }
+
   async function handleEmail() {
     if (!clientEmail) { setEmailMsg({ ok: false, text: 'Add a client email address first.' }); return }
     setEmailing(true)
@@ -185,6 +198,11 @@ export default function InvoicePage() {
               className="btn-outline px-4 py-2.5 rounded-xl text-sm flex items-center gap-2 disabled:opacity-60">
               {downloading ? <Loader2 className="w-4 h-4 animate-spin" /> : <Download className="w-4 h-4" />}
               Download PDF
+            </button>
+            <button onClick={handlePrint} disabled={printing}
+              className="btn-outline px-4 py-2.5 rounded-xl text-sm flex items-center gap-2 disabled:opacity-60">
+              {printing ? <Loader2 className="w-4 h-4 animate-spin" /> : <Printer className="w-4 h-4" />}
+              Print
             </button>
             <button onClick={handleEmail} disabled={emailing || !clientEmail}
               className="btn-outline px-4 py-2.5 rounded-xl text-sm flex items-center gap-2 disabled:opacity-50"

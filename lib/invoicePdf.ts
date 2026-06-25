@@ -161,6 +161,19 @@ export async function downloadInvoicePdf(data: InvoicePdfData) {
   doc.save(`${data.invoiceNumber || 'invoice'}.pdf`)
 }
 
+// Opens the generated PDF and triggers the browser's print dialog. The printout
+// is identical to the download (same jsPDF doc), no fragile print CSS needed.
+export async function printInvoicePdf(data: InvoicePdfData) {
+  const doc = await buildInvoicePdf(data)
+  doc.autoPrint()
+  const blobUrl = doc.output('bloburl') as unknown as string
+  const win = window.open(blobUrl, '_blank')
+  if (!win) {
+    // Popup blocked — fall back to downloading the same PDF.
+    doc.save(`${data.invoiceNumber || 'invoice'}.pdf`)
+  }
+}
+
 // Base64 (no data-URI prefix) for Resend email attachments.
 export async function invoicePdfBase64(data: InvoicePdfData): Promise<string> {
   const doc = await buildInvoicePdf(data)

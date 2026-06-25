@@ -42,3 +42,31 @@ export function registerFailedAttempt(key: string, windowMs: number): void {
 export function clearAttempts(key: string): void {
   buckets.delete(key)
 }
+
+/**
+ * Generic sliding-window counter: counts EVERY call against `key` and reports
+ * `limited` once the count exceeds `max` within `windowMs`. Used to throttle
+ * public form submissions per IP (unlike the failed-attempt helpers above, which
+ * only count failures).
+ *
+ * Caveat: same in-memory, per-instance limitation as the rest of this module —
+ * on serverless each instance has its own counter. Good enough to blunt naive
+ * floods; swap for Upstash Redis for cross-instance accuracy (see TASKS.md).
+ */
+export function rateLimit(
+  key: string,
+  max: number,
+  windowMs: number
+): { limited: boolean; retryAfterMs: number } {
+  const now = Date.now()
+  const b = buckets.get(key)
+  if (!b || now > b.resetAt) {
+    buckets.set(key, { count: 1, resetAt: now + windowMs })
+    return { limited: false, retryAfterMs: 0 }
+  }
+  b.count++
+  if (b.count > max) {
+    return { limited: true, retryAfterMs: Math.max(0, b.resetAt - now) }
+  }
+  return { limited: false, retryAfterMs: 0 }
+}

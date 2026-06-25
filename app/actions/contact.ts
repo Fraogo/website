@@ -3,6 +3,7 @@
 import { z } from 'zod'
 import { prisma } from '@/lib/db'
 import { requireAdmin } from '@/lib/auth'
+import { enforceSubmissionLimit } from '@/lib/submitGuard'
 import { sendEmail } from '@/lib/email'
 import { paginationParams, totalPages } from '@/lib/pagination'
 import { revalidatePath } from 'next/cache'
@@ -24,6 +25,9 @@ function singleLine(value: string): string {
 export type ContactFormData = z.infer<typeof contactSchema>
 
 export async function submitContactForm(data: ContactFormData) {
+  const limitError = await enforceSubmissionLimit('contact')
+  if (limitError) return { success: false, error: limitError }
+
   const parsed = contactSchema.safeParse(data)
   if (!parsed.success) {
     return { success: false, error: parsed.error.flatten().fieldErrors }

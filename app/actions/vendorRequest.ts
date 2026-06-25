@@ -3,6 +3,7 @@
 import { z } from 'zod'
 import { prisma } from '@/lib/db'
 import { requireAdmin } from '@/lib/auth'
+import { enforceSubmissionLimit } from '@/lib/submitGuard'
 import {
   sendVendorRequestNotification,
   sendVendorRequestCustomerAck,
@@ -23,6 +24,9 @@ const vendorRequestSchema = z.object({
 export type VendorRequestFormData = z.infer<typeof vendorRequestSchema>
 
 export async function submitVendorRequest(data: VendorRequestFormData) {
+  const limitError = await enforceSubmissionLimit('vendor-request')
+  if (limitError) return { success: false, error: limitError }
+
   const parsed = vendorRequestSchema.safeParse(data)
   if (!parsed.success) {
     return { success: false, error: parsed.error.flatten().fieldErrors }

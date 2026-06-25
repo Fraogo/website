@@ -23,9 +23,9 @@ you focus on what matters.`,
   // ── Bank / payment details (shown on invoices) ─────────────────────────────
   // Fill in your real business account so clients know where to pay.
   bank: {
-    bankName:      '[YOUR BANK NAME]',
-    accountName:   'Fraogo Limited',
-    accountNumber: '[YOUR ACCOUNT NUMBER]',
+    bankName:      'Kuda Microfinance Bank',
+    accountName:   'FRAOGO LOGISTICS VENTURE',
+    accountNumber: '3003395489',
   },
 
   // ── Homepage hero ──────────────────────────────────────────────────────────

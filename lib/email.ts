@@ -10,15 +10,21 @@ const FROM = process.env.EMAIL_FROM ?? 'FRAOGO <noreply@fraogo.com>'
 const ADMIN_EMAIL = process.env.ADMIN_EMAIL ?? 'fraogo6@gmail.com'
 const ADMIN_EMAIL_CC = process.env.ADMIN_EMAIL_CC
 
+// Customer-facing confirmations are scheduled to arrive a short while after the
+// submission, while admin notifications stay immediate. Resend accepts natural
+// language ('in 1 hour') or an ISO timestamp. Set to '' to send instantly.
+const CUSTOMER_EMAIL_DELAY = 'in 1 hour'
+
 interface SendEmailOptions {
   to: string | string[]
   subject: string
   html: string
   cc?: string
   attachments?: { filename: string; content: string }[]
+  scheduledAt?: string
 }
 
-export async function sendEmail({ to, subject, html, cc, attachments }: SendEmailOptions) {
+export async function sendEmail({ to, subject, html, cc, attachments, scheduledAt }: SendEmailOptions) {
   if (!RESEND_API_KEY) {
     console.error(`[Email Error] RESEND_API_KEY is not set — email NOT sent. Subject: "${subject}"`)
     return { success: false, error: 'RESEND_API_KEY is not configured' }
@@ -31,6 +37,7 @@ export async function sendEmail({ to, subject, html, cc, attachments }: SendEmai
       subject,
       html,
       attachments,
+      scheduledAt: scheduledAt || undefined,
     })
     return { success: true, data: result }
   } catch (error) {
@@ -148,6 +155,7 @@ export async function sendProcurementConfirmation(order: {
     to: order.customerEmail,
     subject: 'FRAOGO — We\'ve received your order ✅',
     html,
+    scheduledAt: CUSTOMER_EMAIL_DELAY,
   })
 
   // Admin notification
@@ -211,7 +219,7 @@ export async function sendDeliveryConfirmation(req: {
     </div>
   `)
 
-  await sendEmail({ to: req.senderEmail, subject: 'FRAOGO — Delivery Request Received', html })
+  await sendEmail({ to: req.senderEmail, subject: 'FRAOGO — Delivery Request Received', html, scheduledAt: CUSTOMER_EMAIL_DELAY })
   await sendEmail({
     to: ADMIN_EMAIL,
     cc: ADMIN_EMAIL_CC,
@@ -259,7 +267,7 @@ export async function sendRelocationConfirmation(req: {
     <p style="margin-top:16px;color:#6b7280;font-size:14px">Our team will contact you within 24–48 hours to confirm details and provide a quote.</p>
   `)
 
-  await sendEmail({ to: req.customerEmail, subject: 'FRAOGO — Relocation Request Received', html })
+  await sendEmail({ to: req.customerEmail, subject: 'FRAOGO — Relocation Request Received', html, scheduledAt: CUSTOMER_EMAIL_DELAY })
   await sendEmail({
     to: ADMIN_EMAIL,
     cc: ADMIN_EMAIL_CC,
@@ -308,6 +316,7 @@ export async function sendVendorRegistrationConfirmation(vendor: {
     to: vendor.email,
     subject: 'FRAOGO — Vendor Application Received',
     html,
+    scheduledAt: CUSTOMER_EMAIL_DELAY,
   })
 }
 
@@ -423,6 +432,26 @@ export async function sendVendorRequestNotification(data: {
     subject: `FRAOGO — New Customer Request from ${data.customerName}`,
     html,
   })
+
+  // Notify FRAOGO admin (us) too — immediate, so we can mediate.
+  await sendEmail({
+    to: ADMIN_EMAIL,
+    cc: ADMIN_EMAIL_CC,
+    subject: `[FRAOGO] New Vendor Request — ${data.customerName} → ${data.vendorBusinessName}`,
+    html: emailLayout(`
+      <h2 style="color:#0E2A82">New Vendor Request</h2>
+      <p><strong>${data.customerName}</strong> wants to hire <strong>${data.vendorBusinessName}</strong>.</p>
+      <table style="width:100%;border-collapse:collapse;font-size:14px;margin-top:8px">
+        <tbody>
+          ${detailRow('Customer Email', data.customerEmail)}
+          ${detailRow('Customer Phone', data.customerPhone)}
+          ${data.eventDate ? detailRow('Event Date', new Date(data.eventDate).toLocaleDateString('en-NG', { dateStyle: 'full' })) : ''}
+          ${detailRow('Description', data.description)}
+          ${data.budget ? detailRow('Budget', data.budget) : ''}
+        </tbody>
+      </table>
+    `),
+  })
 }
 
 export async function sendVendorRequestCustomerAck(data: {
@@ -443,6 +472,7 @@ export async function sendVendorRequestCustomerAck(data: {
     to: data.customerEmail,
     subject: `FRAOGO — Your Request to ${data.vendorBusinessName} Has Been Sent`,
     html,
+    scheduledAt: CUSTOMER_EMAIL_DELAY,
   })
 }
 
@@ -485,7 +515,7 @@ export async function sendSupplyOrderConfirmation(order: {
     <p style="margin-top:16px;color:#6b7280;font-size:14px">Our team will contact you to confirm your order and arrange payment.</p>
   `)
 
-  await sendEmail({ to: order.customerEmail, subject: 'FRAOGO — Supply Order Received', html })
+  await sendEmail({ to: order.customerEmail, subject: 'FRAOGO — Supply Order Received', html, scheduledAt: CUSTOMER_EMAIL_DELAY })
   await sendEmail({
     to: ADMIN_EMAIL,
     cc: ADMIN_EMAIL_CC,

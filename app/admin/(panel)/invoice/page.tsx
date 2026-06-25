@@ -232,8 +232,8 @@ export default function InvoicePage() {
             <p className="text-gray-400 font-semibold">No saved invoices yet</p>
           </div>
         ) : (
-          <div className="bg-white rounded-2xl border border-gray-100 shadow-soft overflow-hidden">
-            <table className="w-full text-sm">
+          <div className="bg-white rounded-2xl border border-gray-100 shadow-soft overflow-x-auto">
+            <table className="w-full text-sm min-w-[520px]">
               <thead>
                 <tr className="border-b border-gray-50">
                   <th className="text-left px-5 py-3 text-xs font-bold text-gray-400 uppercase tracking-wider">Invoice #</th>
@@ -273,7 +273,7 @@ export default function InvoicePage() {
         )
       ) : (
       /* ─── INVOICE BUILDER ─── */
-      <div className="bg-white rounded-2xl border border-gray-100 shadow-soft p-8">
+      <div className="bg-white rounded-2xl border border-gray-100 shadow-soft p-5 sm:p-8">
 
         {/* Invoice Header */}
         <div className="flex items-start justify-between mb-10">
@@ -322,7 +322,8 @@ export default function InvoicePage() {
         </div>
 
         {/* Line Items */}
-        <table className="w-full text-sm mb-6">
+        <div className="overflow-x-auto -mx-2 px-2">
+        <table className="w-full text-sm mb-6 min-w-[480px]">
           <thead>
             <tr style={{ background: '#EEF2FF' }}>
               <th className="text-left px-3 py-2.5 text-xs font-bold text-gray-500 uppercase tracking-wide rounded-l-lg">Description</th>
@@ -359,6 +360,7 @@ export default function InvoicePage() {
             ))}
           </tbody>
         </table>
+        </div>
 
         <button onClick={addItem} className="flex items-center gap-1.5 text-xs font-semibold text-[#1B4AD4] hover:underline mb-8">
           <Plus className="w-3.5 h-3.5" /> Add Line Item

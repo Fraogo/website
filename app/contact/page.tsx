@@ -7,6 +7,7 @@ import { submitContactForm, type ContactFormData } from '@/app/actions/contact'
 import { InstagramIcon, FacebookIcon, TwitterIcon, LinkedInIcon, TikTokIcon } from '@/components/ui/social-icons'
 import FaqAccordion from '@/components/contact/FaqAccordion'
 import PhoneField from '@/components/ui/PhoneField'
+import Honeypot from '@/components/ui/Honeypot'
 
 const socials = [
   { href: contact.social.instagram, Icon: InstagramIcon, label: 'Instagram' },
@@ -29,6 +30,7 @@ export default function ContactPage() {
   const [form, setForm] = useState<ContactFormData>({ name: '', email: '', phone: '', subject: '', message: '' })
   const [status, setStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle')
   const [errorMsg, setErrorMsg] = useState<string | null>(null)
+  const [hp, setHp] = useState('')
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     setForm((prev) => ({ ...prev, [e.target.name]: e.target.value }))
@@ -39,7 +41,8 @@ export default function ContactPage() {
     setStatus('loading')
     setErrorMsg(null)
 
-    const result = await submitContactForm(form)
+    const payload = { ...form, company_website: hp }
+    const result = await submitContactForm(payload)
     if (result.success) {
       setStatus('success')
       setForm({ name: '', email: '', phone: '', subject: '', message: '' })
@@ -187,6 +190,7 @@ export default function ContactPage() {
               </div>
             ) : (
               <form onSubmit={handleSubmit} className="space-y-5">
+                <Honeypot value={hp} onChange={setHp} />
                 <div className="grid sm:grid-cols-2 gap-5">
                   <div>
                     <label htmlFor="name" className="form-label">Full Name *</label>

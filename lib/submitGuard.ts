@@ -24,3 +24,14 @@ export async function enforceSubmissionLimit(scope: string): Promise<string | nu
   const mins = Math.max(1, Math.ceil(retryAfterMs / 60_000))
   return `Too many submissions from your network. Please try again in ${mins} minute${mins === 1 ? '' : 's'}.`
 }
+
+// ─── Honeypot ─────────────────────────────────────────────────────────────────
+// A hidden form field real users never see/fill. Bots that auto-fill every field
+// give themselves away. The form sends it under this key; actions check it.
+export const HONEYPOT_FIELD = 'company_website'
+
+/** True if the hidden honeypot field was filled (i.e. the caller is a bot). */
+export function looksLikeBot(data: unknown): boolean {
+  const v = (data as Record<string, unknown> | null)?.[HONEYPOT_FIELD]
+  return typeof v === 'string' && v.trim().length > 0
+}

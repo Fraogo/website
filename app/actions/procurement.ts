@@ -4,7 +4,7 @@ import { z } from 'zod'
 import { Prisma } from '@prisma/client'
 import { prisma } from '@/lib/db'
 import { requireAdmin } from '@/lib/auth'
-import { enforceSubmissionLimit } from '@/lib/submitGuard'
+import { enforceSubmissionLimit, looksLikeBot } from '@/lib/submitGuard'
 import { sendProcurementConfirmation } from '@/lib/email'
 import { paginationParams, totalPages } from '@/lib/pagination'
 import { revalidatePath } from 'next/cache'
@@ -33,6 +33,7 @@ export type ProcurementFormData = z.infer<typeof procurementSchema>
 export async function submitProcurementOrder(data: ProcurementFormData) {
   const limitError = await enforceSubmissionLimit('procurement')
   if (limitError) return { success: false, error: limitError }
+  if (looksLikeBot(data)) return { success: true }
 
   // Validate
   const parsed = procurementSchema.safeParse(data)

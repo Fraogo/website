@@ -7,6 +7,7 @@ import { submitProcurementOrder } from '@/app/actions/procurement'
 import { Trash2, Plus, ShoppingCart, AlertTriangle, CheckCircle2, Loader2 } from 'lucide-react'
 import Link from 'next/link'
 import { cn } from '@/lib/utils'
+import Honeypot from '@/components/ui/Honeypot'
 
 export default function CartPage() {
   const router = useRouter()
@@ -14,7 +15,8 @@ export default function CartPage() {
   const [showModal, setShowModal] = useState(false)
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [error, setError] = useState<string | null>(null)
-  
+  const [hp, setHp] = useState('')
+
   // Safe hydration check for React 19
   const [mounted, setMounted] = useState(false)
   useEffect(() => {
@@ -34,7 +36,7 @@ export default function CartPage() {
     setError(null)
 
     try {
-      const result = await submitProcurementOrder({
+      const payload = {
         type: orderType ?? 'nigeria',
         customerName: customerInfo.fullName,
         customerEmail: customerInfo.email,
@@ -46,7 +48,9 @@ export default function CartPage() {
           deliveryMode: item.deliveryMode,
           deliveryAddress: item.deliveryAddress,
         })),
-      })
+        company_website: hp,
+      }
+      const result = await submitProcurementOrder(payload)
 
       if (result.success) {
         clearCart()
@@ -64,6 +68,7 @@ export default function CartPage() {
 
   return (
     <div className="min-h-screen" style={{ background: '#f8fafc' }}>
+      <Honeypot value={hp} onChange={setHp} />
       {/* Header */}
       <div className="page-header">
         <div className="section-container pt-8">

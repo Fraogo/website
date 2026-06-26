@@ -8,6 +8,7 @@ import { AlertCircle, AlertTriangle, CheckCircle2, Loader2 } from 'lucide-react'
 import { registerVendor } from '@/app/actions/vendor'
 import { cn } from '@/lib/utils'
 import PhoneField from '@/components/ui/PhoneField'
+import Honeypot from '@/components/ui/Honeypot'
 
 const BUSINESS_TYPES = ['Event Space', 'Protocol Service', 'Catering & Small Chops', 'Make Up', 'Gadgets', 'Other']
 
@@ -28,6 +29,7 @@ type FormValues = z.infer<typeof formSchema>
 export default function VendorRegistrationForm() {
   const [success, setSuccess] = useState(false)
   const [serverError, setServerError] = useState<string | null>(null)
+  const [hp, setHp] = useState('')
 
   const {
     register,
@@ -43,7 +45,8 @@ export default function VendorRegistrationForm() {
 
   const onSubmit = async (data: FormValues) => {
     setServerError(null)
-    const result = await registerVendor(data)
+    const payload = { ...data, company_website: hp }
+    const result = await registerVendor(payload)
     if (result.success) {
       setSuccess(true)
     } else {
@@ -73,6 +76,7 @@ export default function VendorRegistrationForm() {
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="space-y-8" noValidate>
+      <Honeypot value={hp} onChange={setHp} />
       {/* Business Info */}
       <div className="bg-white rounded-2xl p-6 shadow-soft border border-border">
         <h2 className="text-base font-bold text-foreground mb-5 flex items-center gap-2">

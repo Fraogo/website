@@ -9,6 +9,7 @@ import { submitDeliveryRequest } from '@/app/actions/delivery'
 import { cn } from '@/lib/utils'
 import PhoneField from '@/components/ui/PhoneField'
 import ConfirmSubmitModal from '@/components/ui/ConfirmSubmitModal'
+import Honeypot from '@/components/ui/Honeypot'
 
 const formSchema = z.object({
   type: z.enum(['local', 'international']),
@@ -35,6 +36,7 @@ export default function DeliveryForm({ defaultType = 'local' }: DeliveryFormProp
   const [serverError, setServerError] = useState<string | null>(null)
   const [pending, setPending] = useState<FormValues | null>(null)
   const [submitting, setSubmitting] = useState(false)
+  const [hp, setHp] = useState('')
 
   const {
     register,
@@ -56,7 +58,8 @@ export default function DeliveryForm({ defaultType = 'local' }: DeliveryFormProp
     if (!pending) return
     setServerError(null)
     setSubmitting(true)
-    const result = await submitDeliveryRequest(pending)
+    const payload = { ...pending, company_website: hp }
+    const result = await submitDeliveryRequest(payload)
     setSubmitting(false)
     if (result.success) {
       setPending(null)
@@ -96,6 +99,7 @@ export default function DeliveryForm({ defaultType = 'local' }: DeliveryFormProp
 
   return (
     <form onSubmit={handleSubmit((data) => setPending(data))} className="space-y-8" noValidate>
+      <Honeypot value={hp} onChange={setHp} />
       {/* Type toggle */}
       <div className="bg-white rounded-2xl p-6 shadow-soft border border-border">
         <label className="form-label mb-3">Delivery Type *</label>

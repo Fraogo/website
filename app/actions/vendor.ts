@@ -4,7 +4,7 @@ import { z } from 'zod'
 import { randomBytes } from 'crypto'
 import { prisma } from '@/lib/db'
 import { requireAdmin } from '@/lib/auth'
-import { enforceSubmissionLimit } from '@/lib/submitGuard'
+import { enforceSubmissionLimit, looksLikeBot } from '@/lib/submitGuard'
 import {
   sendVendorRegistrationConfirmation,
   sendVendorAdminNotification,
@@ -34,6 +34,7 @@ export type VendorFormData = z.infer<typeof vendorSchema>
 export async function registerVendor(data: VendorFormData) {
   const limitError = await enforceSubmissionLimit('vendor-register')
   if (limitError) return { success: false, error: limitError }
+  if (looksLikeBot(data)) return { success: true }
 
   const parsed = vendorSchema.safeParse(data)
   if (!parsed.success) {

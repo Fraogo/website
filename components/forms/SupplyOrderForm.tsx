@@ -9,6 +9,7 @@ import { submitSupplyOrder } from '@/app/actions/supply'
 import { getMinDeliveryDate, cn } from '@/lib/utils'
 import PhoneField from '@/components/ui/PhoneField'
 import ConfirmSubmitModal from '@/components/ui/ConfirmSubmitModal'
+import Honeypot from '@/components/ui/Honeypot'
 
 const SUPPLY_ITEMS = [
   { id: 'event-supplies', label: 'Supply for Events', emoji: '🎉', description: 'Generic event supplies and materials' },
@@ -45,6 +46,7 @@ export default function SupplyOrderForm() {
   const [serverError, setServerError] = useState<string | null>(null)
   const [pending, setPending] = useState<FormValues | null>(null)
   const [submitting, setSubmitting] = useState(false)
+  const [hp, setHp] = useState('')
 
   const {
     register,
@@ -92,7 +94,8 @@ export default function SupplyOrderForm() {
     if (!pending) return
     setServerError(null)
     setSubmitting(true)
-    const result = await submitSupplyOrder(pending)
+    const payload = { ...pending, company_website: hp }
+    const result = await submitSupplyOrder(payload)
     setSubmitting(false)
     if (result.success) {
       setPending(null)
@@ -130,6 +133,7 @@ export default function SupplyOrderForm() {
 
   return (
     <form onSubmit={handleSubmit(openReview)} className="space-y-8" noValidate>
+      <Honeypot value={hp} onChange={setHp} />
       {/* Item Selection */}
       <div className="bg-white rounded-2xl p-6 shadow-soft border border-border">
         <h2 className="text-base font-bold text-foreground mb-2 flex items-center gap-2">

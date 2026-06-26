@@ -3,7 +3,7 @@
 import { z } from 'zod'
 import { prisma } from '@/lib/db'
 import { requireAdmin } from '@/lib/auth'
-import { enforceSubmissionLimit } from '@/lib/submitGuard'
+import { enforceSubmissionLimit, looksLikeBot } from '@/lib/submitGuard'
 import { sendRelocationConfirmation } from '@/lib/email'
 import { paginationParams, totalPages } from '@/lib/pagination'
 import { revalidatePath } from 'next/cache'
@@ -24,6 +24,7 @@ export type RelocationFormData = z.infer<typeof relocationSchema>
 export async function submitRelocationRequest(data: RelocationFormData) {
   const limitError = await enforceSubmissionLimit('relocation')
   if (limitError) return { success: false, error: limitError }
+  if (looksLikeBot(data)) return { success: true }
 
   const parsed = relocationSchema.safeParse(data)
   if (!parsed.success) {

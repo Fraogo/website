@@ -10,6 +10,7 @@ import { submitVendorRequest } from '@/app/actions/vendorRequest'
 import { cn } from '@/lib/utils'
 import PhoneField from '@/components/ui/PhoneField'
 import ConfirmSubmitModal from '@/components/ui/ConfirmSubmitModal'
+import Honeypot from '@/components/ui/Honeypot'
 
 interface VendorImage {
   id: string
@@ -61,6 +62,7 @@ export default function VendorDetailModal({ vendor, onClose }: VendorDetailModal
   const [currency, setCurrency] = useState('₦')
   const [pending, setPending] = useState<RequestFormValues | null>(null)
   const [submitting, setSubmitting] = useState(false)
+  const [hp, setHp] = useState('')
 
   const images = vendor.portfolioImages
   const hasImages = images.length > 0
@@ -85,7 +87,8 @@ export default function VendorDetailModal({ vendor, onClose }: VendorDetailModal
     if (!pending) return
     setServerError(null)
     setSubmitting(true)
-    const result = await submitVendorRequest({ ...pending, vendorId: vendor.id })
+    const payload = { ...pending, vendorId: vendor.id, company_website: hp }
+    const result = await submitVendorRequest(payload)
     setSubmitting(false)
     if (result.success) {
       setPending(null)
@@ -202,6 +205,7 @@ export default function VendorDetailModal({ vendor, onClose }: VendorDetailModal
               </div>
             ) : (
               <form onSubmit={handleSubmit(openReview)} className="space-y-4" noValidate>
+                <Honeypot value={hp} onChange={setHp} />
                 <div className="grid sm:grid-cols-2 gap-4">
                   <div>
                     <label className="form-label text-xs" htmlFor="req-name">Full Name *</label>

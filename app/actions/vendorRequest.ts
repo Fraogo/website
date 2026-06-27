@@ -5,7 +5,7 @@ import { prisma } from '@/lib/db'
 import { requireAdmin } from '@/lib/auth'
 import { enforceSubmissionLimit, looksLikeBot } from '@/lib/submitGuard'
 import {
-  sendVendorRequestNotification,
+  sendVendorRequestAdminNotification,
   sendVendorRequestCustomerAck,
 } from '@/lib/email'
 import { paginationParams, totalPages } from '@/lib/pagination'
@@ -54,8 +54,7 @@ export async function submitVendorRequest(data: VendorRequestFormData) {
       },
     })
 
-    sendVendorRequestNotification({
-      vendorEmail: vendor.email,
+    sendVendorRequestAdminNotification({
       vendorBusinessName: vendor.businessName,
       customerName: d.customerName,
       customerEmail: d.customerEmail,

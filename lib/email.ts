@@ -399,8 +399,10 @@ export async function sendVendorRejectionEmail(vendor: {
 
 // ─── Vendor Request ───────────────────────────────────────────────────────────
 
-export async function sendVendorRequestNotification(data: {
-  vendorEmail: string
+// FRAOGO mediates every vendor request — the vendor is never emailed directly
+// here. Only admin is notified; staff relay it to the vendor themselves
+// (see the WhatsApp/Email/Call buttons on /admin/vendor-requests).
+export async function sendVendorRequestAdminNotification(data: {
   vendorBusinessName: string
   customerName: string
   customerEmail: string
@@ -409,31 +411,6 @@ export async function sendVendorRequestNotification(data: {
   description: string
   budget?: string
 }) {
-  const html = emailLayout(`
-    <h2 style="color:#0E2A82">New Customer Request</h2>
-    <p>Hi <strong>${data.vendorBusinessName}</strong>, a customer has requested your services through FRAOGO.</p>
-    <table style="width:100%;border-collapse:collapse;font-size:14px;margin-top:16px">
-      <tbody>
-        ${detailRow('Customer Name', data.customerName)}
-        ${detailRow('Customer Email', data.customerEmail)}
-        ${detailRow('Customer Phone', data.customerPhone)}
-        ${data.eventDate ? detailRow('Event Date', new Date(data.eventDate).toLocaleDateString('en-NG', { dateStyle: 'full' })) : ''}
-        ${detailRow('Description', data.description)}
-        ${data.budget ? detailRow('Budget', data.budget) : ''}
-      </tbody>
-    </table>
-    <div style="background:#EEF2FF;border-left:4px solid #0E2A82;padding:16px;margin-top:20px;border-radius:4px">
-      <p style="margin:0;font-size:13px;color:#0E2A82">FRAOGO will facilitate the connection. Please do not negotiate directly with the customer outside the FRAOGO platform.</p>
-    </div>
-  `)
-
-  await sendEmail({
-    to: data.vendorEmail,
-    subject: `FRAOGO — New Customer Request from ${data.customerName}`,
-    html,
-  })
-
-  // Notify FRAOGO admin (us) too — immediate, so we can mediate.
   await sendEmail({
     to: ADMIN_EMAIL,
     cc: ADMIN_EMAIL_CC,

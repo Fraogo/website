@@ -572,3 +572,34 @@ function emailLayout(content: string) {
 </body>
 </html>`
 }
+
+function escapeHtml(value: string): string {
+  return value
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;')
+}
+
+// ─── Admin: Manual Compose ─────────────────────────────────────────────────────
+
+// Lets admin staff reply to a submission with a free-typed message, sent for
+// real through Resend — distinct from the mailto: links, which just open the
+// staff member's own email client.
+export async function sendCustomAdminEmail({
+  to,
+  subject,
+  message,
+  attachments,
+}: {
+  to: string
+  subject: string
+  message: string
+  attachments?: { filename: string; content: string }[]
+}) {
+  const html = emailLayout(`
+    <div style="white-space:pre-wrap;font-size:14px;color:#111827;line-height:1.6">${escapeHtml(message)}</div>
+  `)
+  return sendEmail({ to, subject, html, attachments })
+}

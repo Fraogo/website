@@ -8,6 +8,7 @@ import { enforceSubmissionLimit, looksLikeBot } from '@/lib/submitGuard'
 import { sendProcurementConfirmation } from '@/lib/email'
 import { paginationParams, totalPages } from '@/lib/pagination'
 import { revalidatePath } from 'next/cache'
+import { after } from 'next/server'
 
 const itemSchema = z.object({
   name: z.string().min(1, 'Item name is required').max(300),
@@ -56,14 +57,18 @@ export async function submitProcurementOrder(data: ProcurementFormData) {
       },
     })
 
-    // Send emails (non-blocking)
-    sendProcurementConfirmation({
-      customerName,
-      customerEmail,
-      customerPhone,
-      type,
-      items,
-    }).catch(console.error)
+    // after() keeps this running past the response, unlike a bare un-awaited
+    // promise which has no guarantee of finishing before Vercel suspends the
+    // function (see lib/email.ts).
+    after(() => {
+      sendProcurementConfirmation({
+        customerName,
+        customerEmail,
+        customerPhone,
+        type,
+        items,
+      }).catch(console.error)
+    })
 
     revalidatePath('/admin/orders')
 

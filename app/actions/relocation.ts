@@ -7,6 +7,7 @@ import { enforceSubmissionLimit, looksLikeBot } from '@/lib/submitGuard'
 import { sendRelocationConfirmation } from '@/lib/email'
 import { paginationParams, totalPages } from '@/lib/pagination'
 import { revalidatePath } from 'next/cache'
+import { after } from 'next/server'
 
 const relocationSchema = z.object({
   customerName: z.string().min(2, 'Full name is required').max(200),
@@ -48,7 +49,7 @@ export async function submitRelocationRequest(data: RelocationFormData) {
       },
     })
 
-    sendRelocationConfirmation(d).catch(console.error)
+    after(() => { sendRelocationConfirmation(d).catch(console.error) })
     revalidatePath('/admin/relocations')
 
     return { success: true }

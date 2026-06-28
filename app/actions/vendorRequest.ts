@@ -10,6 +10,7 @@ import {
 } from '@/lib/email'
 import { paginationParams, totalPages } from '@/lib/pagination'
 import { revalidatePath } from 'next/cache'
+import { after } from 'next/server'
 
 const vendorRequestSchema = z.object({
   vendorId: z.string().min(1).max(60),
@@ -54,21 +55,23 @@ export async function submitVendorRequest(data: VendorRequestFormData) {
       },
     })
 
-    sendVendorRequestAdminNotification({
-      vendorBusinessName: vendor.businessName,
-      customerName: d.customerName,
-      customerEmail: d.customerEmail,
-      customerPhone: d.customerPhone,
-      eventDate: d.eventDate ? new Date(d.eventDate) : undefined,
-      description: d.description,
-      budget: d.budget,
-    }).catch(console.error)
+    after(() => {
+      sendVendorRequestAdminNotification({
+        vendorBusinessName: vendor.businessName,
+        customerName: d.customerName,
+        customerEmail: d.customerEmail,
+        customerPhone: d.customerPhone,
+        eventDate: d.eventDate ? new Date(d.eventDate) : undefined,
+        description: d.description,
+        budget: d.budget,
+      }).catch(console.error)
 
-    sendVendorRequestCustomerAck({
-      customerName: d.customerName,
-      customerEmail: d.customerEmail,
-      vendorBusinessName: vendor.businessName,
-    }).catch(console.error)
+      sendVendorRequestCustomerAck({
+        customerName: d.customerName,
+        customerEmail: d.customerEmail,
+        vendorBusinessName: vendor.businessName,
+      }).catch(console.error)
+    })
 
     revalidatePath('/admin/vendor-requests')
 

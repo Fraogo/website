@@ -7,6 +7,7 @@ import { enforceSubmissionLimit, looksLikeBot } from '@/lib/submitGuard'
 import { sendDeliveryConfirmation } from '@/lib/email'
 import { paginationParams, totalPages } from '@/lib/pagination'
 import { revalidatePath } from 'next/cache'
+import { after } from 'next/server'
 
 const deliverySchema = z.object({
   type: z.enum(['local', 'international']),
@@ -54,7 +55,7 @@ export async function submitDeliveryRequest(data: DeliveryFormData) {
       },
     })
 
-    sendDeliveryConfirmation(d).catch(console.error)
+    after(() => { sendDeliveryConfirmation(d).catch(console.error) })
     revalidatePath('/admin/deliveries')
 
     return { success: true }

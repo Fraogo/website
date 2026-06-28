@@ -8,6 +8,7 @@ import { enforceSubmissionLimit, looksLikeBot } from '@/lib/submitGuard'
 import { sendSupplyOrderConfirmation } from '@/lib/email'
 import { paginationParams, totalPages } from '@/lib/pagination'
 import { revalidatePath } from 'next/cache'
+import { after } from 'next/server'
 
 const supplyItemSchema = z.object({
   name: z.string().min(1).max(300),
@@ -56,14 +57,16 @@ export async function submitSupplyOrder(data: SupplyFormData) {
       },
     })
 
-    sendSupplyOrderConfirmation({
-      customerName: d.customerName,
-      customerEmail: d.customerEmail,
-      customerPhone: d.customerPhone,
-      destination: d.destination,
-      preferredDate: new Date(d.preferredDate),
-      items: d.items,
-    }).catch(console.error)
+    after(() => {
+      sendSupplyOrderConfirmation({
+        customerName: d.customerName,
+        customerEmail: d.customerEmail,
+        customerPhone: d.customerPhone,
+        destination: d.destination,
+        preferredDate: new Date(d.preferredDate),
+        items: d.items,
+      }).catch(console.error)
+    })
 
     revalidatePath('/admin/supply-orders')
 

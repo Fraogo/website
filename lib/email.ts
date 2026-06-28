@@ -30,7 +30,10 @@ export async function sendEmail({ to, subject, html, cc, attachments, scheduledA
     return { success: false, error: 'RESEND_API_KEY is not configured' }
   }
   try {
-    const result = await resend.emails.send({
+    // resend.emails.send() does NOT throw on failure — it returns { data, error }.
+    // Checking only for thrown exceptions (as this used to) silently reported
+    // success on every rejected send (e.g. unverified domain, invalid address).
+    const { data, error } = await resend.emails.send({
       from: FROM,
       to: Array.isArray(to) ? to : [to],
       cc: cc ? [cc] : undefined,
@@ -39,7 +42,11 @@ export async function sendEmail({ to, subject, html, cc, attachments, scheduledA
       attachments,
       scheduledAt: scheduledAt || undefined,
     })
-    return { success: true, data: result }
+    if (error) {
+      console.error(`[Email Error] Resend rejected "${subject}":`, error)
+      return { success: false, error: error.message }
+    }
+    return { success: true, data }
   } catch (error) {
     console.error('[Email Error]', error)
     return { success: false, error }

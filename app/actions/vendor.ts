@@ -13,6 +13,7 @@ import {
 } from '@/lib/email'
 import { paginationParams, totalPages } from '@/lib/pagination'
 import { revalidatePath } from 'next/cache'
+import { after } from 'next/server'
 
 const vendorSchema = z.object({
   businessName: z.string().min(2, 'Business name is required').max(200),
@@ -57,20 +58,22 @@ export async function registerVendor(data: VendorFormData) {
       },
     })
 
-    sendVendorRegistrationConfirmation({
-      businessName: d.businessName,
-      email: d.email,
-      businessType: finalBusinessType,
-      location: d.location,
-    }).catch(console.error)
+    after(() => {
+      sendVendorRegistrationConfirmation({
+        businessName: d.businessName,
+        email: d.email,
+        businessType: finalBusinessType,
+        location: d.location,
+      }).catch(console.error)
 
-    sendVendorAdminNotification({
-      businessName: d.businessName,
-      email: d.email,
-      phone: d.phone,
-      businessType: finalBusinessType,
-      location: d.location,
-    }).catch(console.error)
+      sendVendorAdminNotification({
+        businessName: d.businessName,
+        email: d.email,
+        phone: d.phone,
+        businessType: finalBusinessType,
+        location: d.location,
+      }).catch(console.error)
+    })
 
     revalidatePath('/admin/vendors')
 
@@ -108,12 +111,14 @@ export async function approveVendor(vendorId: string) {
     const magicLinkUrl = `${process.env.NEXTAUTH_URL}/vendor/dashboard?token=${magicLink.token}`
     const profileUrl = `${process.env.NEXTAUTH_URL}/vendor/${vendorId}`
 
-    sendVendorApprovalWithMagicLink({
-      businessName: vendor.businessName,
-      email: vendor.email,
-      magicLinkUrl,
-      profileUrl,
-    }).catch(console.error)
+    after(() => {
+      sendVendorApprovalWithMagicLink({
+        businessName: vendor.businessName,
+        email: vendor.email,
+        magicLinkUrl,
+        profileUrl,
+      }).catch(console.error)
+    })
 
     revalidatePath('/admin/vendors')
     return { success: true }
@@ -127,7 +132,9 @@ export async function rejectVendor(vendorId: string) {
   await requireAdmin()
   try {
     const vendor = await prisma.vendor.update({ where: { id: vendorId }, data: { status: 'rejected' } })
-    sendVendorRejectionEmail({ businessName: vendor.businessName, email: vendor.email }).catch(console.error)
+    after(() => {
+      sendVendorRejectionEmail({ businessName: vendor.businessName, email: vendor.email }).catch(console.error)
+    })
     revalidatePath('/admin/vendors')
     return { success: true }
   } catch (error) {

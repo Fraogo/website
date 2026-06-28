@@ -2,7 +2,7 @@ import { SignJWT, jwtVerify } from 'jose'
 import { NextRequest } from 'next/server'
 
 const SESSION_COOKIE = 'fraogo_admin_session'
-const EXPIRES_IN = 60 * 60 * 8 // 8 hours
+const EXPIRES_IN = 60 * 60 * 24 * 30 // 30 days
 
 function getSecret() {
   const secret = process.env.NEXTAUTH_SECRET

@@ -7,6 +7,7 @@ import { enforceSubmissionLimit, looksLikeBot } from '@/lib/submitGuard'
 import { sendEmail } from '@/lib/email'
 import { paginationParams, totalPages } from '@/lib/pagination'
 import { revalidatePath } from 'next/cache'
+import { after } from 'next/server'
 
 const contactSchema = z.object({
   name:    z.string().min(2, 'Name is required').max(120),
@@ -44,27 +45,32 @@ export async function submitContactForm(data: ContactFormData) {
     const ADMIN_EMAIL = process.env.ADMIN_EMAIL ?? 'fraogo6@gmail.com'
     const ADMIN_CC    = process.env.ADMIN_EMAIL_CC
 
-    await sendEmail({
-      to: ADMIN_EMAIL,
-      cc: ADMIN_CC,
-      subject: `[FRAOGO] New Contact Inquiry — ${singleLine(subject)}`,
-      html: `
-        <div style="font-family:sans-serif;max-width:600px;margin:auto">
-          <div style="background:#1B4AD4;padding:28px 32px;border-radius:8px 8px 0 0">
-            <h1 style="color:#fff;margin:0;font-size:22px">New Contact Inquiry</h1>
+    // after() runs once the response has been sent — the submit doesn't wait on
+    // Resend's network round-trip, but (unlike a bare un-awaited promise) Vercel
+    // keeps the function alive long enough for it to actually finish sending.
+    after(() => {
+      sendEmail({
+        to: ADMIN_EMAIL,
+        cc: ADMIN_CC,
+        subject: `[FRAOGO] New Contact Inquiry — ${singleLine(subject)}`,
+        html: `
+          <div style="font-family:sans-serif;max-width:600px;margin:auto">
+            <div style="background:#1B4AD4;padding:28px 32px;border-radius:8px 8px 0 0">
+              <h1 style="color:#fff;margin:0;font-size:22px">New Contact Inquiry</h1>
+            </div>
+            <div style="background:#fff;padding:32px;border:1px solid #e5e7eb;border-top:0;border-radius:0 0 8px 8px">
+              <table style="width:100%;border-collapse:collapse;font-size:14px">
+                <tr><td style="padding:8px 12px;font-weight:600;background:#f9fafb;width:30%;border:1px solid #e5e7eb">Name</td><td style="padding:8px 12px;border:1px solid #e5e7eb">${name}</td></tr>
+                <tr><td style="padding:8px 12px;font-weight:600;background:#f9fafb;border:1px solid #e5e7eb">Email</td><td style="padding:8px 12px;border:1px solid #e5e7eb">${email}</td></tr>
+                ${phone ? `<tr><td style="padding:8px 12px;font-weight:600;background:#f9fafb;border:1px solid #e5e7eb">Phone</td><td style="padding:8px 12px;border:1px solid #e5e7eb">${phone}</td></tr>` : ''}
+                <tr><td style="padding:8px 12px;font-weight:600;background:#f9fafb;border:1px solid #e5e7eb">Subject</td><td style="padding:8px 12px;border:1px solid #e5e7eb">${subject}</td></tr>
+                <tr><td style="padding:8px 12px;font-weight:600;background:#f9fafb;border:1px solid #e5e7eb;vertical-align:top">Message</td><td style="padding:8px 12px;border:1px solid #e5e7eb;white-space:pre-wrap">${message}</td></tr>
+              </table>
+              <p style="margin-top:20px"><a href="${process.env.NEXTAUTH_URL}/admin/contacts" style="background:#1B4AD4;color:#fff;padding:10px 20px;text-decoration:none;border-radius:6px;display:inline-block">View in Admin Panel</a></p>
+            </div>
           </div>
-          <div style="background:#fff;padding:32px;border:1px solid #e5e7eb;border-top:0;border-radius:0 0 8px 8px">
-            <table style="width:100%;border-collapse:collapse;font-size:14px">
-              <tr><td style="padding:8px 12px;font-weight:600;background:#f9fafb;width:30%;border:1px solid #e5e7eb">Name</td><td style="padding:8px 12px;border:1px solid #e5e7eb">${name}</td></tr>
-              <tr><td style="padding:8px 12px;font-weight:600;background:#f9fafb;border:1px solid #e5e7eb">Email</td><td style="padding:8px 12px;border:1px solid #e5e7eb">${email}</td></tr>
-              ${phone ? `<tr><td style="padding:8px 12px;font-weight:600;background:#f9fafb;border:1px solid #e5e7eb">Phone</td><td style="padding:8px 12px;border:1px solid #e5e7eb">${phone}</td></tr>` : ''}
-              <tr><td style="padding:8px 12px;font-weight:600;background:#f9fafb;border:1px solid #e5e7eb">Subject</td><td style="padding:8px 12px;border:1px solid #e5e7eb">${subject}</td></tr>
-              <tr><td style="padding:8px 12px;font-weight:600;background:#f9fafb;border:1px solid #e5e7eb;vertical-align:top">Message</td><td style="padding:8px 12px;border:1px solid #e5e7eb;white-space:pre-wrap">${message}</td></tr>
-            </table>
-            <p style="margin-top:20px"><a href="${process.env.NEXTAUTH_URL}/admin/contacts" style="background:#1B4AD4;color:#fff;padding:10px 20px;text-decoration:none;border-radius:6px;display:inline-block">View in Admin Panel</a></p>
-          </div>
-        </div>
-      `,
+        `,
+      }).catch(console.error)
     })
 
     revalidatePath('/admin/contacts')

@@ -12,8 +12,8 @@ const ADMIN_EMAIL_CC = process.env.ADMIN_EMAIL_CC
 
 // Customer-facing confirmations are scheduled to arrive a short while after the
 // submission, while admin notifications stay immediate. Resend accepts natural
-// language ('in 1 hour') or an ISO timestamp. Set to '' to send instantly.
-const CUSTOMER_EMAIL_DELAY = 'in 1 hour'
+// language ('in 30 minutes') or an ISO timestamp. Set to '' to send instantly.
+const CUSTOMER_EMAIL_DELAY = 'in 30 minutes'
 
 interface SendEmailOptions {
   to: string | string[]

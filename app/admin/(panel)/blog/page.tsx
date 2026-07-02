@@ -26,8 +26,8 @@ export default async function AdminBlogPage() {
   const publishedCount = posts.filter((p) => p.published).length
 
   return (
-    <div className="p-6 lg:p-8 max-w-4xl">
-      <div className="flex items-center justify-between gap-4 mb-8 flex-wrap">
+    <div className="max-w-4xl">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-8">
         <div className="flex items-center gap-3">
           <div className="w-10 h-10 rounded-xl flex items-center justify-center" style={{ background: '#EEF2FF' }}>
             <BookOpen className="w-5 h-5" style={{ color: '#1B4AD4' }} />
@@ -81,8 +81,8 @@ export default async function AdminBlogPage() {
                 {post.excerpt && (
                   <p className="text-sm text-gray-500 line-clamp-1 mb-2">{post.excerpt}</p>
                 )}
-                <div className="flex items-center gap-3 text-xs text-gray-400">
-                  <span>/{post.slug}</span>
+                <div className="flex flex-wrap items-center gap-x-2 gap-y-0.5 text-xs text-gray-400">
+                  <span className="truncate max-w-[140px] sm:max-w-xs">/{post.slug}</span>
                   <span>·</span>
                   <span>{post.publishedAt ? `Published ${formatDate(post.publishedAt)}` : `Created ${formatDate(post.createdAt)}`}</span>
                 </div>

@@ -83,7 +83,7 @@ export default async function AdminOrdersPage({
                 </div>
 
                 {items.length > 0 && (
-                  <div className="rounded-xl border border-gray-100 overflow-hidden mb-4 overflow-x-auto">
+                  <div className="rounded-xl border border-gray-100 overflow-x-auto mb-4">
                     <table className="w-full text-xs min-w-[28rem]">
                       <thead className="bg-gray-50 text-gray-500">
                         <tr>

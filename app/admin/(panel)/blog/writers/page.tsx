@@ -11,7 +11,7 @@ export default async function WriterLinksPage() {
   const tokens = await getWriterTokens()
 
   return (
-    <div className="p-6 lg:p-8 max-w-3xl">
+    <div className="max-w-3xl">
       <div className="flex items-center gap-3 mb-8">
         <Link href="/admin/blog" className="text-gray-400 hover:text-gray-600 transition-colors">
           <ArrowLeft className="w-5 h-5" />

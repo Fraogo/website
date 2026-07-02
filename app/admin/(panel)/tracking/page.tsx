@@ -32,8 +32,8 @@ export default async function AdminTrackingPage({
   const { records, total, page: currentPage, totalPages } = await getAllTrackingRecords(Number(page) || 1)
 
   return (
-    <div className="p-6 lg:p-8 max-w-5xl">
-      <div className="flex items-center justify-between gap-4 mb-8 flex-wrap">
+    <div className="max-w-5xl">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-8">
         <div className="flex items-center gap-3">
           <div className="w-10 h-10 rounded-xl flex items-center justify-center" style={{ background: '#EEF2FF' }}>
             <MapPin className="w-5 h-5" style={{ color: '#1B4AD4' }} />

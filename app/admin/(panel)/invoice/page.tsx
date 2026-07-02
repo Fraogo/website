@@ -196,9 +196,9 @@ export default function InvoicePage() {
   }
 
   return (
-    <div className="p-6 lg:p-8 max-w-4xl">
+    <div className="max-w-4xl">
       {/* Header */}
-      <div className="flex items-center justify-between gap-4 mb-6 flex-wrap">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-6">
         <div className="flex items-center gap-3">
           <div className="w-10 h-10 rounded-xl flex items-center justify-center" style={{ background: '#EEF2FF' }}>
             <FileText className="w-5 h-5" style={{ color: '#1B4AD4' }} />
@@ -211,24 +211,24 @@ export default function InvoicePage() {
         {view === 'new' && (
           <div className="flex gap-2 flex-wrap">
             <button onClick={handleDownload} disabled={downloading}
-              className="btn-outline px-4 py-2.5 rounded-xl text-sm flex items-center gap-2 disabled:opacity-60">
+              className="btn-outline px-3 py-2.5 rounded-xl text-sm flex items-center gap-2 disabled:opacity-60">
               {downloading ? <Loader2 className="w-4 h-4 animate-spin" /> : <Download className="w-4 h-4" />}
-              Download PDF
+              <span className="hidden sm:inline">Download PDF</span>
             </button>
             <button onClick={handlePrint} disabled={printing}
-              className="btn-outline px-4 py-2.5 rounded-xl text-sm flex items-center gap-2 disabled:opacity-60">
+              className="btn-outline px-3 py-2.5 rounded-xl text-sm flex items-center gap-2 disabled:opacity-60">
               {printing ? <Loader2 className="w-4 h-4 animate-spin" /> : <Printer className="w-4 h-4" />}
-              Print
+              <span className="hidden sm:inline">Print</span>
             </button>
             <button onClick={handleEmail} disabled={emailing || !clientEmail}
-              className="btn-outline px-4 py-2.5 rounded-xl text-sm flex items-center gap-2 disabled:opacity-50"
+              className="btn-outline px-3 py-2.5 rounded-xl text-sm flex items-center gap-2 disabled:opacity-50"
               title={!clientEmail ? 'Add a client email first' : 'Email this invoice to the client'}>
               {emailing ? <Loader2 className="w-4 h-4 animate-spin" /> : <Mail className="w-4 h-4" />}
-              Email to Client
+              <span className="hidden sm:inline">Email</span>
             </button>
             <button onClick={handleSave} disabled={saving}
-              className="btn-primary px-4 py-2.5 rounded-xl text-sm flex items-center gap-2 disabled:opacity-60">
-              {saving ? 'Saving…' : saved ? 'Saved ✓' : 'Save Invoice'}
+              className="btn-primary px-3 sm:px-4 py-2.5 rounded-xl text-sm flex items-center gap-2 disabled:opacity-60">
+              {saving ? 'Saving…' : saved ? '✓' : <><span className="hidden sm:inline">Save Invoice</span><span className="sm:hidden">Save</span></>}
             </button>
           </div>
         )}

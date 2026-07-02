@@ -24,8 +24,9 @@ const navItems = [
   {
     label: 'Services',
     children: [
-      { label: 'Browse & Hire', href: '/general-service/rental', description: 'Find vendors for events & projects' },
-      { label: 'Supply Orders', href: '/general-service/supply', description: 'Bulk supplies delivered to you' },
+      { label: 'Browse Vendors',   href: '/general-service/rental/hire-vendor', description: 'Hire or buy from verified vendors' },
+      { label: 'Supply Orders',    href: '/general-service/supply',             description: 'Bulk supplies delivered to you' },
+      { label: 'Become a Vendor',  href: '/general-service/rental/register-vendor', description: 'Join the FRAOGO vendor network' },
     ],
   },
 ]

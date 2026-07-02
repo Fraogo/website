@@ -1,7 +1,6 @@
 ﻿import type { Metadata } from 'next'
 import { getActiveVendors } from '@/app/actions/vendor'
 import VendorCard from '@/components/vendor/VendorCard'
-import { Users } from 'lucide-react'
 
 export const metadata: Metadata = {
   title: 'Hire a Vendor',
@@ -27,15 +26,9 @@ export default async function HireVendorPage({
     <div className="min-h-screen" style={{ background: '#f8fafc' }}>
       <div className="page-header">
         <div className="section-container pt-8">
-          <p className="text-sm font-bold uppercase tracking-wider mb-2" style={{ color: '#93A9F5' }}>
-            General Service → Rental
-          </p>
-          <h1 className="text-3xl lg:text-4xl font-black mb-3 flex items-center gap-3">
-            <Users className="w-8 h-8" />
-            Hire or Buy from Vendors
-          </h1>
+          <h1 className="text-3xl lg:text-4xl font-black mb-3">Vendors &amp; Sellers</h1>
           <p className="text-white/70 max-w-xl">
-            Browse our verified vendors and sellers. Open any profile to see their photos, then send a request to hire them or buy through FRAOGO.
+            Browse verified vendors and sellers. Open any profile to see their photos, then send a request to hire them or buy through FRAOGO.
           </p>
         </div>
       </div>

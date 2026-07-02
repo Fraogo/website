@@ -2,6 +2,8 @@ import Link from 'next/link'
 import { ArrowRight } from 'lucide-react'
 import type { Metadata } from 'next'
 import { company } from '@/content'
+import { getActiveVendors } from '@/app/actions/vendor'
+import VendorCard from '@/components/vendor/VendorCard'
 
 export const metadata: Metadata = {
   title: `${company.name} — Procurement, Logistics & General Services`,
@@ -53,7 +55,12 @@ const services = [
   },
 ]
 
-export default function HomePage() {
+const VENDOR_CATEGORIES = ['All', 'Event Space', 'Protocol Service', 'Catering & Small Chops', 'Make Up', 'Gadgets', 'Other']
+
+export default async function HomePage() {
+  const allVendors = await getActiveVendors()
+  const previewVendors = allVendors.slice(0, 6)
+
   return (
     <>
       {/* ═══════════════════════════════════════════════════════════════
@@ -181,6 +188,69 @@ export default function HomePage() {
           </div>
         ))}
       </div>
+
+      {/* ═══════════════════════════════════════════════════════════════
+          VENDORS — Preview strip
+          ═══════════════════════════════════════════════════════════════ */}
+      {allVendors.length > 0 && (
+        <section className="py-16 sm:py-24 bg-white border-t border-gray-100">
+          <div className="section-container">
+            {/* Header */}
+            <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-8">
+              <div>
+                <p className="text-xs font-bold uppercase tracking-widest mb-2 text-[#1B4AD4]">Vendors & Sellers</p>
+                <h2 className="text-2xl sm:text-3xl lg:text-4xl font-black text-gray-900">
+                  Browse what's available
+                </h2>
+              </div>
+              <Link
+                href="/general-service/rental/hire-vendor"
+                className="inline-flex items-center gap-2 text-sm font-bold text-[#1B4AD4] hover:underline flex-shrink-0"
+              >
+                See all vendors <ArrowRight className="w-4 h-4" />
+              </Link>
+            </div>
+
+            {/* Category filter — links, no JS state needed */}
+            <div className="flex gap-2 overflow-x-auto pb-2 mb-8 no-scrollbar">
+              {VENDOR_CATEGORIES.map((cat) => (
+                <Link
+                  key={cat}
+                  href={cat === 'All'
+                    ? '/general-service/rental/hire-vendor'
+                    : `/general-service/rental/hire-vendor?type=${encodeURIComponent(cat)}`}
+                  className="px-4 py-1.5 rounded-full text-sm font-semibold whitespace-nowrap border border-gray-200 text-gray-600 hover:border-[#0E2A82] hover:text-[#0E2A82] bg-white transition-colors"
+                >
+                  {cat}
+                </Link>
+              ))}
+            </div>
+
+            {/* Vendor cards */}
+            <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+              {previewVendors.map((vendor: any) => (
+                <VendorCard key={vendor.id} vendor={vendor} />
+              ))}
+            </div>
+
+            {/* Footer row */}
+            <div className="mt-10 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+              <Link
+                href="/general-service/rental/hire-vendor"
+                className="btn-primary px-6 py-3 rounded-xl text-sm inline-flex items-center gap-2"
+              >
+                Browse all vendors & sellers <ArrowRight className="w-4 h-4" />
+              </Link>
+              <Link
+                href="/general-service/rental/register-vendor"
+                className="text-sm text-gray-400 hover:text-[#1B4AD4] font-semibold transition-colors"
+              >
+                Are you a vendor? Register here →
+              </Link>
+            </div>
+          </div>
+        </section>
+      )}
 
       {/* ═══════════════════════════════════════════════════════════════
           ABOUT — Dark editorial section, no RC number

@@ -6,6 +6,9 @@ import { ArrowLeft, BookOpen } from 'lucide-react'
 import Link from 'next/link'
 import { createBlogPost } from '@/app/actions/blog'
 import RichTextEditor from '@/components/admin/RichTextEditor'
+import { makeImageUploader } from '@/components/blog/imageUpload'
+
+const uploadImage = makeImageUploader()
 
 export default function NewBlogPostPage() {
   const router = useRouter()
@@ -103,7 +106,7 @@ export default function NewBlogPostPage() {
 
           <div>
             <label className="form-label">Content *</label>
-            <RichTextEditor value={content} onChange={setContent} />
+            <RichTextEditor value={content} onChange={setContent} uploadImage={uploadImage} />
             <p className="text-xs text-gray-400 mt-1">
               Use the toolbar to format your article — headings, lists, quotes, links and images.
             </p>

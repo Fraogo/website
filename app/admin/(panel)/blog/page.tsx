@@ -1,6 +1,6 @@
 import { prisma } from '@/lib/db'
 import { formatDate } from '@/lib/utils'
-import { BookOpen, Plus, Eye } from 'lucide-react'
+import { BookOpen, Plus, Eye, Link2 } from 'lucide-react'
 import Link from 'next/link'
 import type { Metadata } from 'next'
 import DeleteButton from '@/components/admin/DeleteButton'
@@ -37,12 +37,20 @@ export default async function AdminBlogPage() {
             <p className="text-sm text-gray-400">{publishedCount} published · {posts.length - publishedCount} draft</p>
           </div>
         </div>
-        <Link
-          href="/admin/blog/new"
-          className="btn-primary px-4 py-2.5 rounded-xl text-sm flex items-center gap-2"
-        >
-          <Plus className="w-4 h-4" /> New Post
-        </Link>
+        <div className="flex items-center gap-2">
+          <Link
+            href="/admin/blog/writers"
+            className="btn-outline px-4 py-2.5 rounded-xl text-sm flex items-center gap-2"
+          >
+            <Link2 className="w-4 h-4" /> Writer Links
+          </Link>
+          <Link
+            href="/admin/blog/new"
+            className="btn-primary px-4 py-2.5 rounded-xl text-sm flex items-center gap-2"
+          >
+            <Plus className="w-4 h-4" /> New Post
+          </Link>
+        </div>
       </div>
 
       {posts.length === 0 ? (

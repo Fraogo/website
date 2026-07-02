@@ -360,16 +360,24 @@
   .shadow-elevated { box-shadow: 0 8px 32px rgba(0,0,0,0.12); }
 }
 
-/* ── Rich text editor (TipTap) content ─────────────────────────────────────── */
-.tiptap-content { font-size: 0.95rem; line-height: 1.7; color: #1f2937; }
-.tiptap-content > * + * { margin-top: 0.6rem; }
-.tiptap-content h2 { font-size: 1.4rem; font-weight: 800; color: #0E2A82; margin: 1.2rem 0 0.5rem; }
-.tiptap-content h3 { font-size: 1.15rem; font-weight: 700; color: #111827; margin: 1rem 0 0.4rem; }
-.tiptap-content ul { list-style: disc; padding-left: 1.5rem; }
-.tiptap-content ol { list-style: decimal; padding-left: 1.5rem; }
-.tiptap-content li { margin: 0.2rem 0; }
-.tiptap-content blockquote { border-left: 3px solid #1B4AD4; padding-left: 1rem; color: #4b5563; font-style: italic; }
-.tiptap-content a { color: #1B4AD4; text-decoration: underline; }
-.tiptap-content img { max-width: 100%; height: auto; border-radius: 0.5rem; }
-.tiptap-content strong { font-weight: 700; }
-.tiptap-content code { background: #f1f5f9; padding: 0.1rem 0.3rem; border-radius: 0.25rem; font-size: 0.85em; }
+/* ── Article content ───────────────────────────────────────────────────────────
+   Shared by the TipTap editor and the published blog post, so what a writer sees
+   while editing matches the final article (true WYSIWYG). */
+.article-content { font-size: 1.05rem; line-height: 1.8; color: #1f2937; }
+.article-content > * + * { margin-top: 1.1rem; }
+.article-content h2 { font-size: 1.7rem; font-weight: 800; color: #0E2A82; line-height: 1.25; margin: 2rem 0 0.75rem; }
+.article-content h3 { font-size: 1.35rem; font-weight: 700; color: #111827; line-height: 1.3; margin: 1.6rem 0 0.5rem; }
+.article-content p { margin: 0; }
+.article-content ul { list-style: disc; padding-left: 1.5rem; }
+.article-content ol { list-style: decimal; padding-left: 1.5rem; }
+.article-content li { margin: 0.35rem 0; }
+.article-content li > ul, .article-content li > ol { margin-top: 0.35rem; }
+.article-content blockquote { border-left: 4px solid #1B4AD4; padding: 0.15rem 0 0.15rem 1.25rem; margin: 1.6rem 0; color: #374151; font-style: italic; font-size: 1.1rem; }
+.article-content a { color: #1B4AD4; text-decoration: underline; text-underline-offset: 2px; }
+.article-content a:hover { color: #2A5EE8; }
+.article-content img { max-width: 100%; height: auto; border-radius: 0.75rem; margin: 1.6rem 0; }
+.article-content strong { font-weight: 700; color: #111827; }
+.article-content code { background: #f1f5f9; padding: 0.15rem 0.4rem; border-radius: 0.3rem; font-size: 0.9em; }
+.article-content pre { background: #0E2A82; color: #e5edff; padding: 1rem 1.25rem; border-radius: 0.75rem; overflow-x: auto; font-size: 0.9rem; }
+.article-content pre code { background: transparent; padding: 0; color: inherit; }
+.article-content hr { border: 0; border-top: 1px solid #e5e7eb; margin: 2rem 0; }

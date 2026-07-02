@@ -180,6 +180,16 @@ model BlogPost {
   updatedAt   DateTime  @updatedAt
 }
 
+// Private invite links that let non-admins publish blog posts via /write?token=
+model BlogWriterToken {
+  id         String    @id @default(cuid())
+  token      String    @unique
+  name       String    // who the link is for; pre-fills the post author
+  active     Boolean   @default(true)
+  createdAt  DateTime  @default(now())
+  lastUsedAt DateTime?
+}
+
 // Key/value store for runtime-editable settings (e.g. admin password hash)
 model Setting {
   key       String   @id

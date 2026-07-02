@@ -6,6 +6,9 @@ import { Trash2 } from 'lucide-react'
 import Link from 'next/link'
 import { updateBlogPost, deleteBlogPost } from '@/app/actions/blog'
 import RichTextEditor from '@/components/admin/RichTextEditor'
+import { makeImageUploader } from '@/components/blog/imageUpload'
+
+const uploadImage = makeImageUploader()
 
 interface PostData {
   id: string
@@ -100,7 +103,7 @@ export default function BlogEditForm({ post }: { post: PostData }) {
 
           <div>
             <label className="form-label">Content *</label>
-            <RichTextEditor value={content} onChange={setContent} />
+            <RichTextEditor value={content} onChange={setContent} uploadImage={uploadImage} />
             <p className="text-xs text-gray-400 mt-1">
               Use the toolbar to format your article — headings, lists, quotes, links and images.
             </p>

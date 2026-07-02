@@ -1,12 +1,13 @@
 'use client'
 
+import { useRef, useState } from 'react'
 import { useEditor, EditorContent, type Editor } from '@tiptap/react'
 import StarterKit from '@tiptap/starter-kit'
 import Link from '@tiptap/extension-link'
 import Image from '@tiptap/extension-image'
 import {
   Bold, Italic, Strikethrough, Heading2, Heading3,
-  List, ListOrdered, Quote, Link2, Image as ImageIcon, Undo2, Redo2,
+  List, ListOrdered, Quote, Link2, Image as ImageIcon, Undo2, Redo2, Upload, Loader2,
 } from 'lucide-react'
 
 function ToolbarButton({
@@ -34,7 +35,25 @@ function ToolbarButton({
   )
 }
 
-function Toolbar({ editor }: { editor: Editor }) {
+function Toolbar({ editor, uploadImage }: { editor: Editor; uploadImage?: (file: File) => Promise<string> }) {
+  const fileRef = useRef<HTMLInputElement>(null)
+  const [uploading, setUploading] = useState(false)
+
+  async function onPickImage(e: React.ChangeEvent<HTMLInputElement>) {
+    const file = e.target.files?.[0]
+    e.target.value = ''
+    if (!file || !uploadImage) return
+    setUploading(true)
+    try {
+      const url = await uploadImage(file)
+      if (url) editor.chain().focus().setImage({ src: url }).run()
+    } catch {
+      alert('Image upload failed. Please try again.')
+    } finally {
+      setUploading(false)
+    }
+  }
+
   const setLink = () => {
     const prev = editor.getAttributes('link').href as string | undefined
     const url = window.prompt('Link URL', prev || 'https://')
@@ -89,6 +108,14 @@ function Toolbar({ editor }: { editor: Editor }) {
       <ToolbarButton label="Add link" onClick={setLink} active={editor.isActive('link')}>
         <Link2 className="w-4 h-4" />
       </ToolbarButton>
+      {uploadImage && (
+        <>
+          <ToolbarButton label="Upload image" onClick={() => fileRef.current?.click()} disabled={uploading}>
+            {uploading ? <Loader2 className="w-4 h-4 animate-spin" /> : <Upload className="w-4 h-4" />}
+          </ToolbarButton>
+          <input ref={fileRef} type="file" accept="image/*" className="sr-only" onChange={onPickImage} />
+        </>
+      )}
       <ToolbarButton label="Add image by URL" onClick={addImage}>
         <ImageIcon className="w-4 h-4" />
       </ToolbarButton>
@@ -108,9 +135,11 @@ function Toolbar({ editor }: { editor: Editor }) {
 export default function RichTextEditor({
   value,
   onChange,
+  uploadImage,
 }: {
   value: string
   onChange: (html: string) => void
+  uploadImage?: (file: File) => Promise<string>
 }) {
   const editor = useEditor({
     immediatelyRender: false, // required for Next.js SSR — avoids hydration mismatch
@@ -122,7 +151,7 @@ export default function RichTextEditor({
     content: value,
     editorProps: {
       attributes: {
-        class: 'tiptap-content focus:outline-none px-4 py-3 min-h-[320px]',
+        class: 'article-content focus:outline-none px-4 py-3 min-h-[320px]',
       },
     },
     onUpdate: ({ editor }) => onChange(editor.getHTML()),
@@ -130,7 +159,7 @@ export default function RichTextEditor({
 
   return (
     <div className="border border-gray-200 rounded-xl bg-white overflow-hidden">
-      {editor && <Toolbar editor={editor} />}
+      {editor && <Toolbar editor={editor} uploadImage={uploadImage} />}
       <EditorContent editor={editor} />
     </div>
   )

@@ -13,6 +13,30 @@ export const supabaseClient = createClient(supabaseUrl, supabaseAnonKey)
 // ─── Bucket names ─────────────────────────────────────────────────────────────
 export const VENDOR_DOCUMENTS_BUCKET = 'vendor-documents' // private
 export const VENDOR_PORTFOLIO_BUCKET = 'vendor-portfolio' // public
+export const BLOG_IMAGES_BUCKET = 'blog-images' // public
+
+// ─── Upload a blog image (server-side, service role) ──────────────────────────
+// Returns the public URL. Used for cover images and in-article images, by both
+// the admin editor and the token-gated public write page.
+export async function uploadBlogImage(bytes: Buffer, ext: string, contentType: string) {
+  const safeExt = ext.replace(/[^a-z0-9]/gi, '').toLowerCase() || 'jpg'
+  const fileName = `${Date.now()}_${Math.random().toString(36).slice(2)}.${safeExt}`
+
+  const { data, error } = await supabaseAdmin.storage
+    .from(BLOG_IMAGES_BUCKET)
+    .upload(fileName, bytes, { contentType })
+
+  if (error) {
+    console.error('[Storage] Blog image upload error:', error)
+    throw error
+  }
+
+  const { data: publicData } = supabaseAdmin.storage
+    .from(BLOG_IMAGES_BUCKET)
+    .getPublicUrl(data.path)
+
+  return publicData.publicUrl
+}
 
 // ─── Upload vendor NIN document (server-side) ─────────────────────────────────
 export async function uploadNinDocument(

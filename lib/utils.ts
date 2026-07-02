@@ -31,6 +31,13 @@ export function formatDate(date: Date | string): string {
   })
 }
 
+/** Estimated reading time in minutes from HTML content (~200 words/min). */
+export function readingTime(html: string): number {
+  const text = html.replace(/<[^>]*>/g, ' ').replace(/\s+/g, ' ').trim()
+  const words = text ? text.split(' ').length : 0
+  return Math.max(1, Math.round(words / 200))
+}
+
 /**
  * Returns a date string formatted for input[type="date"] (YYYY-MM-DD)
  * offsetDays: how many days from today

@@ -21,7 +21,7 @@ const TAX_RATE = 7.5 // VAT in Nigeria
 const DEFAULT_NOTES = 'Payment due within 7 days. Kindly pay into the account below and send proof of payment to our email.'
 
 export default function InvoicePage() {
-  const [view, setView] = useState<'new' | 'saved'>('new')
+  const [view, setView] = useState<'menu' | 'new' | 'saved'>('menu')
 
   const [invoiceNumber, setInvoiceNumber] = useState('')
   const [clientName, setClientName] = useState('')
@@ -42,9 +42,25 @@ export default function InvoicePage() {
   const [invoices, setInvoices] = useState<SavedInvoice[]>([])
   const [loadingList, setLoadingList] = useState(false)
 
+  // Only fetch a number when the editor is actually opened — the landing menu
+  // stays instant (no DB round-trip on page load).
   useEffect(() => {
-    getNextInvoiceNumber().then(setInvoiceNumber)
-  }, [])
+    if (view === 'new' && !invoiceNumber) getNextInvoiceNumber().then(setInvoiceNumber)
+  }, [view, invoiceNumber])
+
+  function startNewInvoice() {
+    setClientName('')
+    setClientEmail('')
+    setInvoiceDate(new Date().toISOString().slice(0, 10))
+    setTaxRate(TAX_RATE)
+    setItems([{ name: '', quantity: 1, unitPrice: 0, total: 0 }])
+    setNotes(DEFAULT_NOTES)
+    setSaved(false)
+    setEmailMsg(null)
+    setError('')
+    setInvoiceNumber('') // the effect above fetches a fresh number
+    setView('new')
+  }
 
   useEffect(() => {
     if (view !== 'saved') return
@@ -218,16 +234,22 @@ export default function InvoicePage() {
         )}
       </div>
 
-      {/* Tabs */}
-      <div className="flex gap-2 mb-6">
-        {(['new', 'saved'] as const).map((v) => (
-          <button key={v} onClick={() => setView(v)}
-            className={`px-4 py-2 rounded-lg text-sm font-semibold transition-all ${view === v ? 'text-white' : 'bg-white border border-border text-gray-600 hover:border-gray-400'}`}
-            style={view === v ? { background: '#0E2A82' } : {}}>
-            {v === 'new' ? 'New Invoice' : 'Saved Invoices'}
+      {/* Tabs — hidden on the landing menu */}
+      {view !== 'menu' && (
+        <div className="flex gap-2 mb-6">
+          <button onClick={() => setView('menu')}
+            className="px-3 py-2 rounded-lg text-sm font-semibold bg-white border border-border text-gray-500 hover:border-gray-400">
+            ← Menu
           </button>
-        ))}
-      </div>
+          {(['new', 'saved'] as const).map((v) => (
+            <button key={v} onClick={() => setView(v)}
+              className={`px-4 py-2 rounded-lg text-sm font-semibold transition-all ${view === v ? 'text-white' : 'bg-white border border-border text-gray-600 hover:border-gray-400'}`}
+              style={view === v ? { background: '#0E2A82' } : {}}>
+              {v === 'new' ? 'New Invoice' : 'Saved Invoices'}
+            </button>
+          ))}
+        </div>
+      )}
 
       {error && (
         <div className="bg-red-50 border border-red-200 text-red-700 text-sm px-4 py-3 rounded-xl mb-5">{error}</div>
@@ -238,8 +260,27 @@ export default function InvoicePage() {
         </div>
       )}
 
-      {/* ─── SAVED INVOICES ─── */}
-      {view === 'saved' ? (
+      {/* ─── LANDING MENU ─── */}
+      {view === 'menu' ? (
+        <div className="grid sm:grid-cols-2 gap-5">
+          <button onClick={startNewInvoice}
+            className="bg-white rounded-2xl border border-gray-100 shadow-soft p-8 text-left hover:border-[#1B4AD4] hover:shadow-elevated transition-all">
+            <div className="w-12 h-12 rounded-xl flex items-center justify-center mb-4" style={{ background: 'linear-gradient(135deg,#0E2A82,#1B4AD4)' }}>
+              <Plus className="w-6 h-6 text-white" />
+            </div>
+            <h2 className="text-lg font-black text-gray-900 mb-1">New Invoice</h2>
+            <p className="text-sm text-gray-500">Create a fresh invoice, then download, print or email it.</p>
+          </button>
+          <button onClick={() => setView('saved')}
+            className="bg-white rounded-2xl border border-gray-100 shadow-soft p-8 text-left hover:border-[#1B4AD4] hover:shadow-elevated transition-all">
+            <div className="w-12 h-12 rounded-xl flex items-center justify-center mb-4" style={{ background: '#EEF2FF' }}>
+              <FolderOpen className="w-6 h-6" style={{ color: '#1B4AD4' }} />
+            </div>
+            <h2 className="text-lg font-black text-gray-900 mb-1">Saved Invoices</h2>
+            <p className="text-sm text-gray-500">Open, re-download or delete invoices you&apos;ve saved.</p>
+          </button>
+        </div>
+      ) : view === 'saved' ? (
         loadingList ? (
           <div className="flex items-center gap-2 text-gray-400 text-sm py-12 justify-center">
             <Loader2 className="w-4 h-4 animate-spin" /> Loading invoices…

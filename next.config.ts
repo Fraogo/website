@@ -40,6 +40,13 @@ const nextConfig: NextConfig = {
       },
     ],
   },
+  experimental: {
+    // Blog images are sent through a Server Action as base64. The default cap is
+    // 1MB; raise it so larger images (esp. GIFs, which aren't compressed client
+    // side) don't 413. Images are downscaled in the browser first, so this is a
+    // ceiling, not the norm. (Vercel's platform request cap is ~4.5MB.)
+    serverActions: { bodySizeLimit: '5mb' },
+  },
   async headers() {
     return [
       {

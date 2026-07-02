@@ -363,8 +363,8 @@
 /* ── Article content ───────────────────────────────────────────────────────────
    Shared by the TipTap editor and the published blog post, so what a writer sees
    while editing matches the final article (true WYSIWYG). */
-.article-content { font-size: 1.05rem; line-height: 1.8; color: #1f2937; }
-.article-content > * + * { margin-top: 1.1rem; }
+.article-content { font-size: 1.125rem; line-height: 1.85; color: #26313f; letter-spacing: -0.003em; }
+.article-content > * + * { margin-top: 1.3rem; }
 .article-content h2 { font-size: 1.7rem; font-weight: 800; color: #0E2A82; line-height: 1.25; margin: 2rem 0 0.75rem; }
 .article-content h3 { font-size: 1.35rem; font-weight: 700; color: #111827; line-height: 1.3; margin: 1.6rem 0 0.5rem; }
 .article-content p { margin: 0; }

@@ -10,7 +10,7 @@ import { cn } from '@/lib/utils'
 import PhoneField from '@/components/ui/PhoneField'
 import Honeypot from '@/components/ui/Honeypot'
 
-const BUSINESS_TYPES = ['Event Space', 'Protocol Service', 'Catering & Small Chops', 'Make Up', 'Gadgets', 'Other']
+const BUSINESS_TYPES = ['Solar & Energy', 'Event Space', 'Protocol Service', 'Catering & Small Chops', 'Make Up', 'Gadgets', 'Other']
 
 const formSchema = z.object({
   businessName: z.string().min(2, 'Business name is required'),

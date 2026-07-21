@@ -1,6 +1,7 @@
-﻿import type { Metadata } from 'next'
+import type { Metadata } from 'next'
 import { getActiveVendors } from '@/app/actions/vendor'
 import VendorCard from '@/components/vendor/VendorCard'
+import { KNOWN_CATEGORIES } from '@/lib/categories'
 
 export const metadata: Metadata = {
   title: 'Hire a Vendor',
@@ -36,20 +37,34 @@ export default async function HireVendorPage({
       <div className="section-container py-12">
         {/* Filter tabs */}
         <div className="flex flex-wrap gap-2 mb-8">
-          {BUSINESS_TYPES.map((t) => (
-            <a
-              key={t}
-              href={t === 'All' ? '/general-service/rental/hire-vendor' : `/general-service/rental/hire-vendor?type=${encodeURIComponent(t)}`}
-              className={`px-4 py-2 rounded-xl text-sm font-semibold transition-all ${
-                (t === 'All' && !type) || type === t
-                  ? 'text-white shadow-soft'
-                  : 'bg-white border border-border text-muted-foreground hover:border-[#0E2A82] hover:text-[#0E2A82]'
-              }`}
-              style={(t === 'All' && !type) || type === t ? { background: '#0E2A82' } : {}}
-            >
-              {t}
-            </a>
-          ))}
+          <a
+            href="/general-service/rental/hire-vendor"
+            className={`px-4 py-2 rounded-xl text-sm font-semibold transition-all ${
+              !type || type === 'All'
+                ? 'text-white shadow-soft'
+                : 'bg-white border border-border text-muted-foreground hover:border-[#0E2A82] hover:text-[#0E2A82]'
+            }`}
+            style={!type || type === 'All' ? { background: '#0E2A82' } : {}}
+          >
+            All Categories
+          </a>
+          {KNOWN_CATEGORIES.map((c) => {
+            const isSelected = type === c.name || type === c.slug
+            return (
+              <a
+                key={c.slug}
+                href={`/general-service/rental/category/${c.slug}`}
+                className={`px-4 py-2 rounded-xl text-sm font-semibold transition-all flex items-center gap-1.5 ${
+                  isSelected
+                    ? 'text-white shadow-soft'
+                    : 'bg-white border border-border text-muted-foreground hover:border-[#0E2A82] hover:text-[#0E2A82]'
+                }`}
+                style={isSelected ? { background: '#0E2A82' } : {}}
+              >
+                <span>{c.icon}</span> {c.name}
+              </a>
+            )
+          })}
         </div>
 
         {/* Results */}

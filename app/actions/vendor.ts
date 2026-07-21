@@ -84,6 +84,60 @@ export async function registerVendor(data: VendorFormData) {
   }
 }
 
+const adminCreateVendorSchema = z.object({
+  businessName: z.string().min(2, 'Business or Product title is required').max(200),
+  email: z.string().email('Invalid email address').max(200).optional().or(z.literal('')),
+  phone: z.string().max(40).optional().or(z.literal('')),
+  location: z.string().min(3, 'Location is required').max(300),
+  businessType: z.string().min(1, 'Category is required').max(120),
+  description: z.string().min(10, 'Description & pricing details are required').max(3000),
+  imageUrl: z.string().url('Invalid image URL').optional().or(z.literal('')),
+})
+
+export async function createAdminVendor(data: z.infer<typeof adminCreateVendorSchema>) {
+  await requireAdmin()
+  const parsed = adminCreateVendorSchema.safeParse(data)
+  if (!parsed.success) {
+    return { success: false, error: 'Please check your inputs and try again.' }
+  }
+
+  const d = parsed.data
+  try {
+    const vendor = await prisma.vendor.create({
+      data: {
+        businessName: d.businessName,
+        email: d.email && d.email.trim() !== '' ? d.email.trim() : 'contact@fraogo.com',
+        phone: d.phone && d.phone.trim() !== '' ? d.phone.trim() : '+234 802 822 9002',
+        location: d.location,
+        businessType: d.businessType,
+        description: d.description,
+        status: 'active',
+        ...(d.imageUrl && d.imageUrl.trim() !== ''
+          ? {
+              portfolioImages: {
+                create: [
+                  {
+                    url: d.imageUrl.trim(),
+                    fileName: 'product-cover.jpg',
+                  },
+                ],
+              },
+            }
+          : {}),
+      },
+    })
+
+    revalidatePath('/admin/vendors')
+    revalidatePath('/general-service/rental/hire-vendor')
+    revalidatePath('/general-service/rental/category/[slug]', 'page')
+
+    return { success: true, vendorId: vendor.id }
+  } catch (error) {
+    console.error('[Vendor] Create Admin Vendor error:', error)
+    return { success: false, error: 'Failed to create vendor listing. Please try again.' }
+  }
+}
+
 export async function approveVendor(vendorId: string) {
   await requireAdmin()
   try {

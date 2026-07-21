@@ -1,4 +1,4 @@
-﻿import { getVendors, deleteVendor } from '@/app/actions/vendor'
+import { getVendors, deleteVendor } from '@/app/actions/vendor'
 import { getNinSignedUrl } from '@/lib/storage'
 import { formatDateTime, getStatusColor } from '@/lib/utils'
 import { Users, ExternalLink } from 'lucide-react'
@@ -6,6 +6,7 @@ import Link from 'next/link'
 import VendorActionButtons from '@/components/admin/VendorActionButtons'
 import ContactButtons from '@/components/admin/ContactButtons'
 import DeleteButton from '@/components/admin/DeleteButton'
+import AddVendorModal from '@/components/admin/AddVendorModal'
 import Pagination from '@/components/admin/Pagination'
 import type { Metadata } from 'next'
 
@@ -21,9 +22,12 @@ export default async function AdminVendorsPage({
 
   return (
     <div className="space-y-6">
-      <div>
-        <h1 className="text-2xl font-black text-gray-900">Vendor Management</h1>
-        <p className="text-sm text-gray-500 mt-1">{total} vendor{total !== 1 ? 's' : ''}</p>
+      <div className="flex flex-wrap items-center justify-between gap-4">
+        <div>
+          <h1 className="text-2xl font-black text-gray-900">Vendor Management</h1>
+          <p className="text-sm text-gray-500 mt-1">{total} vendor{total !== 1 ? 's' : ''}</p>
+        </div>
+        <AddVendorModal />
       </div>
 
       <div className="flex gap-2">

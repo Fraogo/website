@@ -1,4 +1,4 @@
-﻿'use client'
+'use client'
 
 import { useState } from 'react'
 import Image from 'next/image'
@@ -31,10 +31,12 @@ export default function VendorCard({ vendor }: VendorCardProps) {
   const hasImages = images.length > 0
 
   const typeColors: Record<string, string> = {
+    'Solar & Energy': 'bg-amber-100 text-amber-800',
     'Event Space': 'bg-purple-100 text-purple-800',
     'Protocol Service': 'bg-blue-100 text-blue-800',
     'Catering & Small Chops': 'bg-orange-100 text-orange-800',
     'Make Up': 'bg-pink-100 text-pink-800',
+    'Gadgets': 'bg-emerald-100 text-emerald-800',
   }
   const badgeClass = Object.keys(typeColors).find((k) => vendor.businessType.startsWith(k))
     ? typeColors[Object.keys(typeColors).find((k) => vendor.businessType.startsWith(k))!]
@@ -77,10 +79,12 @@ export default function VendorCard({ vendor }: VendorCardProps) {
             </>
           ) : (
             <div className="absolute inset-0 flex items-center justify-center text-4xl">
-              {vendor.businessType.startsWith('Event Space') ? '🏛️' :
+              {vendor.businessType.startsWith('Solar') ? '☀️' :
+               vendor.businessType.startsWith('Event Space') ? '🏛️' :
                vendor.businessType.startsWith('Catering') ? '🍽️' :
                vendor.businessType.startsWith('Make Up') ? '💄' :
-               vendor.businessType.startsWith('Protocol') ? '🎖️' : '✨'}
+               vendor.businessType.startsWith('Protocol') ? '🎖️' :
+               vendor.businessType.startsWith('Gadget') ? '📱' : '✨'}
             </div>
           )}
         </div>

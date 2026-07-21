@@ -11,12 +11,22 @@ interface VendorImage {
   url: string
 }
 
+interface Variant {
+  name: string
+  price?: string | null
+  description?: string | null
+}
+
 interface Vendor {
   id: string
   businessName: string
   description: string
   location: string
   businessType: string
+  listingType: 'product' | 'service'
+  price?: string | null
+  priceRange?: string | null
+  variants?: Variant[] | null
   portfolioImages: VendorImage[]
 }
 
@@ -106,6 +116,20 @@ export default function VendorCard({ vendor }: VendorCardProps) {
           <p className="text-xs text-muted-foreground leading-relaxed mb-4">
             {truncate(vendor.description, 120)}
           </p>
+
+          {(vendor.price || vendor.priceRange) && (
+            <div className="mb-3 text-sm text-slate-600">
+              <span className="font-semibold text-slate-900">{vendor.listingType === 'product' ? 'Product' : 'Service'}:</span>
+              {' '}
+              {vendor.price ? vendor.price : vendor.priceRange ? vendor.priceRange : 'Contact for pricing'}
+            </div>
+          )}
+
+          {vendor.variants && vendor.variants.length > 0 && (
+            <div className="mb-3 text-xs text-slate-500">
+              {vendor.variants.length === 1 ? '1 variant available' : `${vendor.variants.length} variants available`}
+            </div>
+          )}
 
           <button
             className="w-full py-2.5 rounded-xl text-sm font-bold text-white transition-all hover:opacity-90"

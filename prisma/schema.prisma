@@ -60,6 +60,10 @@ model Vendor {
   location       String
   phone          String
   businessType   String
+  listingType    String          @default("service") // product | service
+  price          String?
+  priceRange     String?
+  variants       Json?
   ninDocumentUrl String?
   email          String
   status         String          @default("pending_review") // pending_review | active | rejected
@@ -76,7 +80,10 @@ model VendorImage {
   vendor    Vendor   @relation(fields: [vendorId], references: [id], onDelete: Cascade)
   url       String
   fileName  String?
+  order     Int      @default(0)
   createdAt DateTime @default(now())
+
+  @@index([vendorId, order])
 }
 
 model VendorRequest {

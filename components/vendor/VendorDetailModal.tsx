@@ -17,12 +17,22 @@ interface VendorImage {
   url: string
 }
 
+interface Variant {
+  name: string
+  price?: string | null
+  description?: string | null
+}
+
 interface Vendor {
   id: string
   businessName: string
   description: string
   location: string
   businessType: string
+  listingType: string
+  price?: string | null
+  priceRange?: string | null
+  variants?: Variant[] | null
   portfolioImages: VendorImage[]
 }
 
@@ -66,6 +76,7 @@ export default function VendorDetailModal({ vendor, onClose }: VendorDetailModal
 
   const images = vendor.portfolioImages
   const hasImages = images.length > 0
+  const priceBlock = vendor.price ? vendor.price : vendor.priceRange ? vendor.priceRange : null
 
   const {
     register,
@@ -190,6 +201,32 @@ export default function VendorDetailModal({ vendor, onClose }: VendorDetailModal
             <h3 className="font-bold text-foreground mb-2">About</h3>
             <p className="text-sm text-muted-foreground leading-relaxed">{vendor.description}</p>
           </div>
+
+          {(vendor.listingType || priceBlock || (vendor.variants && vendor.variants.length > 0)) && (
+            <div className="rounded-3xl border border-border bg-slate-50 p-4">
+              <div className="flex flex-wrap items-center gap-2 mb-3 text-sm text-slate-700">
+                <span className="rounded-full bg-[#0E2A82]/10 px-3 py-1 font-semibold text-[#0E2A82]">{vendor.listingType === 'product' ? 'Product' : 'Service'}</span>
+                {priceBlock && <span className="rounded-full bg-slate-100 px-3 py-1 text-slate-600">{priceBlock}</span>}
+              </div>
+
+              {vendor.variants && vendor.variants.length > 0 && (
+                <div className="space-y-3">
+                  <p className="text-sm font-semibold text-foreground">Variant options</p>
+                  <div className="grid gap-3">
+                    {vendor.variants.map((variant) => (
+                      <div key={variant.name} className="rounded-2xl border border-slate-200 bg-white p-3">
+                        <div className="flex items-center justify-between gap-3">
+                          <p className="font-semibold text-slate-900 text-sm">{variant.name}</p>
+                          {variant.price ? <span className="text-sm text-slate-600">{variant.price}</span> : null}
+                        </div>
+                        {variant.description ? <p className="text-sm text-slate-500 mt-2">{variant.description}</p> : null}
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+            </div>
+          )}
 
           {/* Request Form */}
           <div className="border-t border-border pt-6">

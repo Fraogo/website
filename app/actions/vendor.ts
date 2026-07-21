@@ -4,6 +4,7 @@ import { z } from 'zod'
 import { randomBytes } from 'crypto'
 import { prisma } from '@/lib/db'
 import { requireAdmin } from '@/lib/auth'
+import type { Prisma } from '@prisma/client'
 import { enforceSubmissionLimit, looksLikeBot } from '@/lib/submitGuard'
 import {
   sendVendorRegistrationConfirmation,
@@ -14,6 +15,35 @@ import {
 import { paginationParams, totalPages } from '@/lib/pagination'
 import { revalidatePath } from 'next/cache'
 import { after } from 'next/server'
+import { uploadPortfolioImage } from '@/lib/storage'
+
+type VendorVariant = {
+  name: string
+  price: string | null
+  description: string | null
+}
+
+function parseVariants(value: Prisma.JsonValue | null | undefined): VendorVariant[] | null {
+  if (!value || typeof value === 'string') return null
+  if (!Array.isArray(value)) return null
+
+  const parsed = value
+    .map((item) => {
+      if (!item || typeof item !== 'object' || Array.isArray(item)) return null
+      const variant = item as Record<string, unknown>
+      const name = typeof variant.name === 'string' ? variant.name.trim() : ''
+      if (!name) return null
+
+      return {
+        name,
+        price: typeof variant.price === 'string' ? variant.price : null,
+        description: typeof variant.description === 'string' ? variant.description : null,
+      }
+    })
+    .filter((item): item is VendorVariant => item !== null)
+
+  return parsed.length > 0 ? parsed : null
+}
 
 const vendorSchema = z.object({
   businessName: z.string().min(2, 'Business name is required').max(200),
@@ -23,11 +53,17 @@ const vendorSchema = z.object({
   phone: z.string().min(7, 'Phone number is required').max(40),
   businessType: z.string().min(1, 'Business type is required').max(120),
   businessTypeOther: z.string().max(120).optional(),
+  listingType: z.enum(['product', 'service']),
+  price: z.string().max(100).optional().or(z.literal('')), 
+  priceRange: z.string().max(100).optional().or(z.literal('')),
   consentFee: z.literal(true, { message: 'You must agree to the 10% service fee' }),
   consentNoDirect: z.literal(true, { message: 'You must agree not to negotiate directly with customers' }),
 }).refine(
   (data) => data.businessType !== 'Other' || (data.businessTypeOther && data.businessTypeOther.trim().length > 0),
   { message: 'Please specify your service type', path: ['businessTypeOther'] }
+).refine(
+  (data) => data.listingType !== 'product' || (data.price && data.price.trim().length > 0),
+  { message: 'Products require a price', path: ['price'] }
 )
 
 export type VendorFormData = z.infer<typeof vendorSchema>
@@ -54,6 +90,9 @@ export async function registerVendor(data: VendorFormData) {
         location: d.location,
         phone: d.phone,
         businessType: finalBusinessType,
+        listingType: d.listingType,
+        price: d.price?.trim() || null,
+        priceRange: d.priceRange?.trim() || null,
         status: 'pending_review',
       },
     })
@@ -90,11 +129,26 @@ const adminCreateVendorSchema = z.object({
   phone: z.string().max(40).optional().or(z.literal('')),
   location: z.string().min(3, 'Location is required').max(300),
   businessType: z.string().min(1, 'Category is required').max(120),
+  listingType: z.enum(['product', 'service']),
+  price: z.string().max(100).optional().or(z.literal('')),
+  priceRange: z.string().max(100).optional().or(z.literal('')),
   description: z.string().min(10, 'Description & pricing details are required').max(3000),
   imageUrl: z.string().url('Invalid image URL').optional().or(z.literal('')),
-})
+  variants: z
+    .array(
+      z.object({
+        name: z.string().min(1, 'Variant name is required').max(150),
+        price: z.string().max(100).optional().or(z.literal('')),
+        description: z.string().max(300).optional().or(z.literal('')),
+      }),
+    )
+    .optional(),
+}).refine(
+  (data) => data.listingType !== 'product' || (data.price && data.price.trim().length > 0),
+  { message: 'Product listings require a price', path: ['price'] }
+)
 
-export async function createAdminVendor(data: z.infer<typeof adminCreateVendorSchema>) {
+export async function createAdminVendor(data: z.infer<typeof adminCreateVendorSchema>, imageFiles?: File[]) {
   await requireAdmin()
   const parsed = adminCreateVendorSchema.safeParse(data)
   if (!parsed.success) {
@@ -103,29 +157,63 @@ export async function createAdminVendor(data: z.infer<typeof adminCreateVendorSc
 
   const d = parsed.data
   try {
+    const vendorData: any = {
+      businessName: d.businessName,
+      email: d.email && d.email.trim() !== '' ? d.email.trim() : 'contact@fraogo.com',
+      phone: d.phone && d.phone.trim() !== '' ? d.phone.trim() : '+234 802 822 9002',
+      location: d.location,
+      businessType: d.businessType,
+      listingType: d.listingType,
+      price: d.price?.trim() || null,
+      priceRange: d.priceRange?.trim() || null,
+      description: d.description,
+      status: 'active',
+    }
+
+    if (d.variants && d.variants.length > 0) {
+      vendorData.variants = d.variants
+    }
+
+    const files = Array.from(imageFiles ?? [])
+    if (files.length > 4) {
+      return { success: false, error: 'You can upload up to 4 images.' }
+    }
+
+    for (const file of files) {
+      if (!['image/jpeg', 'image/png', 'image/webp'].includes(file.type)) {
+        return { success: false, error: 'Only JPG, PNG, or WebP images are allowed.' }
+      }
+      if (file.size > 5 * 1024 * 1024) {
+        return { success: false, error: 'Each image must be under 5MB.' }
+      }
+    }
+
     const vendor = await prisma.vendor.create({
-      data: {
-        businessName: d.businessName,
-        email: d.email && d.email.trim() !== '' ? d.email.trim() : 'contact@fraogo.com',
-        phone: d.phone && d.phone.trim() !== '' ? d.phone.trim() : '+234 802 822 9002',
-        location: d.location,
-        businessType: d.businessType,
-        description: d.description,
-        status: 'active',
-        ...(d.imageUrl && d.imageUrl.trim() !== ''
-          ? {
-              portfolioImages: {
-                create: [
-                  {
-                    url: d.imageUrl.trim(),
-                    fileName: 'product-cover.jpg',
-                  },
-                ],
-              },
-            }
-          : {}),
-      },
+      data: vendorData,
     })
+
+    if (files.length > 0) {
+      for (const [index, file] of files.entries()) {
+        const imageUrl = await uploadPortfolioImage(file, vendor.id)
+        await prisma.vendorImage.create({
+          data: {
+            vendorId: vendor.id,
+            url: imageUrl,
+            fileName: file.name,
+            order: index,
+          },
+        })
+      }
+    } else if (d.imageUrl && d.imageUrl.trim() !== '') {
+      await prisma.vendor.update({
+        where: { id: vendor.id },
+        data: {
+          portfolioImages: {
+            create: [{ url: d.imageUrl.trim(), fileName: 'product-cover.jpg', order: 0 }],
+          },
+        },
+      })
+    }
 
     revalidatePath('/admin/vendors')
     revalidatePath('/general-service/rental/hire-vendor')
@@ -237,7 +325,7 @@ export async function getVendors(status?: string, page?: number) {
 // Public — single vendor profile for the shareable /vendor/[id] page. Active
 // vendors only, and ONLY public-safe fields (never email/phone/NIN).
 export async function getPublicVendor(id: string) {
-  return prisma.vendor.findFirst({
+  const vendor = await prisma.vendor.findFirst({
     where: { id, status: 'active' },
     select: {
       id: true,
@@ -245,18 +333,28 @@ export async function getPublicVendor(id: string) {
       description: true,
       location: true,
       businessType: true,
+      listingType: true,
+      price: true,
+      priceRange: true,
+      variants: true,
       portfolioImages: {
-        orderBy: { createdAt: 'desc' },
+        orderBy: { order: 'asc' },
         select: { id: true, url: true },
       },
     },
   })
+
+  if (!vendor) return null
+  return {
+    ...vendor,
+    variants: parseVariants(vendor.variants),
+  }
 }
 
 // Public — used on the hire-vendor page. Selects ONLY public-safe fields so the
 // browser payload never includes vendor email, phone, or NIN document path.
 export async function getActiveVendors() {
-  return prisma.vendor.findMany({
+  const vendors = await prisma.vendor.findMany({
     where: { status: 'active' },
     select: {
       id: true,
@@ -264,12 +362,21 @@ export async function getActiveVendors() {
       description: true,
       location: true,
       businessType: true,
+      listingType: true,
+      price: true,
+      priceRange: true,
+      variants: true,
       portfolioImages: {
         take: 5,
-        orderBy: { createdAt: 'desc' },
+        orderBy: { order: 'asc' },
         select: { id: true, url: true },
       },
     },
     orderBy: { createdAt: 'desc' },
   })
+
+  return vendors.map((vendor) => ({
+    ...vendor,
+    variants: parseVariants(vendor.variants),
+  }))
 }

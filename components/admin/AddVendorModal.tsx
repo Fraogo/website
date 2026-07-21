@@ -12,22 +12,39 @@ export default function AddVendorModal() {
   const [submitting, setSubmitting] = useState(false)
   const [error, setError] = useState<string | null>(null)
 
-  const [form, setForm] = useState({
+  const [form, setForm] = useState<{
+    businessName: string
+    email: string
+    phone: string
+    location: string
+    businessType: string
+    listingType: 'product' | 'service'
+    price: string
+    priceRange: string
+    description: string
+    imageUrl: string
+    variants: Array<{ name: string; price: string; description: string }>
+  }>({
     businessName: '',
     email: 'contact@fraogo.com',
     phone: '+234 802 822 9002',
     location: 'Ikeja, Lagos, Nigeria',
     businessType: 'Solar & Energy',
+    listingType: 'product',
+    price: '',
+    priceRange: '',
     description: '',
     imageUrl: '',
+    variants: [],
   })
+  const [imageFiles, setImageFiles] = useState<File[]>([])
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
     setError(null)
     setSubmitting(true)
     try {
-      const res = await createAdminVendor(form)
+      const res = await createAdminVendor(form, imageFiles)
       if (res.success) {
         setOpen(false)
         setForm({
@@ -36,9 +53,14 @@ export default function AddVendorModal() {
           phone: '+234 802 822 9002',
           location: 'Ikeja, Lagos, Nigeria',
           businessType: 'Solar & Energy',
+          listingType: 'product',
+          price: '',
+          priceRange: '',
           description: '',
           imageUrl: '',
+          variants: [],
         })
+        setImageFiles([])
         router.refresh()
       } else {
         setError(res.error ?? 'Error creating vendor listing.')
@@ -109,26 +131,77 @@ export default function AddVendorModal() {
                 </div>
 
                 <div>
-                  <label className="block font-semibold text-gray-700 mb-1">Location *</label>
+                  <label className="block font-semibold text-gray-700 mb-1">Listing Type *</label>
+                  <select
+                    value={form.listingType}
+                    onChange={(e) => setForm({ ...form, listingType: e.target.value as 'product' | 'service' })}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-lg text-xs focus:ring-2 focus:ring-[#1B4AD4] focus:outline-none"
+                  >
+                    <option value="product">Product</option>
+                    <option value="service">Service</option>
+                  </select>
+                </div>
+              </div>
+
+              <div className="grid grid-cols-2 gap-3">
+                <div>
+                  <label className="block font-semibold text-gray-700 mb-1">Price {form.listingType === 'product' ? '*' : '(Optional)'}</label>
                   <input
                     type="text"
-                    required
-                    value={form.location}
-                    onChange={(e) => setForm({ ...form, location: e.target.value })}
+                    value={form.price}
+                    onChange={(e) => setForm({ ...form, price: e.target.value })}
+                    placeholder="e.g. ₦650,000"
+                    className="w-full px-3 py-2 border border-gray-300 rounded-lg text-xs focus:ring-2 focus:ring-[#1B4AD4] focus:outline-none"
+                  />
+                </div>
+                <div>
+                  <label className="block font-semibold text-gray-700 mb-1">Price Range</label>
+                  <input
+                    type="text"
+                    value={form.priceRange}
+                    onChange={(e) => setForm({ ...form, priceRange: e.target.value })}
+                    placeholder="e.g. ₦50,000 - ₦120,000"
                     className="w-full px-3 py-2 border border-gray-300 rounded-lg text-xs focus:ring-2 focus:ring-[#1B4AD4] focus:outline-none"
                   />
                 </div>
               </div>
 
-              <div>
-                <label className="block font-semibold text-gray-700 mb-1">Image URL (Optional)</label>
-                <input
-                  type="url"
-                  placeholder="https://images.unsplash.com/..."
-                  value={form.imageUrl}
-                  onChange={(e) => setForm({ ...form, imageUrl: e.target.value })}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg text-xs focus:ring-2 focus:ring-[#1B4AD4] focus:outline-none"
-                />
+              <div className="grid gap-3">
+                <div>
+                  <label className="block font-semibold text-gray-700 mb-1">Image files (Optional, up to 4)</label>
+                  <input
+                    type="file"
+                    accept="image/png,image/jpeg,image/webp"
+                    multiple
+                    onChange={(e) => {
+                      const files = Array.from(e.target.files ?? [])
+                      setImageFiles(files.slice(0, 4))
+                      if (files.length > 4) {
+                        setError('Only the first 4 images will be used.')
+                      }
+                    }}
+                    className="w-full text-xs text-gray-700"
+                  />
+                  <p className="text-xs text-gray-500 mt-1">
+                    Upload images in the order you want them shown in the gallery.
+                  </p>
+                  {imageFiles.length > 0 && (
+                    <p className="text-xs text-gray-500 mt-1">
+                      Selected files: {imageFiles.map((file) => file.name).join(', ')}
+                    </p>
+                  )}
+                </div>
+                <div>
+                  <label className="block font-semibold text-gray-700 mb-1">Or image URL</label>
+                  <input
+                    type="url"
+                    placeholder="https://images.unsplash.com/..."
+                    value={form.imageUrl}
+                    onChange={(e) => setForm({ ...form, imageUrl: e.target.value })}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-lg text-xs focus:ring-2 focus:ring-[#1B4AD4] focus:outline-none"
+                  />
+                  <p className="text-xs text-gray-500 mt-1">Provide a URL if you do not want to upload a file.</p>
+                </div>
               </div>
 
               <div>
@@ -144,6 +217,83 @@ export default function AddVendorModal() {
                   className="w-full px-3 py-2 border border-gray-300 rounded-lg text-xs focus:ring-2 focus:ring-[#1B4AD4] focus:outline-none"
                 />
               </div>
+
+              {form.listingType === 'product' && (
+                <div className="space-y-3">
+                  <div className="flex items-center justify-between gap-3">
+                    <h3 className="font-semibold text-gray-700">Product variants (optional)</h3>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setForm({
+                          ...form,
+                          variants: [...form.variants, { name: '', price: '', description: '' }],
+                        })
+                      }}
+                      className="text-xs font-semibold text-[#0E2A82] hover:text-[#1B4AD4]"
+                    >
+                      + Add variant
+                    </button>
+                  </div>
+
+                  {form.variants.length === 0 && (
+                    <p className="text-xs text-gray-500">Add variants for different sizes, colors, or price packages for this product.</p>
+                  )}
+
+                  {form.variants.map((variant, index) => (
+                    <div key={index} className="space-y-2 rounded-2xl border border-gray-200 p-3 bg-slate-50">
+                      <div className="flex items-center justify-between gap-2">
+                        <span className="text-xs font-semibold text-gray-700">Variant {index + 1}</span>
+                        <button
+                          type="button"
+                          onClick={() => setForm({
+                            ...form,
+                            variants: form.variants.filter((_, idx) => idx !== index),
+                          })}
+                          className="text-xs text-red-600 hover:text-red-800"
+                        >
+                          Remove
+                        </button>
+                      </div>
+                      <div className="grid sm:grid-cols-3 gap-2">
+                        <input
+                          type="text"
+                          value={variant.name}
+                          placeholder="Variant name (e.g. Red, 2-pack)"
+                          onChange={(e) => {
+                            const updated = [...form.variants]
+                            updated[index] = { ...updated[index], name: e.target.value }
+                            setForm({ ...form, variants: updated })
+                          }}
+                          className="w-full px-3 py-2 border border-gray-300 rounded-lg text-xs focus:ring-2 focus:ring-[#1B4AD4] focus:outline-none"
+                        />
+                        <input
+                          type="text"
+                          value={variant.price}
+                          placeholder="Price (optional)"
+                          onChange={(e) => {
+                            const updated = [...form.variants]
+                            updated[index] = { ...updated[index], price: e.target.value }
+                            setForm({ ...form, variants: updated })
+                          }}
+                          className="w-full px-3 py-2 border border-gray-300 rounded-lg text-xs focus:ring-2 focus:ring-[#1B4AD4] focus:outline-none"
+                        />
+                        <input
+                          type="text"
+                          value={variant.description}
+                          placeholder="Short description (optional)"
+                          onChange={(e) => {
+                            const updated = [...form.variants]
+                            updated[index] = { ...updated[index], description: e.target.value }
+                            setForm({ ...form, variants: updated })
+                          }}
+                          className="w-full px-3 py-2 border border-gray-300 rounded-lg text-xs focus:ring-2 focus:ring-[#1B4AD4] focus:outline-none"
+                        />
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
 
               <div className="flex justify-end gap-2 pt-2">
                 <button

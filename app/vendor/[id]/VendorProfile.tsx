@@ -6,12 +6,22 @@ import { MapPin, ChevronLeft, ChevronRight } from 'lucide-react'
 import VendorDetailModal from '@/components/vendor/VendorDetailModal'
 
 interface VendorImage { id: string; url: string }
+interface Variant {
+  name: string
+  price?: string | null
+  description?: string | null
+}
+
 interface Vendor {
   id: string
   businessName: string
   description: string
   location: string
   businessType: string
+  listingType: string
+  price?: string | null
+  priceRange?: string | null
+  variants?: Variant[] | null
   portfolioImages: VendorImage[]
 }
 
@@ -29,10 +39,36 @@ export default function VendorProfile({ vendor }: { vendor: Vendor }) {
             FRAOGO Vendor
           </p>
           <h1 className="text-3xl lg:text-4xl font-black mb-2">{vendor.businessName}</h1>
-          <div className="flex items-center gap-2 text-white/70 text-sm flex-wrap">
+          <div className="flex flex-wrap items-center gap-2 text-white/70 text-sm">
             <span className="px-2 py-0.5 rounded-full bg-white/15">{vendor.businessType}</span>
             <span className="flex items-center gap-1"><MapPin className="w-3.5 h-3.5" /> {vendor.location}</span>
+            <span className="px-2 py-0.5 rounded-full bg-white/15 text-xs">
+              {vendor.listingType === 'product' ? 'Product' : 'Service'}
+            </span>
+            {(vendor.price || vendor.priceRange) && (
+              <span className="px-2 py-0.5 rounded-full bg-white/15 text-xs">
+                {vendor.price ? vendor.price : vendor.priceRange}
+              </span>
+            )}
           </div>
+          {vendor.variants && vendor.variants.length > 0 && (
+            <div className="mt-4 grid gap-3 text-sm text-gray-200">
+              <div className="rounded-2xl bg-white/10 p-3">
+                <p className="text-xs uppercase tracking-[0.2em] text-white/50 mb-2">Variants available</p>
+                <div className="grid gap-2">
+                  {vendor.variants.map((variant) => (
+                    <div key={variant.name} className="rounded-2xl border border-white/10 bg-white/5 p-3">
+                      <div className="flex items-center justify-between gap-3">
+                        <p className="font-semibold text-white text-sm">{variant.name}</p>
+                        {variant.price ? <p className="text-xs text-gray-100">{variant.price}</p> : null}
+                      </div>
+                      {variant.description ? <p className="text-xs text-gray-100/80 mt-1">{variant.description}</p> : null}
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+          )}
         </div>
       </div>
 

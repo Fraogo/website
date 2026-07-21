@@ -11,6 +11,10 @@ import PhoneField from '@/components/ui/PhoneField'
 import Honeypot from '@/components/ui/Honeypot'
 
 const BUSINESS_TYPES = ['Solar & Energy', 'Event Space', 'Protocol Service', 'Catering & Small Chops', 'Make Up', 'Gadgets', 'Other']
+const LISTING_TYPES = [
+  { value: 'service', label: 'Service' },
+  { value: 'product', label: 'Product' },
+]
 
 const formSchema = z.object({
   businessName: z.string().min(2, 'Business name is required'),
@@ -20,9 +24,18 @@ const formSchema = z.object({
   phone: z.string().min(7, 'Phone number is required'),
   businessType: z.string().min(1, 'Please select a business type'),
   businessTypeOther: z.string().optional(),
+  listingType: z.enum(['product', 'service']),
+  price: z.string().max(100).optional().or(z.literal('')),
+  priceRange: z.string().max(100).optional().or(z.literal('')),
   consentFee: z.literal(true, { message: 'You must agree to the 10% service fee' }),
   consentNoDirect: z.literal(true, { message: 'You must agree not to negotiate directly with customers' }),
-})
+}).refine(
+  (data) => data.businessType !== 'Other' || (data.businessTypeOther && data.businessTypeOther.trim().length > 0),
+  { message: 'Please specify your service type', path: ['businessTypeOther'] }
+).refine(
+  (data) => data.listingType !== 'product' || (data.price && data.price.trim().length > 0),
+  { message: 'Products require a price', path: ['price'] }
+)
 
 type FormValues = z.infer<typeof formSchema>
 
@@ -42,6 +55,7 @@ export default function VendorRegistrationForm() {
   })
 
   const selectedType = watch('businessType')
+  const listingType = watch('listingType')
 
   const onSubmit = async (data: FormValues) => {
     setServerError(null)
@@ -126,6 +140,17 @@ export default function VendorRegistrationForm() {
             {errors.businessType && <p className="form-error"><AlertCircle className="w-3 h-3" />{errors.businessType.message}</p>}
           </div>
 
+          <div className="sm:col-span-2">
+            <label className="form-label" htmlFor="listing-type">Listing Type *</label>
+            <select id="listing-type" className={cn('form-input', errors.listingType && 'error')} {...register('listingType')}>
+              <option value="">Select listing type...</option>
+              {LISTING_TYPES.map((type) => (
+                <option key={type.value} value={type.value}>{type.label}</option>
+              ))}
+            </select>
+            {errors.listingType && <p className="form-error"><AlertCircle className="w-3 h-3" />{errors.listingType.message}</p>}
+          </div>
+
           {selectedType === 'Other' && (
             <div className="sm:col-span-2 animate-fade-in">
               <label className="form-label" htmlFor="business-type-other">Please Specify Your Service *</label>
@@ -133,6 +158,18 @@ export default function VendorRegistrationForm() {
               {errors.businessTypeOther && <p className="form-error"><AlertCircle className="w-3 h-3" />{errors.businessTypeOther.message}</p>}
             </div>
           )}
+
+          <div className="sm:col-span-2 grid sm:grid-cols-2 gap-5">
+            <div>
+              <label className="form-label" htmlFor="price">Price {listingType === 'product' ? '*' : '(Optional)'}</label>
+              <input id="price" type="text" className={cn('form-input', errors.price && 'error')} placeholder="e.g. ₦650,000" {...register('price')} />
+              {errors.price && <p className="form-error"><AlertCircle className="w-3 h-3" />{errors.price.message}</p>}
+            </div>
+            <div>
+              <label className="form-label" htmlFor="price-range">Price Range (Optional)</label>
+              <input id="price-range" type="text" className="form-input" placeholder="e.g. ₦50,000 - ₦120,000" {...register('priceRange')} />
+            </div>
+          </div>
         </div>
       </div>
 

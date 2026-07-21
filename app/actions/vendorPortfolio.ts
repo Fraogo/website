@@ -7,7 +7,7 @@ import { revalidatePath } from 'next/cache'
 export async function validateMagicLink(token: string) {
   const magicLink = await prisma.vendorMagicLink.findUnique({
     where: { token },
-    include: { vendor: { include: { portfolioImages: { orderBy: { createdAt: 'desc' } } } } },
+    include: { vendor: { include: { portfolioImages: { orderBy: { order: 'asc' } } } } },
   })
 
   if (!magicLink) return { valid: false, error: 'Invalid link' }
@@ -43,6 +43,11 @@ export async function addVendorImage(token: string, url: string, fileName?: stri
     return { success: false, error: 'Invalid image URL' }
   }
 
+  const maxOrderResult = await prisma.vendorImage.aggregate({
+    _max: { order: true },
+    where: { vendorId },
+  })
+  const nextOrder = (maxOrderResult._max.order ?? -1) + 1
   const count = await prisma.vendorImage.count({ where: { vendorId } })
   if (count >= 50) {
     return { success: false, error: 'Maximum 50 images allowed per vendor' }
@@ -50,7 +55,7 @@ export async function addVendorImage(token: string, url: string, fileName?: stri
 
   try {
     const image = await prisma.vendorImage.create({
-      data: { vendorId, url, fileName: fileName ?? null },
+      data: { vendorId, url, fileName: fileName ?? null, order: nextOrder },
     })
     revalidatePath('/vendor/dashboard')
     return { success: true, image }

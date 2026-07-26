@@ -134,11 +134,13 @@ export const team: {
     linkedin: '',
   },
   {
-    name:     'Marvellous Adepoju',
-    role:     'IT Specialist',
-    bio:      'Marvellous Adepoju is a Software Developer and System Architect, he specializes in developing Software solutions for businesses and individuals He also focuses on building and maintaining automation systems for businesses, meeting their technological needs, while currently undergoing his bachelor\'s of Engineering programme in Computer Engineering ',
-    image:    '/team/member-3.jpg',
-    linkedin: '',
+    name:         'Marvellous Adepoju',
+    role:         'IT Specialist',
+    bio:          'Marvellous Adepoju is a Software Developer, System Architect, and Founder of Marvel Develops (https://marveldevelops.com). He specializes in developing software solutions, web applications, and automation systems tailored for businesses and real estate professionals. He is currently completing his Bachelor of Engineering degree in Computer Engineering.',
+    image:        '/team/member-3.jpg',
+    website:      'https://marveldevelops.com',
+    websiteLabel: 'Marvel Develops',
+    linkedin:     '',
   },
 ]
 

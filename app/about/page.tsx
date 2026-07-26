@@ -72,7 +72,31 @@ export default function AboutPage() {
         </div>
       </section>
 
-      {/* ── Values — numbered text list, no cards ── */}
+      {/* ── Team — only rendered when real members exist ── */}
+      {visibleTeam.length > 0 && (
+        <section className="section-padding border-t border-gray-100" style={{ background: '#F5F7FF' }}>
+          <div className="section-container">
+            <p className="text-xs font-bold uppercase tracking-widest mb-3 text-[#1B4AD4]">The People</p>
+            <h2 className="text-3xl lg:text-4xl font-black text-gray-900 mb-8 lg:mb-10">Meet Our Team</h2>
+
+            {/* Team lead — featured, larger across all devices */}
+            <div className="mb-5 sm:mb-6">
+              <TeamCard member={visibleTeam[0]} featured />
+            </div>
+
+            {/* Remaining members */}
+            {visibleTeam.length > 1 && (
+              <div className="grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">
+                {visibleTeam.slice(1).map((member) => (
+                  <TeamCard key={member.name} member={member} />
+                ))}
+              </div>
+            )}
+          </div>
+        </section>
+      )}
+
+      {/* ── Values — numbered text list ── */}
       <section className="section-padding bg-white border-t border-gray-100">
         <div className="section-container">
           <div className="grid lg:grid-cols-2 gap-16 lg:gap-24 items-start">
@@ -104,30 +128,6 @@ export default function AboutPage() {
           </div>
         </div>
       </section>
-
-      {/* ── Team — only rendered when real members exist ── */}
-      {visibleTeam.length > 0 && (
-        <section className="section-padding border-t border-gray-100" style={{ background: '#F5F7FF' }}>
-          <div className="section-container">
-            <p className="text-xs font-bold uppercase tracking-widest mb-3 text-[#1B4AD4]">The People</p>
-            <h2 className="text-3xl lg:text-4xl font-black text-gray-900 mb-8 lg:mb-10">Meet Our Team</h2>
-
-            {/* Team lead — featured, larger across all devices */}
-            <div className="mb-5 sm:mb-6">
-              <TeamCard member={visibleTeam[0]} featured />
-            </div>
-
-            {/* Remaining members */}
-            {visibleTeam.length > 1 && (
-              <div className="grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">
-                {visibleTeam.slice(1).map((member) => (
-                  <TeamCard key={member.name} member={member} />
-                ))}
-              </div>
-            )}
-          </div>
-        </section>
-      )}
 
       {/* ── Stats — only rendered when real stats exist ── */}
       {company.stats.length > 0 && (

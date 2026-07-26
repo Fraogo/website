@@ -15,7 +15,7 @@ import {
 import { paginationParams, totalPages } from '@/lib/pagination'
 import { revalidatePath } from 'next/cache'
 import { after } from 'next/server'
-import { uploadPortfolioImage } from '@/lib/storage'
+import { deletePortfolioImage, uploadPortfolioImage } from '@/lib/storage'
 
 type VendorVariant = {
   name: string
@@ -170,9 +170,7 @@ export async function createAdminVendor(data: z.infer<typeof adminCreateVendorSc
       status: 'active',
     }
 
-    if (d.variants && d.variants.length > 0) {
-      vendorData.variants = d.variants
-    }
+    // variants will be persisted into the VendorVariant table after vendor creation
 
     const files = Array.from(imageFiles ?? [])
     if (files.length > 4) {
@@ -192,32 +190,54 @@ export async function createAdminVendor(data: z.infer<typeof adminCreateVendorSc
       data: vendorData,
     })
 
-    if (files.length > 0) {
-      for (const [index, file] of files.entries()) {
-        const imageUrl = await uploadPortfolioImage(file, vendor.id)
-        await prisma.vendorImage.create({
+    const uploadedPaths: string[] = []
+    try {
+      if (d.variants && d.variants.length > 0) {
+        const createData = d.variants.map((v) => ({
+          vendorId: vendor.id,
+          name: v.name.trim(),
+          price: v.price ? v.price.trim() : null,
+          description: v.description ? v.description.trim() : null,
+        }))
+        await prisma.vendorVariant.createMany({ data: createData })
+      }
+
+      if (files.length > 0) {
+        for (const [index, file] of files.entries()) {
+          const imageUrl = await uploadPortfolioImage(file, vendor.id)
+          const marker = `${vendor.id}/`
+          const path = imageUrl.split(marker).pop()
+          if (path) uploadedPaths.push(path)
+
+          await prisma.vendorImage.create({
+            data: {
+              vendorId: vendor.id,
+              url: imageUrl,
+              fileName: file.name,
+              order: index,
+            },
+          })
+        }
+      } else if (d.imageUrl && d.imageUrl.trim() !== '') {
+        await prisma.vendor.update({
+          where: { id: vendor.id },
           data: {
-            vendorId: vendor.id,
-            url: imageUrl,
-            fileName: file.name,
-            order: index,
+            portfolioImages: {
+              create: [{ url: d.imageUrl.trim(), fileName: 'product-cover.jpg', order: 0 }],
+            },
           },
         })
       }
-    } else if (d.imageUrl && d.imageUrl.trim() !== '') {
-      await prisma.vendor.update({
-        where: { id: vendor.id },
-        data: {
-          portfolioImages: {
-            create: [{ url: d.imageUrl.trim(), fileName: 'product-cover.jpg', order: 0 }],
-          },
-        },
-      })
+    } catch (error) {
+      for (const path of uploadedPaths) {
+        await deletePortfolioImage(path).catch((e) => console.error('[Vendor] cleanup failed:', e))
+      }
+      await prisma.vendor.delete({ where: { id: vendor.id } }).catch(() => undefined)
+      throw error
     }
 
     revalidatePath('/admin/vendors')
     revalidatePath('/general-service/rental/hire-vendor')
-    revalidatePath('/general-service/rental/category/[slug]', 'page')
 
     return { success: true, vendorId: vendor.id }
   } catch (error) {
@@ -337,6 +357,7 @@ export async function getPublicVendor(id: string) {
       price: true,
       priceRange: true,
       variants: true,
+      vendorVariants: { orderBy: { createdAt: 'asc' }, select: { name: true, price: true, description: true } },
       portfolioImages: {
         orderBy: { order: 'asc' },
         select: { id: true, url: true },
@@ -345,10 +366,15 @@ export async function getPublicVendor(id: string) {
   })
 
   if (!vendor) return null
-  return {
-    ...vendor,
-    variants: parseVariants(vendor.variants),
-  }
+  // Map relational VendorVariant rows to the public `variants` shape.
+  const relational = (vendor as any).vendorVariants as { name: string; price?: string | null; description?: string | null }[] | undefined
+  const mapped = relational && relational.length > 0
+    ? relational.map((v) => ({ name: v.name, price: v.price ?? null, description: v.description ?? null }))
+    : parseVariants((vendor as any).variants)
+
+  // Return public-safe shape: include variants as `variants` for legacy clients
+  const { vendorVariants, variants, ...rest } = vendor as any
+  return { ...rest, variants: mapped }
 }
 
 // Public — used on the hire-vendor page. Selects ONLY public-safe fields so the
@@ -366,6 +392,7 @@ export async function getActiveVendors() {
       price: true,
       priceRange: true,
       variants: true,
+      vendorVariants: { orderBy: { createdAt: 'asc' }, select: { name: true, price: true, description: true } },
       portfolioImages: {
         take: 5,
         orderBy: { order: 'asc' },
@@ -375,8 +402,13 @@ export async function getActiveVendors() {
     orderBy: { createdAt: 'desc' },
   })
 
-  return vendors.map((vendor) => ({
-    ...vendor,
-    variants: parseVariants(vendor.variants),
-  }))
+  return vendors.map((vendor) => {
+    const relational = (vendor as any).vendorVariants as { name: string; price?: string | null; description?: string | null }[] | undefined
+    const mapped = relational && relational.length > 0
+      ? relational.map((v) => ({ name: v.name, price: v.price ?? null, description: v.description ?? null }))
+      : parseVariants((vendor as any).variants)
+
+    const { vendorVariants, variants, ...rest } = vendor as any
+    return { ...rest, variants: mapped }
+  })
 }

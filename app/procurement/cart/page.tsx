@@ -17,10 +17,11 @@ export default function CartPage() {
   const [error, setError] = useState<string | null>(null)
   const [hp, setHp] = useState('')
 
-  // Safe hydration check for React 19
+  // Safe hydration check for React 19 — setMounted(true) in a [] effect is
+  // intentional: it only ever runs once after mount and doesn't cascade.
   const [mounted, setMounted] = useState(false)
   useEffect(() => {
-    // eslint-disable-next-line react-compiler/react-compiler
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setMounted(true)
   }, [])
 

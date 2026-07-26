@@ -21,7 +21,7 @@ export default function VendorActionButtons({ vendorId }: VendorActionButtonsPro
       } else {
         toast.error(res.error || 'Failed to approve vendor')
       }
-    } catch (err) {
+    } catch {
       toast.error('An unexpected error occurred')
     } finally {
       setLoading(null)
@@ -30,7 +30,7 @@ export default function VendorActionButtons({ vendorId }: VendorActionButtonsPro
 
   const handleReject = async () => {
     if (!confirm('Are you sure you want to reject this vendor?')) return
-    
+
     setLoading('reject')
     try {
       const res = await rejectVendor(vendorId)
@@ -39,7 +39,7 @@ export default function VendorActionButtons({ vendorId }: VendorActionButtonsPro
       } else {
         toast.error(res.error || 'Failed to reject vendor')
       }
-    } catch (err) {
+    } catch {
       toast.error('An unexpected error occurred')
     } finally {
       setLoading(null)

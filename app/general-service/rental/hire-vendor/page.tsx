@@ -4,8 +4,8 @@ import VendorCard from '@/components/vendor/VendorCard'
 import { KNOWN_CATEGORIES } from '@/lib/categories'
 
 export const metadata: Metadata = {
-  title: 'Hire a Vendor',
-  description: 'Browse and hire verified vendors for your events through FRAOGO.',
+  title: 'Verified Marketplace — Shop Products & Hire Sellers',
+  description: 'Browse and hire verified sellers for products, solar equipment, gadgets, and events through FRAOGO with 100% payment protection.',
 }
 export const dynamic = 'force-dynamic'
 

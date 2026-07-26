@@ -12,11 +12,9 @@
 export const company = {
   name: 'Fraogo',
   legalName: 'Fraogo Limited',
-  tagline: 'Procurement · Logistics · General Services',
-  shortDescription: 'Procurement, freight, and business services for Nigerian businesses and individuals.',
-  longDescription: `Fraogo is a Nigerian company built to simplify how businesses and individuals
-source products, move goods, and access quality services. We handle the complexity —
-you focus on what matters.`,
+  tagline: 'Source Products · Ship Freight · Hire Verified Sellers',
+  shortDescription: 'The all-in-one platform for global product sourcing, freight shipping across Nigeria, and verified marketplace sellers.',
+  longDescription: `Fraogo is a verified multi-service platform that simplifies how businesses and individuals buy products globally, ship cargo across Nigeria, and hire vetted service providers. We handle sourcing, logistics, and payment safety from start to finish.`,
   rc: 'RC8967311',
   founded: '2024',
 
@@ -31,11 +29,11 @@ you focus on what matters.`,
   // ── Homepage hero ──────────────────────────────────────────────────────────
   // The headline is shown as stacked lines; the last line is highlighted.
   // Edit the text here and the homepage updates automatically.
-  heroEyebrow: 'Ikeja, Lagos · Nigeria',
-  heroHeadlineLines: ['Procurement.', 'Logistics.'],
-  heroHeadlineAccent: 'General Services.',
+  heroEyebrow: 'Ikeja, Lagos · CAC Registered RC8967311',
+  heroHeadlineLines: ['Source Products.', 'Ship Cargo.'],
+  heroHeadlineAccent: 'Hire Verified Sellers.',
   heroSubtext:
-    'From sourcing products globally to transporting goods across Nigeria — Fraogo handles the complexity so you can focus on your business.',
+    'The all-in-one platform for sourcing goods worldwide, shipping freight across Nigeria, and connecting with verified sellers — with 100% guaranteed delivery.',
 
   // Leave stats as an empty array — fake numbers hurt trust more than no numbers
   stats: [] as { value: string; label: string }[],

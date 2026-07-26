@@ -4,7 +4,7 @@ import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import Image from 'next/image'
 import { Upload, Trash2, Loader2, Copy, Check, Link2 } from 'lucide-react'
-import { addVendorImage, deleteVendorImageAction } from '@/app/actions/vendorPortfolio'
+import { addVendorImage, addVendorImageUrlLink, deleteVendorImageAction } from '@/app/actions/vendorPortfolio'
 import { supabaseClient, VENDOR_PORTFOLIO_BUCKET } from '@/lib/storage'
 
 interface VendorImage { id: string; url: string }
@@ -20,6 +20,8 @@ interface Vendor {
 export default function VendorDashboard({ token, vendor, profileUrl }: { token: string; vendor: Vendor; profileUrl: string }) {
   const router = useRouter()
   const [uploading, setUploading] = useState(false)
+  const [addingUrl, setAddingUrl] = useState(false)
+  const [imageUrlInput, setImageUrlInput] = useState('')
   const [error, setError] = useState<string | null>(null)
   const [copied, setCopied] = useState(false)
 
@@ -30,6 +32,24 @@ export default function VendorDashboard({ token, vendor, profileUrl }: { token: 
       setTimeout(() => setCopied(false), 2000)
     } catch {
       setError('Could not copy automatically — please copy the link manually.')
+    }
+  }
+
+  async function handleUrlAdd(e: React.FormEvent) {
+    e.preventDefault()
+    if (!imageUrlInput.trim()) return
+    setError(null)
+    setAddingUrl(true)
+    try {
+      const res = await addVendorImageUrlLink(token, imageUrlInput.trim())
+      if (res.success) {
+        setImageUrlInput('')
+        router.refresh()
+      } else {
+        setError(res.error ?? 'Could not save image URL.')
+      }
+    } finally {
+      setAddingUrl(false)
     }
   }
 
@@ -110,23 +130,52 @@ export default function VendorDashboard({ token, vendor, profileUrl }: { token: 
 
         <div className="bg-white rounded-2xl border border-gray-100 shadow-soft p-6 mb-8">
           <h2 className="font-bold text-gray-900 mb-1">Portfolio Images</h2>
-          <p className="text-sm text-gray-400 mb-4">
-            Show customers your work. JPG, PNG or WebP, up to 5MB each (max 50 images). {vendor.portfolioImages.length}/50 used.
+          <p className="text-sm text-gray-400 mb-5">
+            Show customers your work. Upload image files or enter image web links (max 50 images). {vendor.portfolioImages.length}/50 used.
           </p>
-          <label className="inline-flex items-center gap-2 cursor-pointer btn-primary px-5 py-3 rounded-xl text-sm">
-            {uploading
-              ? <><Loader2 className="w-4 h-4 animate-spin" /> Uploading…</>
-              : <><Upload className="w-4 h-4" /> Upload Images</>}
-            <input
-              type="file"
-              accept="image/png,image/jpeg,image/webp"
-              multiple
-              className="sr-only"
-              onChange={handleFiles}
-              disabled={uploading || vendor.portfolioImages.length >= 50}
-            />
-          </label>
-          {error && <p className="text-sm text-red-600 mt-3">{error}</p>}
+
+          <div className="grid md:grid-cols-2 gap-6 items-start">
+            <div className="p-4 bg-gray-50 border border-gray-200 rounded-xl space-y-2">
+              <label className="block text-xs font-semibold text-gray-700">Option 1: Upload File(s)</label>
+              <label className="inline-flex items-center gap-2 cursor-pointer btn-primary px-4 py-2.5 rounded-xl text-xs font-bold">
+                {uploading
+                  ? <><Loader2 className="w-4 h-4 animate-spin" /> Uploading…</>
+                  : <><Upload className="w-4 h-4" /> Choose Local Files</>}
+                <input
+                  type="file"
+                  accept="image/png,image/jpeg,image/webp"
+                  multiple
+                  className="sr-only"
+                  onChange={handleFiles}
+                  disabled={uploading || vendor.portfolioImages.length >= 50}
+                />
+              </label>
+              <p className="text-[11px] text-gray-400">JPG, PNG or WebP up to 5MB each.</p>
+            </div>
+
+            <form onSubmit={handleUrlAdd} className="p-4 bg-gray-50 border border-gray-200 rounded-xl space-y-2">
+              <label className="block text-xs font-semibold text-gray-700">Option 2: Add Image URL Link</label>
+              <div className="flex gap-2">
+                <input
+                  type="url"
+                  placeholder="https://images.unsplash.com/..."
+                  value={imageUrlInput}
+                  onChange={(e) => setImageUrlInput(e.target.value)}
+                  className="form-input text-xs flex-1 px-3 py-2 bg-white"
+                />
+                <button
+                  type="submit"
+                  disabled={addingUrl || !imageUrlInput.trim()}
+                  className="btn-primary px-3 py-2 text-xs font-bold rounded-xl disabled:opacity-50 whitespace-nowrap"
+                >
+                  {addingUrl ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : 'Add URL'}
+                </button>
+              </div>
+              <p className="text-[11px] text-gray-400">Paste direct image URL link.</p>
+            </form>
+          </div>
+
+          {error && <p className="text-sm text-red-600 mt-4">{error}</p>}
         </div>
 
         {vendor.portfolioImages.length === 0 ? (

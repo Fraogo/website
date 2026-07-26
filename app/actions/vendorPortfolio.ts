@@ -65,6 +65,38 @@ export async function addVendorImage(token: string, url: string, fileName?: stri
   }
 }
 
+export async function addVendorImageUrlLink(token: string, url: string) {
+  const vendorId = await vendorIdFromToken(token)
+  if (!vendorId) return { success: false, error: 'Unauthorized' }
+
+  const trimmed = url.trim()
+  if (!trimmed.startsWith('http://') && !trimmed.startsWith('https://')) {
+    return { success: false, error: 'Please enter a valid web image URL (starting with http:// or https://)' }
+  }
+
+  const maxOrderResult = await prisma.vendorImage.aggregate({
+    _max: { order: true },
+    where: { vendorId },
+  })
+  const nextOrder = (maxOrderResult._max.order ?? -1) + 1
+  const count = await prisma.vendorImage.count({ where: { vendorId } })
+  if (count >= 50) {
+    return { success: false, error: 'Maximum 50 images allowed per vendor' }
+  }
+
+  try {
+    const image = await prisma.vendorImage.create({
+      data: { vendorId, url: trimmed, fileName: 'External Image Link', order: nextOrder },
+    })
+    revalidatePath('/vendor/dashboard')
+    revalidatePath('/general-service/rental/hire-vendor')
+    return { success: true, image }
+  } catch (error) {
+    console.error('[VendorPortfolio] Add image URL error:', error)
+    return { success: false, error: 'Failed to save image URL' }
+  }
+}
+
 export async function deleteVendorImageAction(token: string, imageId: string) {
   const vendorId = await vendorIdFromToken(token)
   if (!vendorId) return { success: false, error: 'Unauthorized' }

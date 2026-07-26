@@ -61,9 +61,6 @@ const vendorSchema = z.object({
 }).refine(
   (data) => data.businessType !== 'Other' || (data.businessTypeOther && data.businessTypeOther.trim().length > 0),
   { message: 'Please specify your service type', path: ['businessTypeOther'] }
-).refine(
-  (data) => data.listingType !== 'product' || (data.price && data.price.trim().length > 0),
-  { message: 'Products require a price', path: ['price'] }
 )
 
 export type VendorFormData = z.infer<typeof vendorSchema>
@@ -143,10 +140,7 @@ const adminCreateVendorSchema = z.object({
       }),
     )
     .optional(),
-}).refine(
-  (data) => data.listingType !== 'product' || (data.price && data.price.trim().length > 0),
-  { message: 'Product listings require a price', path: ['price'] }
-)
+})
 
 export async function createAdminVendor(data: z.infer<typeof adminCreateVendorSchema>, imageFiles?: File[]) {
   await requireAdmin()

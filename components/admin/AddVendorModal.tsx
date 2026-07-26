@@ -145,7 +145,7 @@ export default function AddVendorModal() {
 
               <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <label className="block font-semibold text-gray-700 mb-1">Price {form.listingType === 'product' ? '*' : '(Optional)'}</label>
+                  <label className="block font-semibold text-gray-700 mb-1">Fixed Price (Optional)</label>
                   <input
                     type="text"
                     value={form.price}
@@ -155,7 +155,7 @@ export default function AddVendorModal() {
                   />
                 </div>
                 <div>
-                  <label className="block font-semibold text-gray-700 mb-1">Price Range</label>
+                  <label className="block font-semibold text-gray-700 mb-1">Price Range (Optional)</label>
                   <input
                     type="text"
                     value={form.priceRange}
@@ -164,43 +164,51 @@ export default function AddVendorModal() {
                     className="w-full px-3 py-2 border border-gray-300 rounded-lg text-xs focus:ring-2 focus:ring-[#1B4AD4] focus:outline-none"
                   />
                 </div>
+                <p className="col-span-2 text-[11px] text-gray-400 -mt-1">
+                  Optional: Include fixed price, range, or leave blank to mark listing as &quot;Price on Request&quot;.
+                </p>
               </div>
 
-              <div className="grid gap-3">
+              <div className="p-3 bg-gray-50 border border-gray-200 rounded-xl space-y-3">
+                <div className="flex items-center justify-between">
+                  <label className="block font-semibold text-gray-700">Product / Service Images</label>
+                  <span className="text-[11px] text-gray-500">File Upload or Link URL</span>
+                </div>
+
                 <div>
-                  <label className="block font-semibold text-gray-700 mb-1">Image files (Optional, up to 3)</label>
+                  <label className="block text-xs text-gray-600 font-medium mb-1">Upload File(s)</label>
                   <input
                     type="file"
                     accept="image/png,image/jpeg,image/webp"
                     multiple
                     onChange={(e) => {
                       const files = Array.from(e.target.files ?? [])
-                      setImageFiles(files.slice(0, 3))
-                      if (files.length > 3) {
-                        setError('Only the first 3 images will be used.')
+                      setImageFiles(files.slice(0, 4))
+                      if (files.length > 4) {
+                        setError('Only the first 4 images will be uploaded.')
                       }
                     }}
-                    className="w-full text-xs text-gray-700"
+                    className="w-full text-xs text-gray-700 file:mr-2 file:py-1 file:px-3 file:rounded-lg file:border-0 file:text-xs file:font-semibold file:bg-[#0E2A82] file:text-white hover:file:bg-[#1B4AD4] cursor-pointer"
                   />
-                  <p className="text-xs text-gray-500 mt-1">
-                    Upload up to 3 images for the listing gallery.
-                  </p>
                   {imageFiles.length > 0 && (
-                    <p className="text-xs text-gray-500 mt-1">
-                      Selected files: {imageFiles.map((file) => file.name).join(', ')}
+                    <p className="text-[11px] text-emerald-600 font-medium mt-1">
+                      {imageFiles.length} file(s) selected: {imageFiles.map((file) => file.name).join(', ')}
                     </p>
                   )}
                 </div>
-                <div>
-                  <label className="block font-semibold text-gray-700 mb-1">Or image URL</label>
+
+                <div className="pt-2 border-t border-gray-200">
+                  <label className="block text-xs text-gray-600 font-medium mb-1">Or Enter Image URL Link</label>
                   <input
                     type="url"
-                    placeholder="https://images.unsplash.com/..."
+                    placeholder="https://images.unsplash.com/photo-..."
                     value={form.imageUrl}
                     onChange={(e) => setForm({ ...form, imageUrl: e.target.value })}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg text-xs focus:ring-2 focus:ring-[#1B4AD4] focus:outline-none"
+                    className="w-full px-3 py-1.5 border border-gray-300 rounded-lg text-xs focus:ring-2 focus:ring-[#1B4AD4] focus:outline-none bg-white"
                   />
-                  <p className="text-xs text-gray-500 mt-1">Provide a URL if you do not want to upload a file.</p>
+                  <p className="text-[11px] text-gray-400 mt-1">
+                    Enter a direct web image link if you are not uploading local files.
+                  </p>
                 </div>
               </div>
 

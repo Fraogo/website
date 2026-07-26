@@ -32,9 +32,6 @@ const formSchema = z.object({
 }).refine(
   (data) => data.businessType !== 'Other' || (data.businessTypeOther && data.businessTypeOther.trim().length > 0),
   { message: 'Please specify your service type', path: ['businessTypeOther'] }
-).refine(
-  (data) => data.listingType !== 'product' || (data.price && data.price.trim().length > 0),
-  { message: 'Products require a price', path: ['price'] }
 )
 
 type FormValues = z.infer<typeof formSchema>
@@ -56,7 +53,6 @@ export default function VendorRegistrationForm() {
 
   // eslint-disable-next-line react-hooks/incompatible-library
   const selectedType = watch('businessType')
-  const listingType = watch('listingType')
 
   const onSubmit = async (data: FormValues) => {
     setServerError(null)
@@ -162,14 +158,17 @@ export default function VendorRegistrationForm() {
 
           <div className="sm:col-span-2 grid sm:grid-cols-2 gap-5">
             <div>
-              <label className="form-label" htmlFor="price">Price {listingType === 'product' ? '*' : '(Optional)'}</label>
+              <label className="form-label" htmlFor="price">Fixed Price (Optional)</label>
               <input id="price" type="text" className={cn('form-input', errors.price && 'error')} placeholder="e.g. ₦650,000" {...register('price')} />
               {errors.price && <p className="form-error"><AlertCircle className="w-3 h-3" />{errors.price.message}</p>}
             </div>
             <div>
-              <label className="form-label" htmlFor="price-range">Price Range</label>
+              <label className="form-label" htmlFor="price-range">Price Range (Optional)</label>
               <input id="price-range" type="text" className="form-input" placeholder="e.g. ₦50,000 - ₦120,000" {...register('priceRange')} />
             </div>
+            <p className="sm:col-span-2 text-xs text-muted-foreground -mt-2">
+              Optional: Specify a fixed price, price range, or leave empty for custom quotes.
+            </p>
           </div>
         </div>
       </div>

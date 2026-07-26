@@ -1,4 +1,4 @@
-﻿'use client'
+'use client'
 
 import { useState, useEffect } from 'react'
 import { useForm } from 'react-hook-form'
@@ -232,6 +232,7 @@ export default function SupplyOrderForm() {
           </div>
           <div>
             <label className="form-label" htmlFor="supply-phone">Phone Number *</label>
+            {/* eslint-disable-next-line react-hooks/incompatible-library */}
             <PhoneField id="supply-phone" value={watch('customerPhone') ?? ''} onChange={(v) => setValue('customerPhone', v, { shouldValidate: true })} error={!!errors.customerPhone} />
             <input type="hidden" {...register('customerPhone')} />
             {errors.customerPhone && <p className="form-error"><AlertCircle className="w-3 h-3" />{errors.customerPhone.message}</p>}

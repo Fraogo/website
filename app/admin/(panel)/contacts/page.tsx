@@ -29,7 +29,7 @@ export default async function AdminContactsPage({
   searchParams,
 }: { searchParams: Promise<{ page?: string }> }) {
   const { page } = await searchParams
-  const [{ inquiries, total, page: currentPage, totalPages }, stats] = await Promise.all([
+  const [{ inquiries, page: currentPage, totalPages }, stats] = await Promise.all([
     getContactInquiries(undefined, Number(page) || 1),
     getContactStats(),
   ])

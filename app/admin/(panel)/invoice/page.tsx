@@ -64,7 +64,7 @@ export default function InvoicePage() {
 
   useEffect(() => {
     if (view !== 'saved') return
-    setLoadingList(true)
+    Promise.resolve().then(() => setLoadingList(true))
     getInvoices().then((data) => { setInvoices(data); setLoadingList(false) })
   }, [view])
 

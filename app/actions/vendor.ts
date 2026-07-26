@@ -157,7 +157,7 @@ export async function createAdminVendor(data: z.infer<typeof adminCreateVendorSc
 
   const d = parsed.data
   try {
-    const vendorData: any = {
+    const vendorData: Prisma.VendorCreateInput = {
       businessName: d.businessName,
       email: d.email && d.email.trim() !== '' ? d.email.trim() : 'contact@fraogo.com',
       phone: d.phone && d.phone.trim() !== '' ? d.phone.trim() : '+234 802 822 9002',
@@ -366,14 +366,17 @@ export async function getPublicVendor(id: string) {
   })
 
   if (!vendor) return null
+
+  type RawVariant = { name: string; price?: string | null; description?: string | null }
+  type PublicVendor = { vendorVariants: RawVariant[]; variants: Prisma.JsonValue | null } & Record<string, unknown>
+
   // Map relational VendorVariant rows to the public `variants` shape.
-  const relational = (vendor as any).vendorVariants as { name: string; price?: string | null; description?: string | null }[] | undefined
+  const { vendorVariants: relational, variants: legacyVariants, ...rest } = vendor as unknown as PublicVendor
   const mapped = relational && relational.length > 0
     ? relational.map((v) => ({ name: v.name, price: v.price ?? null, description: v.description ?? null }))
-    : parseVariants((vendor as any).variants)
+    : parseVariants(legacyVariants)
 
   // Return public-safe shape: include variants as `variants` for legacy clients
-  const { vendorVariants, variants, ...rest } = vendor as any
   return { ...rest, variants: mapped }
 }
 
@@ -402,13 +405,15 @@ export async function getActiveVendors() {
     orderBy: { createdAt: 'desc' },
   })
 
+  type RawVariant = { name: string; price?: string | null; description?: string | null }
+  type RawVendor = { vendorVariants: RawVariant[]; variants: Prisma.JsonValue | null } & Record<string, unknown>
+
   return vendors.map((vendor) => {
-    const relational = (vendor as any).vendorVariants as { name: string; price?: string | null; description?: string | null }[] | undefined
+    const { vendorVariants: relational, variants: legacyVariants, ...rest } = vendor as unknown as RawVendor
     const mapped = relational && relational.length > 0
       ? relational.map((v) => ({ name: v.name, price: v.price ?? null, description: v.description ?? null }))
-      : parseVariants((vendor as any).variants)
+      : parseVariants(legacyVariants)
 
-    const { vendorVariants, variants, ...rest } = vendor as any
     return { ...rest, variants: mapped }
   })
 }

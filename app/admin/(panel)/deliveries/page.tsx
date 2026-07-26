@@ -49,7 +49,7 @@ export default async function AdminDeliveriesPage({
         </div>
       ) : (
         <div className="space-y-4">
-          {deliveries.map((d: any) => {
+          {deliveries.map((d) => {
             const message = `Hi ${d.senderName}, regarding your Fraogo ${d.type} delivery of "${d.itemDescription}" to ${d.destination} (receiver: ${d.receiverName}):`
             return (
               <div key={d.id} className="bg-white rounded-2xl border border-gray-100 shadow-soft p-5">

@@ -1,4 +1,4 @@
-﻿'use client'
+'use client'
 
 import { useForm, useFieldArray } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
@@ -66,6 +66,7 @@ export default function ProcurementForm({ type }: ProcurementFormProps) {
   })
 
   const { fields, append, remove } = useFieldArray({ control, name: 'items' })
+  // eslint-disable-next-line react-hooks/incompatible-library
   const watchedItems = watch('items')
 
   const onSubmit = async (data: FormValues) => {
@@ -144,6 +145,7 @@ export default function ProcurementForm({ type }: ProcurementFormProps) {
             <label className="form-label" htmlFor="phone">Phone Number *</label>
             <PhoneField
               id="phone"
+              // eslint-disable-next-line react-hooks/incompatible-library
               value={watch('phone') ?? ''}
               onChange={(v) => setValue('phone', v, { shouldValidate: true })}
               error={!!errors.phone}

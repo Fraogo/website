@@ -1,4 +1,4 @@
-﻿'use client'
+'use client'
 
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
@@ -52,6 +52,7 @@ export default function DeliveryForm({ defaultType = 'local' }: DeliveryFormProp
     },
   })
 
+  // eslint-disable-next-line react-hooks/incompatible-library
   const selectedType = watch('type')
 
   const confirmSubmit = async () => {

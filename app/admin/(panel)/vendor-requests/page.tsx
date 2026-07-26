@@ -34,7 +34,7 @@ export default async function AdminVendorRequestsPage({
         </div>
       ) : (
         <div className="space-y-4">
-          {requests.map((r: any) => {
+          {requests.map((r) => {
             const message = `Hi ${r.customerName}, regarding your Fraogo request to hire ${r.vendor.businessName}:`
             return (
               <div key={r.id} className="bg-white rounded-2xl border border-gray-100 shadow-soft p-5">

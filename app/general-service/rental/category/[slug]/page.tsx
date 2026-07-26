@@ -1,6 +1,5 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
-import { notFound } from 'next/navigation'
 import { getActiveVendors } from '@/app/actions/vendor'
 import { seedSolarVendors } from '@/app/actions/seedSolar'
 import VendorCard from '@/components/vendor/VendorCard'
@@ -33,7 +32,7 @@ export default async function CategoryPage({ params }: PageProps) {
   const allVendors = await getActiveVendors()
 
   // Filter vendors matching this category name or slug pattern
-  const vendors = allVendors.filter((v: any) => {
+  const vendors = allVendors.filter((v) => {
     const rawType = v.businessType ? v.businessType.split(':')[0].trim() : ''
     if (rawType.toLowerCase() === cat.name.toLowerCase()) return true
     if (slug === 'solar-products' && (rawType.toLowerCase().includes('solar') || rawType.toLowerCase().includes('energy'))) return true
@@ -117,7 +116,7 @@ export default async function CategoryPage({ params }: PageProps) {
               </p>
             </div>
             <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
-              {vendors.map((vendor: any) => (
+              {vendors.map((vendor) => (
                 <VendorCard key={vendor.id} vendor={vendor} />
               ))}
             </div>

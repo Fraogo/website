@@ -47,7 +47,7 @@ export default async function AdminSupplyOrdersPage({
         </div>
       ) : (
         <div className="space-y-4">
-          {orders.map((o: any) => {
+          {orders.map((o) => {
             const items = Array.isArray(o.items) ? o.items as Array<{ name: string; quantity: number; unit: string }> : []
             const itemSummary = items.map((it) => `${it.quantity} ${it.unit} ${it.name}`).join(', ')
             const message = `Hi ${o.customerName}, regarding your Fraogo supply order${itemSummary ? ` (${itemSummary})` : ''} to ${o.destination}:`

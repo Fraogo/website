@@ -5,7 +5,7 @@ import Footer from '@/components/layout/Footer'
 import FloatingWhatsApp from '@/components/ui/floating-whatsapp'
 import PublicChrome from '@/components/layout/PublicChrome'
 import { Toaster } from '@/components/ui/sonner'
-import { company, contact } from '@/content'
+import { company } from '@/content'
 
 export const metadata: Metadata = {
   metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL ?? 'https://fraogo.com'),

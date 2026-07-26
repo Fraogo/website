@@ -46,7 +46,7 @@ export default async function AdminVendorsPage({
             <p className="text-gray-500 text-sm">No vendors found</p>
           </div>
         ) : (
-          vendors.map((vendor: any) => {
+          vendors.map((vendor) => {
             const contactSubject = `FRAOGO — ${vendor.businessName}`
             const contactMessage = vendor.status === 'active'
               ? `Hi ${vendor.businessName}, this is FRAOGO regarding your approved vendor listing.`

@@ -1,4 +1,4 @@
-﻿'use client'
+'use client'
 
 import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
@@ -20,6 +20,7 @@ export default function CartPage() {
   // Safe hydration check for React 19
   const [mounted, setMounted] = useState(false)
   useEffect(() => {
+    // eslint-disable-next-line react-compiler/react-compiler
     setMounted(true)
   }, [])
 

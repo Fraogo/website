@@ -57,9 +57,10 @@ export default async function AdminOrdersPage({
         </div>
       ) : (
         <div className="space-y-4">
-          {orders.map((order: any) => {
-            const items = Array.isArray(order.items) ? order.items : []
-            const itemSummary = items.map((it: any) => `${it.quantity}x ${it.name}`).join(', ')
+          {orders.map((order) => {
+            type OrderItem = { name: string; quantity: number; specification?: string; deliveryMode?: string; deliveryAddress?: string }
+            const items = (Array.isArray(order.items) ? order.items : []) as OrderItem[]
+            const itemSummary = items.map((it) => `${it.quantity}x ${it.name}`).join(', ')
             const message = `Hi ${order.customerName}, regarding your Fraogo procurement order (${order.type === 'nigeria' ? 'Nigeria' : 'International'})${itemSummary ? ` — ${itemSummary}` : ''}:`
             return (
               <div key={order.id} className="bg-white rounded-2xl border border-gray-100 shadow-soft p-5">
@@ -94,7 +95,7 @@ export default async function AdminOrdersPage({
                         </tr>
                       </thead>
                       <tbody className="divide-y divide-gray-50">
-                        {items.map((it: any, i: number) => (
+                        {items.map((it, i) => (
                           <tr key={i}>
                             <td className="px-3 py-2 text-gray-800 font-medium">{it.name}</td>
                             <td className="px-3 py-2 text-gray-500">{it.specification}</td>

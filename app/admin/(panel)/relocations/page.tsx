@@ -47,7 +47,7 @@ export default async function AdminRelocationsPage({
         </div>
       ) : (
         <div className="space-y-4">
-          {relocations.map((r: any) => {
+          {relocations.map((r) => {
             const message = `Hi ${r.customerName}, regarding your Fraogo relocation from ${r.pickupLocation} to ${r.destination}:`
             return (
               <div key={r.id} className="bg-white rounded-2xl border border-gray-100 shadow-soft p-5">

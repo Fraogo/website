@@ -1,4 +1,4 @@
-﻿import { prisma } from '@/lib/db'
+import { prisma } from '@/lib/db'
 import { Package, Truck, MoveRight, ShoppingBag, Users, UserCheck, Clock, TrendingUp } from 'lucide-react'
 import Link from 'next/link'
 import { formatDateTime } from '@/lib/utils'
@@ -117,7 +117,7 @@ export default async function AdminDashboardPage() {
             <div className="p-8 text-center text-sm text-gray-400">No orders yet</div>
           ) : (
             <div className="divide-y divide-border">
-              {recent.orders.map((order: any) => (
+              {recent.orders.map((order) => (
                 <div key={order.id} className="p-4 flex items-center justify-between hover:bg-gray-50 transition-colors">
                   <div>
                     <div className="font-semibold text-sm text-gray-900">{order.customerName}</div>
@@ -150,7 +150,7 @@ export default async function AdminDashboardPage() {
             <div className="p-8 text-center text-sm text-gray-400">No deliveries yet</div>
           ) : (
             <div className="divide-y divide-border">
-              {recent.deliveries.map((delivery: any) => (
+              {recent.deliveries.map((delivery) => (
                 <div key={delivery.id} className="p-4 flex items-center justify-between hover:bg-gray-50">
                   <div>
                     <div className="font-semibold text-sm text-gray-900">{delivery.senderName}</div>

@@ -200,7 +200,7 @@ export default async function HomePage() {
               <div>
                 <p className="text-xs font-bold uppercase tracking-widest mb-2 text-[#1B4AD4]">Vendors & Sellers</p>
                 <h2 className="text-2xl sm:text-3xl lg:text-4xl font-black text-gray-900">
-                  Browse what's available
+                  Browse what&apos;s available
                 </h2>
               </div>
               <Link
@@ -228,7 +228,7 @@ export default async function HomePage() {
 
             {/* Vendor cards */}
             <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
-              {previewVendors.map((vendor: any) => (
+              {previewVendors.map((vendor) => (
                 <VendorCard key={vendor.id} vendor={vendor} />
               ))}
             </div>

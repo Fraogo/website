@@ -9,8 +9,6 @@ export const metadata: Metadata = {
 }
 export const dynamic = 'force-dynamic'
 
-const BUSINESS_TYPES = ['All', 'Event Space', 'Protocol Service', 'Catering & Small Chops', 'Make Up', 'Gadgets', 'Other']
-
 export default async function HireVendorPage({
   searchParams,
 }: {
@@ -20,7 +18,7 @@ export default async function HireVendorPage({
   const vendors = await getActiveVendors()
 
   const filtered = type && type !== 'All'
-    ? vendors.filter((v: any) => v.businessType.startsWith(type))
+    ? vendors.filter((v) => v.businessType.startsWith(type))
     : vendors
 
   return (
@@ -83,7 +81,7 @@ export default async function HireVendorPage({
               {type && type !== 'All' ? ` in "${type}"` : ''}
             </p>
             <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
-              {filtered.map((vendor: any) => (
+              {filtered.map((vendor) => (
                 <VendorCard key={vendor.id} vendor={vendor} />
               ))}
             </div>

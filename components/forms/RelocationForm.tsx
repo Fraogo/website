@@ -1,4 +1,4 @@
-﻿'use client'
+'use client'
 
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
@@ -42,6 +42,7 @@ export default function RelocationForm() {
     defaultValues: { transportBy: 'fraogo' },
   })
 
+  // eslint-disable-next-line react-hooks/incompatible-library
   const selectedTransport = watch('transportBy')
 
   const confirmSubmit = async () => {

@@ -145,7 +145,6 @@ export default function ProcurementForm({ type }: ProcurementFormProps) {
             <label className="form-label" htmlFor="phone">Phone Number *</label>
             <PhoneField
               id="phone"
-              // eslint-disable-next-line react-hooks/incompatible-library
               value={watch('phone') ?? ''}
               onChange={(v) => setValue('phone', v, { shouldValidate: true })}
               error={!!errors.phone}

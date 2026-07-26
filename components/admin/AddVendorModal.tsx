@@ -168,22 +168,22 @@ export default function AddVendorModal() {
 
               <div className="grid gap-3">
                 <div>
-                  <label className="block font-semibold text-gray-700 mb-1">Image files (Optional, up to 4)</label>
+                  <label className="block font-semibold text-gray-700 mb-1">Image files (Optional, up to 3)</label>
                   <input
                     type="file"
                     accept="image/png,image/jpeg,image/webp"
                     multiple
                     onChange={(e) => {
                       const files = Array.from(e.target.files ?? [])
-                      setImageFiles(files.slice(0, 4))
-                      if (files.length > 4) {
-                        setError('Only the first 4 images will be used.')
+                      setImageFiles(files.slice(0, 3))
+                      if (files.length > 3) {
+                        setError('Only the first 3 images will be used.')
                       }
                     }}
                     className="w-full text-xs text-gray-700"
                   />
                   <p className="text-xs text-gray-500 mt-1">
-                    Upload images in the order you want them shown in the gallery.
+                    Upload up to 3 images for the listing gallery.
                   </p>
                   {imageFiles.length > 0 && (
                     <p className="text-xs text-gray-500 mt-1">
@@ -206,35 +206,34 @@ export default function AddVendorModal() {
 
               <div>
                 <label className="block font-semibold text-gray-700 mb-1">
-                  Product Description, Specs & Pricing Details *
+                  Product/Service Description & Details *
                 </label>
                 <textarea
                   required
                   rows={4}
-                  placeholder="List items, specifications, pricing (e.g. ₦650,000), and warranty info..."
+                  placeholder="List specifications, pricing details, and warranty info..."
                   value={form.description}
                   onChange={(e) => setForm({ ...form, description: e.target.value })}
                   className="w-full px-3 py-2 border border-gray-300 rounded-lg text-xs focus:ring-2 focus:ring-[#1B4AD4] focus:outline-none"
                 />
               </div>
 
-              {form.listingType === 'product' && (
-                <div className="space-y-3">
-                  <div className="flex items-center justify-between gap-3">
-                    <h3 className="font-semibold text-gray-700">Product variants (optional)</h3>
-                    <button
-                      type="button"
-                      onClick={() => {
-                        setForm({
-                          ...form,
-                          variants: [...form.variants, { name: '', price: '', description: '' }],
-                        })
-                      }}
-                      className="text-xs font-semibold text-[#0E2A82] hover:text-[#1B4AD4]"
-                    >
-                      + Add variant
-                    </button>
-                  </div>
+              <div className="space-y-3">
+                <div className="flex items-center justify-between gap-3">
+                  <h3 className="font-semibold text-gray-700">Variants & Pricing Tiers (optional)</h3>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setForm({
+                        ...form,
+                        variants: [...form.variants, { name: '', price: '', description: '' }],
+                      })
+                    }}
+                    className="text-xs font-semibold text-[#0E2A82] hover:text-[#1B4AD4]"
+                  >
+                    + Add variant
+                  </button>
+                </div>
 
                   {form.variants.length === 0 && (
                     <p className="text-xs text-gray-500">Add variants for different sizes, colors, or price packages for this product.</p>
@@ -293,7 +292,6 @@ export default function AddVendorModal() {
                     </div>
                   ))}
                 </div>
-              )}
 
               <div className="flex justify-end gap-2 pt-2">
                 <button

@@ -100,8 +100,8 @@ export default function VendorRegistrationForm() {
         </h2>
         <div className="grid sm:grid-cols-2 gap-5">
           <div>
-            <label className="form-label" htmlFor="business-name">Vendor / Business Name *</label>
-            <input id="business-name" type="text" className={cn('form-input', errors.businessName && 'error')} placeholder="Your business name" {...register('businessName')} />
+            <label className="form-label" htmlFor="business-name">Listing / Business Title *</label>
+            <input id="business-name" type="text" className={cn('form-input', errors.businessName && 'error')} placeholder="e.g. Fraogo Solar - 5kVA Hybrid Inverter Kit" {...register('businessName')} />
             {errors.businessName && <p className="form-error"><AlertCircle className="w-3 h-3" />{errors.businessName.message}</p>}
           </div>
 
@@ -125,8 +125,8 @@ export default function VendorRegistrationForm() {
           </div>
 
           <div className="sm:col-span-2">
-            <label className="form-label" htmlFor="vendor-description">Description of Service *</label>
-            <textarea id="vendor-description" rows={4} className={cn('form-input resize-none', errors.description && 'error')} placeholder="What services do you offer? Be detailed about your expertise, experience, and what makes you unique..." {...register('description')} />
+            <label className="form-label" htmlFor="vendor-description">Product/Service Description & Details *</label>
+            <textarea id="vendor-description" rows={4} className={cn('form-input resize-none', errors.description && 'error')} placeholder="List specifications, pricing details, and warranty info..." {...register('description')} />
             {errors.description && <p className="form-error"><AlertCircle className="w-3 h-3" />{errors.description.message}</p>}
           </div>
 
@@ -167,7 +167,7 @@ export default function VendorRegistrationForm() {
               {errors.price && <p className="form-error"><AlertCircle className="w-3 h-3" />{errors.price.message}</p>}
             </div>
             <div>
-              <label className="form-label" htmlFor="price-range">Price Range (Optional)</label>
+              <label className="form-label" htmlFor="price-range">Price Range</label>
               <input id="price-range" type="text" className="form-input" placeholder="e.g. ₦50,000 - ₦120,000" {...register('priceRange')} />
             </div>
           </div>

@@ -1,4 +1,4 @@
-﻿import type { Metadata } from 'next'
+import type { Metadata } from 'next'
 import VendorRegistrationForm from '@/components/forms/VendorRegistrationForm'
 
 export const metadata: Metadata = {
@@ -12,11 +12,11 @@ export default function RegisterVendorPage() {
       <div className="page-header">
         <div className="section-container pt-8">
           <p className="text-sm font-bold uppercase tracking-wider mb-2" style={{ color: '#93A9F5' }}>
-            General Service → Rental
+            Seller Application
           </p>
-          <h1 className="text-3xl lg:text-4xl font-black mb-3">Become a Vendor</h1>
+          <h1 className="text-3xl lg:text-4xl font-black mb-3">Become a Seller</h1>
           <p className="text-white/70 max-w-xl">
-            Join our growing network of verified service providers. Once approved, you&apos;ll get access to your own portfolio dashboard.
+            Join our growing marketplace of verified sellers. Once approved, you&apos;ll get access to your own dashboard to manage your products and services.
           </p>
         </div>
       </div>

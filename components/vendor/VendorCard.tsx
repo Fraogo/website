@@ -96,36 +96,44 @@ export default function VendorCard({ vendor }: VendorCardProps) {
         )}
       </div>
 
-      <div className="p-5">
-        <div className="flex items-start justify-between gap-2 mb-2">
-          <h3 className="font-black text-foreground text-base leading-tight">{vendor.businessName}</h3>
-          <span className={cn('text-xs font-semibold px-2 py-0.5 rounded-full flex-shrink-0', badgeClass)}>
+      <div className="p-4 flex flex-col h-[220px]">
+        {/* Top: Category & Title */}
+        <div className="flex items-start justify-between gap-2 mb-1">
+          <span className={cn('text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-sm flex-shrink-0', badgeClass)}>
+            {vendor.listingType === 'product' ? 'Product' : 'Service'}
+          </span>
+          <span className="text-[10px] text-muted-foreground bg-gray-100 px-2 py-0.5 rounded-sm">
             {vendor.businessType.split(':')[0].trim()}
           </span>
         </div>
+        
+        <h3 className="font-bold text-foreground text-[15px] leading-snug line-clamp-2 mt-1 mb-1">
+          {vendor.businessName}
+        </h3>
 
-        <div className="flex items-center gap-1 text-xs text-muted-foreground mb-3">
+        <div className="flex items-center gap-1 text-[11px] text-muted-foreground mb-auto">
           <MapPin className="w-3 h-3" />
           {vendor.location}
         </div>
 
-        <p className="text-xs text-muted-foreground leading-relaxed mb-4">
-          {truncate(vendor.description, 120)}
-        </p>
-
-        {(vendor.price || vendor.priceRange) && (
-          <div className="mb-3 text-sm text-slate-600">
-            <span className="font-semibold text-slate-900">{vendor.listingType === 'product' ? 'Product' : 'Service'}:</span>
-            {' '}
-            {vendor.price ? vendor.price : vendor.priceRange ? vendor.priceRange : 'Contact for pricing'}
-          </div>
-        )}
-
-        {vendor.variants && vendor.variants.length > 0 && (
-          <div className="mb-3 text-xs text-slate-500">
-            {vendor.variants.length === 1 ? '1 variant available' : `${vendor.variants.length} variants available`}
-          </div>
-        )}
+        {/* Pricing */}
+        <div className="mt-3 mb-4">
+          {(vendor.price || vendor.priceRange) ? (
+            <div className="flex items-baseline gap-1">
+              <span className="text-lg font-black text-slate-900">
+                {vendor.price ? vendor.price : vendor.priceRange}
+              </span>
+            </div>
+          ) : (
+            <div className="text-sm font-semibold text-slate-600">Contact for pricing</div>
+          )}
+          
+          {vendor.variants && vendor.variants.length > 0 && (
+            <div className="text-[10px] font-medium text-slate-500 mt-0.5">
+              + {vendor.variants.length} other option{vendor.variants.length > 1 ? 's' : ''}
+            </div>
+          )}
+        </div>
 
         <Link
           href={`/vendor/${vendor.id}`}
@@ -133,7 +141,7 @@ export default function VendorCard({ vendor }: VendorCardProps) {
           style={{ background: 'linear-gradient(135deg, #0E2A82, #1B4AD4)' }}
           id={`view-vendor-${vendor.id}`}
         >
-          View Details & Request
+          View Details
         </Link>
       </div>
     </div>

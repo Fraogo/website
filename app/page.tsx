@@ -102,11 +102,6 @@ export default async function HomePage() {
 
         <div className="section-container relative z-10">
           <div className="max-w-4xl mx-auto text-center">
-            <span className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full text-xs font-bold uppercase tracking-wider text-blue-200 bg-white/10 backdrop-blur-md border border-white/15 mb-6">
-              <ShieldCheck className="w-4 h-4 text-emerald-400" />
-              CAC Registered RC8967311 · Verified Platform
-            </span>
-
             <h1 className="font-black text-white leading-[1.05] tracking-tight mb-6"
               style={{ fontSize: 'clamp(2.4rem, 6vw, 4.5rem)' }}
             >

@@ -56,7 +56,6 @@ export default function VendorRegistrationForm() {
 
   // eslint-disable-next-line react-hooks/incompatible-library
   const selectedType = watch('businessType')
-  // eslint-disable-next-line react-hooks/incompatible-library
   const listingType = watch('listingType')
 
   const onSubmit = async (data: FormValues) => {

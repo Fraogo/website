@@ -30,7 +30,7 @@ export default async function AdminVendorsPage({
         <AddVendorModal />
       </div>
 
-      <div className="flex gap-2">
+      <div className="flex flex-wrap gap-2 overflow-x-auto pb-1 no-scrollbar">
         {['all', 'pending_review', 'active', 'rejected'].map((s) => (
           <Link key={s} href={s === 'all' ? '/admin/vendors' : `/admin/vendors?status=${s}`}
             className={`px-3 py-1.5 rounded-lg text-xs font-semibold capitalize transition-all ${(s === 'all' && !status) || status === s ? 'text-white' : 'bg-white border border-border text-gray-600 hover:border-gray-400'}`}

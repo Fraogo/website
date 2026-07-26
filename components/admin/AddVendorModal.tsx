@@ -80,175 +80,182 @@ export default function AddVendorModal() {
       </button>
 
       {open && (
-        <div className="fixed inset-0 z-50 bg-black/60 flex items-center justify-center p-4">
-          <div className="bg-white rounded-2xl max-w-lg w-full p-6 shadow-xl relative animate-in fade-in zoom-in-95">
-            <button
-              onClick={() => setOpen(false)}
-              className="absolute top-4 right-4 p-1 rounded-lg text-gray-400 hover:bg-gray-100 hover:text-gray-600"
-            >
-              <X className="w-5 h-5" />
-            </button>
+        <div className="fixed inset-0 z-50 bg-black/60 flex items-center justify-center p-3 sm:p-4 overflow-hidden">
+          <div className="bg-white rounded-2xl max-w-lg w-full max-h-[90vh] sm:max-h-[85vh] shadow-xl relative animate-in fade-in zoom-in-95 flex flex-col overflow-hidden border border-gray-100">
+            {/* Header */}
+            <div className="p-5 pb-3 border-b border-gray-100 relative flex-shrink-0 bg-white z-10">
+              <button
+                type="button"
+                onClick={() => setOpen(false)}
+                className="absolute top-4 right-4 p-1.5 rounded-lg text-gray-400 hover:bg-gray-100 hover:text-gray-600 transition-colors"
+                aria-label="Close modal"
+              >
+                <X className="w-5 h-5" />
+              </button>
 
-            <h2 className="text-xl font-black text-gray-900 mb-1">Add Vendor / Product Listing</h2>
-            <p className="text-xs text-gray-500 mb-5">
-              Create an active vendor profile or product listing that will immediately appear in the public marketplace.
-            </p>
+              <h2 className="text-lg sm:text-xl font-black text-gray-900 pr-8">Add Vendor / Product Listing</h2>
+              <p className="text-xs text-gray-500 mt-0.5">
+                Create an active vendor profile or product listing that will immediately appear in the public marketplace.
+              </p>
 
-            {error && (
-              <div className="p-3 mb-4 rounded-xl bg-red-50 text-red-700 text-xs font-medium border border-red-200">
-                {error}
-              </div>
-            )}
-
-            <form onSubmit={handleSubmit} className="space-y-4 text-xs">
-              <div>
-                <label className="block font-semibold text-gray-700 mb-1">Listing / Business Title *</label>
-                <input
-                  type="text"
-                  required
-                  placeholder="e.g. Fraogo Solar - 5kVA Hybrid Inverter Kit"
-                  value={form.businessName}
-                  onChange={(e) => setForm({ ...form, businessName: e.target.value })}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg text-xs focus:ring-2 focus:ring-[#1B4AD4] focus:outline-none"
-                />
-              </div>
-
-              <div className="grid grid-cols-2 gap-3">
-                <div>
-                  <label className="block font-semibold text-gray-700 mb-1">Category / Type *</label>
-                  <select
-                    value={form.businessType}
-                    onChange={(e) => setForm({ ...form, businessType: e.target.value })}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg text-xs focus:ring-2 focus:ring-[#1B4AD4] focus:outline-none"
-                  >
-                    {KNOWN_CATEGORIES.map((c) => (
-                      <option key={c.name} value={c.name}>
-                        {c.name}
-                      </option>
-                    ))}
-                    <option value="Other">Other Category</option>
-                  </select>
+              {error && (
+                <div className="p-3 mt-3 rounded-xl bg-red-50 text-red-700 text-xs font-medium border border-red-200">
+                  {error}
                 </div>
+              )}
+            </div>
 
+            {/* Scrollable Form Body */}
+            <form onSubmit={handleSubmit} className="flex flex-col flex-1 min-h-0">
+              <div className="p-5 space-y-4 text-xs overflow-y-auto flex-1 custom-scrollbar">
                 <div>
-                  <label className="block font-semibold text-gray-700 mb-1">Listing Type *</label>
-                  <select
-                    value={form.listingType}
-                    onChange={(e) => setForm({ ...form, listingType: e.target.value as 'product' | 'service' })}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg text-xs focus:ring-2 focus:ring-[#1B4AD4] focus:outline-none"
-                  >
-                    <option value="product">Product</option>
-                    <option value="service">Service</option>
-                  </select>
-                </div>
-              </div>
-
-              <div className="grid grid-cols-2 gap-3">
-                <div>
-                  <label className="block font-semibold text-gray-700 mb-1">Fixed Price (Optional)</label>
+                  <label className="block font-semibold text-gray-700 mb-1">Listing / Business Title *</label>
                   <input
                     type="text"
-                    value={form.price}
-                    onChange={(e) => setForm({ ...form, price: e.target.value })}
-                    placeholder="e.g. ₦650,000"
+                    required
+                    placeholder="e.g. Fraogo Solar - 5kVA Hybrid Inverter Kit"
+                    value={form.businessName}
+                    onChange={(e) => setForm({ ...form, businessName: e.target.value })}
                     className="w-full px-3 py-2 border border-gray-300 rounded-lg text-xs focus:ring-2 focus:ring-[#1B4AD4] focus:outline-none"
                   />
                 </div>
-                <div>
-                  <label className="block font-semibold text-gray-700 mb-1">Price Range (Optional)</label>
-                  <input
-                    type="text"
-                    value={form.priceRange}
-                    onChange={(e) => setForm({ ...form, priceRange: e.target.value })}
-                    placeholder="e.g. ₦50,000 - ₦120,000"
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg text-xs focus:ring-2 focus:ring-[#1B4AD4] focus:outline-none"
-                  />
-                </div>
-                <p className="col-span-2 text-[11px] text-gray-400 -mt-1">
-                  Optional: Include fixed price, range, or leave blank to mark listing as &quot;Price on Request&quot;.
-                </p>
-              </div>
 
-              <div className="p-3 bg-gray-50 border border-gray-200 rounded-xl space-y-3">
-                <div className="flex items-center justify-between">
-                  <label className="block font-semibold text-gray-700">Product / Service Images</label>
-                  <span className="text-[11px] text-gray-500">File Upload or Link URL</span>
-                </div>
+                <div className="grid grid-cols-2 gap-3">
+                  <div>
+                    <label className="block font-semibold text-gray-700 mb-1">Category / Type *</label>
+                    <select
+                      value={form.businessType}
+                      onChange={(e) => setForm({ ...form, businessType: e.target.value })}
+                      className="w-full px-3 py-2 border border-gray-300 rounded-lg text-xs focus:ring-2 focus:ring-[#1B4AD4] focus:outline-none"
+                    >
+                      {KNOWN_CATEGORIES.map((c) => (
+                        <option key={c.name} value={c.name}>
+                          {c.name}
+                        </option>
+                      ))}
+                      <option value="Other">Other Category</option>
+                    </select>
+                  </div>
 
-                <div>
-                  <label className="block text-xs text-gray-600 font-medium mb-1">Upload File(s)</label>
-                  <input
-                    type="file"
-                    accept="image/png,image/jpeg,image/webp"
-                    multiple
-                    onChange={(e) => {
-                      const files = Array.from(e.target.files ?? [])
-                      setImageFiles(files.slice(0, 4))
-                      if (files.length > 4) {
-                        setError('Only the first 4 images will be uploaded.')
-                      }
-                    }}
-                    className="w-full text-xs text-gray-700 file:mr-2 file:py-1 file:px-3 file:rounded-lg file:border-0 file:text-xs file:font-semibold file:bg-[#0E2A82] file:text-white hover:file:bg-[#1B4AD4] cursor-pointer"
-                  />
-                  {imageFiles.length > 0 && (
-                    <p className="text-[11px] text-emerald-600 font-medium mt-1">
-                      {imageFiles.length} file(s) selected: {imageFiles.map((file) => file.name).join(', ')}
-                    </p>
-                  )}
+                  <div>
+                    <label className="block font-semibold text-gray-700 mb-1">Listing Type *</label>
+                    <select
+                      value={form.listingType}
+                      onChange={(e) => setForm({ ...form, listingType: e.target.value as 'product' | 'service' })}
+                      className="w-full px-3 py-2 border border-gray-300 rounded-lg text-xs focus:ring-2 focus:ring-[#1B4AD4] focus:outline-none"
+                    >
+                      <option value="product">Product</option>
+                      <option value="service">Service</option>
+                    </select>
+                  </div>
                 </div>
 
-                <div className="pt-2 border-t border-gray-200">
-                  <label className="block text-xs text-gray-600 font-medium mb-1">Or Enter Image URL Link</label>
-                  <input
-                    type="url"
-                    placeholder="https://images.unsplash.com/photo-..."
-                    value={form.imageUrl}
-                    onChange={(e) => setForm({ ...form, imageUrl: e.target.value })}
-                    className="w-full px-3 py-1.5 border border-gray-300 rounded-lg text-xs focus:ring-2 focus:ring-[#1B4AD4] focus:outline-none bg-white"
-                  />
-                  <p className="text-[11px] text-gray-400 mt-1">
-                    Enter a direct web image link if you are not uploading local files.
+                <div className="grid grid-cols-2 gap-3">
+                  <div>
+                    <label className="block font-semibold text-gray-700 mb-1">Fixed Price (Optional)</label>
+                    <input
+                      type="text"
+                      value={form.price}
+                      onChange={(e) => setForm({ ...form, price: e.target.value })}
+                      placeholder="e.g. ₦650,000"
+                      className="w-full px-3 py-2 border border-gray-300 rounded-lg text-xs focus:ring-2 focus:ring-[#1B4AD4] focus:outline-none"
+                    />
+                  </div>
+                  <div>
+                    <label className="block font-semibold text-gray-700 mb-1">Price Range (Optional)</label>
+                    <input
+                      type="text"
+                      value={form.priceRange}
+                      onChange={(e) => setForm({ ...form, priceRange: e.target.value })}
+                      placeholder="e.g. ₦50,000 - ₦120,000"
+                      className="w-full px-3 py-2 border border-gray-300 rounded-lg text-xs focus:ring-2 focus:ring-[#1B4AD4] focus:outline-none"
+                    />
+                  </div>
+                  <p className="col-span-2 text-[11px] text-gray-400 -mt-1">
+                    Optional: Include fixed price, range, or leave blank to mark listing as &quot;Price on Request&quot;.
                   </p>
                 </div>
-              </div>
 
-              <div>
-                <label className="block font-semibold text-gray-700 mb-1">
-                  Product/Service Description & Details *
-                </label>
-                <textarea
-                  required
-                  rows={4}
-                  placeholder="List specifications, pricing details, and warranty info..."
-                  value={form.description}
-                  onChange={(e) => setForm({ ...form, description: e.target.value })}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg text-xs focus:ring-2 focus:ring-[#1B4AD4] focus:outline-none"
-                />
-              </div>
+                <div className="p-3 bg-gray-50 border border-gray-200 rounded-xl space-y-3">
+                  <div className="flex items-center justify-between">
+                    <label className="block font-semibold text-gray-700">Product / Service Images</label>
+                    <span className="text-[11px] text-gray-500">File Upload or Link URL</span>
+                  </div>
 
-              <div className="space-y-3">
-                <div className="flex items-center justify-between gap-3">
-                  <h3 className="font-semibold text-gray-700">Variants & Pricing Tiers (optional)</h3>
-                  <button
-                    type="button"
-                    onClick={() => {
-                      setForm({
-                        ...form,
-                        variants: [...form.variants, { name: '', price: '', description: '' }],
-                      })
-                    }}
-                    className="text-xs font-semibold text-[#0E2A82] hover:text-[#1B4AD4]"
-                  >
-                    + Add variant
-                  </button>
+                  <div>
+                    <label className="block text-xs text-gray-600 font-medium mb-1">Upload File(s)</label>
+                    <input
+                      type="file"
+                      accept="image/png,image/jpeg,image/webp"
+                      multiple
+                      onChange={(e) => {
+                        const files = Array.from(e.target.files ?? [])
+                        setImageFiles(files.slice(0, 4))
+                        if (files.length > 4) {
+                          setError('Only the first 4 images will be uploaded.')
+                        }
+                      }}
+                      className="w-full text-xs text-gray-700 file:mr-2 file:py-1 file:px-3 file:rounded-lg file:border-0 file:text-xs file:font-semibold file:bg-[#0E2A82] file:text-white hover:file:bg-[#1B4AD4] cursor-pointer"
+                    />
+                    {imageFiles.length > 0 && (
+                      <p className="text-[11px] text-emerald-600 font-medium mt-1">
+                        {imageFiles.length} file(s) selected: {imageFiles.map((file) => file.name).join(', ')}
+                      </p>
+                    )}
+                  </div>
+
+                  <div className="pt-2 border-t border-gray-200">
+                    <label className="block text-xs text-gray-600 font-medium mb-1">Or Enter Image URL Link</label>
+                    <input
+                      type="url"
+                      placeholder="https://images.unsplash.com/photo-..."
+                      value={form.imageUrl}
+                      onChange={(e) => setForm({ ...form, imageUrl: e.target.value })}
+                      className="w-full px-3 py-1.5 border border-gray-300 rounded-lg text-xs focus:ring-2 focus:ring-[#1B4AD4] focus:outline-none bg-white"
+                    />
+                    <p className="text-[11px] text-gray-400 mt-1">
+                      Enter a direct web image link if you are not uploading local files.
+                    </p>
+                  </div>
                 </div>
+
+                <div>
+                  <label className="block font-semibold text-gray-700 mb-1">
+                    Product/Service Description & Details *
+                  </label>
+                  <textarea
+                    required
+                    rows={3}
+                    placeholder="List specifications, pricing details, and warranty info..."
+                    value={form.description}
+                    onChange={(e) => setForm({ ...form, description: e.target.value })}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-lg text-xs focus:ring-2 focus:ring-[#1B4AD4] focus:outline-none"
+                  />
+                </div>
+
+                <div className="space-y-3">
+                  <div className="flex items-center justify-between gap-3">
+                    <h3 className="font-semibold text-gray-700">Variants & Pricing Tiers (optional)</h3>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setForm({
+                          ...form,
+                          variants: [...form.variants, { name: '', price: '', description: '' }],
+                        })
+                      }}
+                      className="text-xs font-semibold text-[#0E2A82] hover:text-[#1B4AD4]"
+                    >
+                      + Add variant
+                    </button>
+                  </div>
 
                   {form.variants.length === 0 && (
                     <p className="text-xs text-gray-500">Add variants for different sizes, colors, or price packages for this product.</p>
                   )}
 
                   {form.variants.map((variant, index) => (
-                    <div key={index} className="space-y-2 rounded-2xl border border-gray-200 p-3 bg-slate-50">
+                    <div key={index} className="space-y-2 rounded-xl border border-gray-200 p-3 bg-slate-50">
                       <div className="flex items-center justify-between gap-2">
                         <span className="text-xs font-semibold text-gray-700">Variant {index + 1}</span>
                         <button
@@ -266,7 +273,7 @@ export default function AddVendorModal() {
                         <input
                           type="text"
                           value={variant.name}
-                          placeholder="Variant name (e.g. Red, 2-pack)"
+                          placeholder="Variant name"
                           onChange={(e) => {
                             const updated = [...form.variants]
                             updated[index] = { ...updated[index], name: e.target.value }
@@ -288,7 +295,7 @@ export default function AddVendorModal() {
                         <input
                           type="text"
                           value={variant.description}
-                          placeholder="Short description (optional)"
+                          placeholder="Description (optional)"
                           onChange={(e) => {
                             const updated = [...form.variants]
                             updated[index] = { ...updated[index], description: e.target.value }
@@ -300,19 +307,21 @@ export default function AddVendorModal() {
                     </div>
                   ))}
                 </div>
+              </div>
 
-              <div className="flex justify-end gap-2 pt-2">
+              {/* Sticky Footer */}
+              <div className="p-4 border-t border-gray-100 flex justify-end gap-2 bg-gray-50 flex-shrink-0">
                 <button
                   type="button"
                   onClick={() => setOpen(false)}
-                  className="px-4 py-2 rounded-lg border border-gray-300 text-gray-700 font-semibold hover:bg-gray-50"
+                  className="px-4 py-2 rounded-lg border border-gray-300 text-gray-700 font-semibold hover:bg-gray-100 transition-colors text-xs"
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
                   disabled={submitting}
-                  className="inline-flex items-center gap-1.5 px-5 py-2 rounded-lg bg-[#0E2A82] text-white font-semibold hover:bg-[#1B4AD4] disabled:opacity-50"
+                  className="inline-flex items-center gap-1.5 px-5 py-2 rounded-lg bg-[#0E2A82] text-white font-semibold hover:bg-[#1B4AD4] disabled:opacity-50 transition-colors text-xs"
                 >
                   {submitting && <Loader2 className="w-3.5 h-3.5 animate-spin" />}
                   Save Listing

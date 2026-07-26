@@ -54,7 +54,9 @@ export default function VendorRegistrationForm() {
     resolver: zodResolver(formSchema),
   })
 
+  // eslint-disable-next-line react-hooks/incompatible-library
   const selectedType = watch('businessType')
+  // eslint-disable-next-line react-hooks/incompatible-library
   const listingType = watch('listingType')
 
   const onSubmit = async (data: FormValues) => {

@@ -1,4 +1,4 @@
-﻿'use client'
+'use client'
 
 import { useState } from 'react'
 import Image from 'next/image'
@@ -256,6 +256,7 @@ export default function VendorDetailModal({ vendor, onClose }: VendorDetailModal
                   </div>
                   <div>
                     <label className="form-label text-xs" htmlFor="req-phone">Phone Number *</label>
+                    {/* eslint-disable-next-line react-hooks/incompatible-library */}
                     <PhoneField id="req-phone" value={watch('customerPhone') ?? ''} onChange={(v) => setValue('customerPhone', v, { shouldValidate: true })} error={!!errors.customerPhone} />
                     <input type="hidden" {...register('customerPhone')} />
                     {errors.customerPhone && <p className="form-error"><AlertCircle className="w-3 h-3" />{errors.customerPhone.message}</p>}

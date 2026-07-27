@@ -3,7 +3,15 @@ import ProcurementForm from '@/components/forms/ProcurementForm'
 
 export const metadata: Metadata = {
   title: 'International Procurement Order',
-  description: 'Import products from global markets. FRAOGO handles international sourcing and logistics.',
+  description: 'Import products from global markets. Fraogo handles overseas supplier sourcing, customs clearance, and freight delivery to Nigeria.',
+  alternates: {
+    canonical: '/procurement/international',
+  },
+  openGraph: {
+    title: 'International Product Sourcing | Fraogo',
+    description: 'Import products from global markets. Fraogo handles overseas supplier sourcing, customs clearance, and freight delivery to Nigeria.',
+    url: 'https://fraogo.com/procurement/international',
+  },
 }
 
 export default function InternationalProcurementPage() {

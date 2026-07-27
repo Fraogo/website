@@ -4,7 +4,15 @@ import type { Metadata } from 'next'
 
 export const metadata: Metadata = {
   title: 'Our Services',
-  description: 'Fraogo offers procurement (local & international sourcing), logistics (freight & transport), and general services (vendor marketplace & supplies).',
+  description: 'Fraogo offers procurement (local & international product sourcing), logistics (freight & cargo transport), and general services (verified vendor marketplace & bulk supplies).',
+  alternates: {
+    canonical: '/services',
+  },
+  openGraph: {
+    title: 'Our Services | Fraogo',
+    description: 'Fraogo offers procurement (local & international product sourcing), logistics (freight & cargo transport), and general services (verified vendor marketplace & bulk supplies).',
+    url: 'https://fraogo.com/services',
+  },
 }
 
 const services = [

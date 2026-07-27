@@ -117,6 +117,8 @@ export const team: {
   role: string
   bio: string
   image: string
+  website?: string
+  websiteLabel?: string
   linkedin?: string
 }[] = [
   {

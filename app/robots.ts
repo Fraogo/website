@@ -1,15 +1,14 @@
 import type { MetadataRoute } from 'next'
 
-const BASE = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://fraogo.com'
-
 export default function robots(): MetadataRoute.Robots {
+  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://fraogo.com'
+
   return {
     rules: {
       userAgent: '*',
       allow: '/',
-      // Keep internal/transactional pages out of search results
-      disallow: ['/admin', '/vendor/dashboard', '/procurement/cart', '/procurement/success'],
+      disallow: ['/admin/', '/admin/*', '/write/', '/write/*'],
     },
-    sitemap: `${BASE}/sitemap.xml`,
+    sitemap: `${baseUrl}/sitemap.xml`,
   }
 }

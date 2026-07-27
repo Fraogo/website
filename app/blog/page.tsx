@@ -7,6 +7,14 @@ import type { Metadata } from 'next'
 export const metadata: Metadata = {
   title: 'Blog',
   description: 'Insights, guides, and industry knowledge from the Fraogo team — covering procurement, logistics, and Nigerian business.',
+  alternates: {
+    canonical: '/blog',
+  },
+  openGraph: {
+    title: 'The Fraogo Blog | Procurement & Logistics Insights',
+    description: 'Insights, guides, and industry knowledge from the Fraogo team — covering procurement, logistics, and Nigerian business.',
+    url: 'https://fraogo.com/blog',
+  },
 }
 
 export const dynamic = 'force-dynamic'

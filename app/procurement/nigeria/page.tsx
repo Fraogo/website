@@ -3,7 +3,15 @@ import ProcurementForm from '@/components/forms/ProcurementForm'
 
 export const metadata: Metadata = {
   title: 'Nigeria Procurement Order',
-  description: 'Place a procurement order for items within Nigeria. FRAOGO handles the sourcing and delivery.',
+  description: 'Place a procurement order for items within Nigeria. Fraogo handles verified supplier sourcing, inspection, and local delivery.',
+  alternates: {
+    canonical: '/procurement/nigeria',
+  },
+  openGraph: {
+    title: 'Nigeria Product Procurement | Fraogo',
+    description: 'Place a procurement order for items within Nigeria. Fraogo handles verified supplier sourcing, inspection, and local delivery.',
+    url: 'https://fraogo.com/procurement/nigeria',
+  },
 }
 
 export default function NigeriaProcurementPage() {

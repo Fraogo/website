@@ -6,7 +6,15 @@ import type { Metadata } from 'next'
 
 export const metadata: Metadata = {
   title: 'About Us',
-  description: `Learn about Fraogo — ${company.shortDescription}`,
+  description: `Learn about Fraogo (CAC RC8967311) — ${company.shortDescription}`,
+  alternates: {
+    canonical: '/about',
+  },
+  openGraph: {
+    title: 'About Us | Fraogo',
+    description: `Learn about Fraogo (CAC RC8967311) — ${company.shortDescription}`,
+    url: 'https://fraogo.com/about',
+  },
 }
 
 const visibleTeam = team.filter((m) => !m.name.startsWith('['))

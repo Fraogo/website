@@ -6,7 +6,10 @@ import type { Metadata } from 'next'
 
 export const metadata: Metadata = {
   title: 'Track Your Order',
-  description: 'Enter your Fraogo tracking number to see the real-time status of your delivery or shipment.',
+  description: 'Enter your Fraogo tracking number to see the real-time status of your delivery, shipment, or service request.',
+  alternates: {
+    canonical: '/track',
+  },
 }
 
 const SERVICE_LABELS: Record<string, string> = {

@@ -6,6 +6,7 @@ import FloatingWhatsApp from '@/components/ui/floating-whatsapp'
 import PublicChrome from '@/components/layout/PublicChrome'
 import { Toaster } from '@/components/ui/sonner'
 import { company } from '@/content'
+import Script from 'next/script'
 
 export const metadata: Metadata = {
   metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL ?? 'https://fraogo.com'),
@@ -106,6 +107,22 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         />
       </head>
       <body className="min-h-screen flex flex-col font-sans antialiased">
+        <Script
+          strategy="afterInteractive"
+          src="https://www.googletagmanager.com/gtag/js?id=G-TDT285EJ8Z"
+        />
+        <Script
+          id="gtag-init"
+          strategy="afterInteractive"
+          dangerouslySetInnerHTML={{
+            __html: `
+              window.dataLayer = window.dataLayer || [];
+              function gtag(){dataLayer.push(arguments);}
+              gtag('js', new Date());
+              gtag('config', 'G-TDT285EJ8Z');
+            `,
+          }}
+        />
         <PublicChrome>
           <Navbar />
         </PublicChrome>
